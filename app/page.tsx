@@ -122,8 +122,13 @@ export default function DieselPrisPage() {
                 Estimert pumpepris basert på terminkontrakter fra ICE-børsen med alle avgifter inkludert.
               </p>
             </div>
-            {contracts.length > 0 && (
+            {contracts.length > 0 ? (
               <FuturesForecast contracts={contracts} exchangeRate={exchangeRate} />
+            ) : (
+              <p className="text-sm text-muted-foreground max-w-2xl">
+                Terminkurve med flere måneder vises når API-et leverer kontraktsrekken. Akkurat nå bruker vi én sammenhengende gasoil-serie til dagspris og historikk
+                {data?.data_source?.includes("TradingView") ? " (TradingView)." : "."}
+              </p>
             )}
           </div>
         </section>
@@ -156,9 +161,17 @@ export default function DieselPrisPage() {
                 USD til NOK basert på dagens valutakurs.
               </p>
               <p>
-                Dagens frontmånedskontrakt (LFJ26 april 2026) handles til <strong className="text-foreground">$1 282 per tonn</strong>,
-                noe som tilsvarer ca. <strong className="text-foreground">11,98 kr per liter</strong> i ren råvarepris. Legg til
-                distribusjon, margin og avgifter, og du ender på en pumpepris rundt 21–23 kr per liter.
+                Frontkontrakten (ICE gasoil, sammenhengende serie) ligger typisk rundt{" "}
+                <strong className="text-foreground">
+                  ${" "}
+                  {currentPrice.price_usd_mt.toLocaleString("nb-NO", { maximumFractionDigits: 0 })} per tonn
+                </strong>
+                , tilsvarende ca.{" "}
+                <strong className="text-foreground">
+                  {currentPrice.price_nok_liter.toLocaleString("nb-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr per liter
+                </strong>{" "}
+                i ren råvarepris (avhengig av valutakurs). Legg til distribusjon, margin og avgifter, og du ender på en pumpepris
+                rundt 21–23 kr per liter.
               </p>
             </div>
           </div>
