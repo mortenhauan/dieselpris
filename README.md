@@ -38,7 +38,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Vercel + Convex production
 
-The repo includes [`vercel.json`](./vercel.json): the Vercel build runs **`npx convex deploy`** first, then **`pnpm run build`**. During that inner build, Convex sets **`NEXT_PUBLIC_CONVEX_URL`** for your production deployment, so you do not need to paste the cloud URL into Vercel for a normal deploy.
+The repo includes [`vercel.ts`](./vercel.ts) ([programmatic Vercel config](https://vercel.com/docs/project-configuration/vercel-ts)): the build runs **`npx convex deploy`** first, then **`pnpm run build`**. During that inner build, Convex sets **`NEXT_PUBLIC_CONVEX_URL`** for your production deployment, so you do not need to paste the cloud URL into Vercel for a normal deploy.
 
 1. In the [Convex dashboard](https://dashboard.convex.dev/), open your project → **Production** deployment → **Settings** → **General** → **Generate Production Deploy Key**.
 2. In Vercel → your project → **Settings** → **Environment Variables**: add **`CONVEX_DEPLOY_KEY`** with that key, scoped to **Production** only (see [Using Convex with Vercel](https://docs.convex.dev/production/hosting/vercel)).
