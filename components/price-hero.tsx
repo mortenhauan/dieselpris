@@ -130,6 +130,30 @@ function ChangeHint({ changePercent, className }: { changePercent: number; class
   )
 }
 
+export function PriceHeroUnavailable({ updatedAt }: { updatedAt: string }) {
+  const formattedTime = formatUpdatedAt(updatedAt)
+  return (
+    <section className="py-16 md:py-24">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-3xl">
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
+            Råvarepris fra europeisk energibørs
+          </p>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
+            Ingen live pris akkurat nå
+          </h1>
+          <p className="text-muted-foreground mb-10 max-w-xl text-pretty leading-relaxed">
+            Ingen oppdatert råvarepris akkurat nå. Kom tilbake om litt — da skal tallene ligge her som vanlig.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-border bg-card px-8 py-6 text-sm text-muted-foreground">
+          Sist forsøkt oppdatert: {formattedTime}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export function PriceHero({
   priceUsdMt,
   priceNokLiter,

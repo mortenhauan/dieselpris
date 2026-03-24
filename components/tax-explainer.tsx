@@ -4,13 +4,15 @@ import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react"
 import { pumpPriceComponents } from "@/lib/pump-price-model"
 
 type TaxExplainerProps = {
-  rawPrice: number
+  rawPrice: number | null
 }
 
 export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
-  const components = pumpPriceComponents(rawPrice)
-  const totalTaxes = components.veibruks + components.co2 + components.mva
-  const taxPercent = (totalTaxes / components.total) * 100
+  const components = rawPrice !== null ? pumpPriceComponents(rawPrice) : null
+  const taxPercent =
+    components && components.total > 0
+      ? ((components.veibruks + components.co2 + components.mva) / components.total) * 100
+      : null
 
   const taxItems = [
     {
@@ -53,8 +55,16 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
             Norske dieselavgifter
           </h2>
           <p className="text-muted-foreground max-w-xl">
-            Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av pumpeprisen til staten i form av
-            veibruksavgift, CO2-avgift og MVA.
+            {taxPercent !== null ? (
+              <>
+                Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av pumpeprisen til staten i form av
+                veibruksavgift, CO2-avgift og MVA.
+              </>
+            ) : (
+              <>
+                Andelen som går til staten avhenger av råvareprisen. Når vi har live pris, viser vi et tall her.
+              </>
+            )}
           </p>
         </div>
 

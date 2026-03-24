@@ -27,6 +27,33 @@ function addCalendarMonthsUTC(year: number, month0: number, delta: number): { y:
   return { y: d.getUTCFullYear(), m: d.getUTCMonth() }
 }
 
+function isBusinessDayUtc(dayOfWeek: number): boolean {
+  return dayOfWeek !== 0 && dayOfWeek !== 6
+}
+
+function subtractBusinessDaysUTC(date: Date, businessDays: number): Date {
+  const result = new Date(date)
+  let remaining = businessDays
+
+  while (remaining > 0) {
+    result.setUTCDate(result.getUTCDate() - 1)
+    if (isBusinessDayUtc(result.getUTCDay())) {
+      remaining -= 1
+    }
+  }
+
+  return result
+}
+
+function currentForwardStartOffset(now: Date): number {
+  const monthCeaseDate = subtractBusinessDaysUTC(
+    new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 14, 12)),
+    2,
+  )
+
+  return now.getTime() > monthCeaseDate.getTime() ? 1 : 0
+}
+
 function ulsTvSymbol(year: number, month0: number): string {
   const letter = ICE_MONTH_LETTERS[month0]
   return `ICEEUR:ULS${letter}${year}`
@@ -69,7 +96,8 @@ export async function fetchNextSixIceUlsMonthlyContracts(
 ): Promise<IceUlsContractRow[]> {
   const y0 = now.getUTCFullYear()
   const m0 = now.getUTCMonth()
-  const slots = Array.from({ length: FORWARD_MONTHS }, (_, i) => addCalendarMonthsUTC(y0, m0, i))
+  const startOffset = currentForwardStartOffset(now)
+  const slots = Array.from({ length: FORWARD_MONTHS }, (_, i) => addCalendarMonthsUTC(y0, m0, startOffset + i))
 
   const settled: Array<IceUlsContractRow | null> = []
   for (let i = 0; i < slots.length; i++) {

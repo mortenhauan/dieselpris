@@ -1,14 +1,16 @@
 "use client"
 
+import type { ReactNode } from "react"
+import { Info } from "lucide-react"
 import {
   Area,
   AreaChart,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts"
+import { Tooltip as HintTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   PUMP_PRICE_STACK_LAYERS,
   type PumpPriceLayerKey,
@@ -30,9 +32,9 @@ interface FuturesForecastProps {
   regionId: RegionId
 }
 
-const MONTH_MARKER_STROKE = "oklch(0.88 0.012 250)"
-const LITERS_PER_MT = 1176
 const Y_STEP_KR = 5
+const HINT_CLASS =
+  "max-w-[min(22rem,calc(100vw-2rem))] text-xs leading-relaxed px-3 py-2.5 font-normal normal-case tracking-normal"
 
 type StackedFuturesRow = {
   contract_code: string
@@ -40,12 +42,6 @@ type StackedFuturesRow = {
   price: number
   price_nok_liter: number
 } & Record<PumpPriceLayerKey, number> & { total: number }
-
-function impliedUsdNok(priceUsdMt: number, nokPerLiter: number): number | null {
-  if (!Number.isFinite(priceUsdMt) || priceUsdMt <= 0) return null
-  const v = (nokPerLiter * LITERS_PER_MT) / priceUsdMt
-  return Number.isFinite(v) ? v : null
-}
 
 function toStackedFutures(
   contracts: Contract[],
@@ -84,6 +80,31 @@ function yScaleFromTotals(totals: number[]): { yTicks: number[]; yDomain: [numbe
   return { yTicks, yDomain: [0, last] }
 }
 
+function formatKrPerLiter(value: number): string {
+  return `${value.toLocaleString("nb-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr/L`
+}
+
+function Hint({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <HintTooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+          aria-label={`Forklaring: ${label}`}
+        >
+          <Info className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" align="start" sideOffset={6} className={HINT_CLASS}>
+        {children}
+      </TooltipContent>
+    </HintTooltip>
+  )
+}
+
+const LAYER_LEGEND = PUMP_PRICE_STACK_LAYERS.map((l) => l.name).join(" → ")
+
 export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesForecastProps) {
   const region = getRegionPriceProfile(regionId)
   const litersPerTon = 1176
@@ -91,54 +112,52 @@ export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesFo
   const { yTicks, yDomain } = yScaleFromTotals(stackedData.map((d) => d.total))
   const xCategories = stackedData.map((r) => r.contract_code)
 
-  const firstPrice = stackedData[0]?.total ?? 0
-  const lastPrice = stackedData[stackedData.length - 1]?.total ?? 0
-  const priceDiff = lastPrice - firstPrice
-  const priceDiffPercent = firstPrice > 0 ? ((priceDiff / firstPrice) * 100).toFixed(1) : "0.0"
-
-  const formatKr = (value: number) =>
-    `${value.toLocaleString("nb-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr`
+  const first = stackedData[0]
+  const last = stackedData[stackedData.length - 1]
+  const firstTotal = first?.total ?? 0
+  const lastTotal = last?.total ?? 0
+  const priceDiff = lastTotal - firstTotal
+  const priceDiffPercent = firstTotal > 0 ? ((priceDiff / firstTotal) * 100).toFixed(1) : "0.0"
 
   const tickLabel = (code: string) =>
     stackedData.find((r) => r.contract_code === code)?.contract_month ?? code
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-foreground mb-2">Estimert pumpepris fremover</h3>
-        <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-          Basert på de neste seks månedlige lavsvovel-gasoil-kontraktene på ICE (samme omregning som 90-dagers
-          historikken): råvare i USD/MT, valutakurs {exchangeRate.toFixed(4)} USD/NOK, deretter distribusjon og
-          avgifter for {region.label.toLowerCase()}.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-6 mb-8">
-        <div className="bg-secondary/50 rounded-xl px-5 py-4">
-          <p className="text-xs text-muted-foreground mb-1">Nærmeste kontrakt</p>
-          <p className="text-2xl font-bold text-foreground tabular-nums">{firstPrice.toFixed(2)} kr/L</p>
-          <p className="text-xs text-muted-foreground">{stackedData[0]?.contract_month}</p>
-        </div>
-        <div className="bg-secondary/50 rounded-xl px-5 py-4">
-          <p className="text-xs text-muted-foreground mb-1">Siste av 6 måneder</p>
-          <p className="text-2xl font-bold text-foreground tabular-nums">{lastPrice.toFixed(2)} kr/L</p>
-          <p className="text-xs text-muted-foreground">{stackedData[stackedData.length - 1]?.contract_month}</p>
-        </div>
-        <div className="bg-secondary/50 rounded-xl px-5 py-4">
-          <p className="text-xs text-muted-foreground mb-1">Forventet endring</p>
-          <p
-            className={`text-2xl font-bold tabular-nums ${priceDiff < 0 ? "text-emerald-600" : "text-amber-600"}`}
-          >
-            {priceDiff > 0 ? "+" : ""}
-            {priceDiff.toFixed(2)} kr
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="max-w-2xl">
+          <div className="mb-2 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-foreground">Pris de neste månedene</h3>
+            <Hint label="Hva er dette?">
+              <p>
+                Et grovt pumpeprisanslag per måned, basert på hva markedet legger til grunn for diesellevering den
+                måneden. Det er ikke det du betaler på en bestemt dag på stasjonen. Beregningen bruker dagens
+                valutakurs og avgifter, og en modellert andel for distribusjon i {region.label.toLowerCase()}.
+              </p>
+            </Hint>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Tallene kommer fra månedlige ICE-kontrakter og er ment som oversikt — ikke som eksakte kjøpspriser.
           </p>
-          <p className="text-xs text-muted-foreground">{priceDiffPercent}% endring</p>
         </div>
+        {first && last && stackedData.length >= 2 ? (
+          <p
+            className={`text-sm font-medium tabular-nums ${priceDiff < 0 ? "text-emerald-600" : priceDiff > 0 ? "text-amber-600" : "text-muted-foreground"}`}
+          >
+            {first.contract_month} → {last.contract_month}: {priceDiff > 0 ? "+" : ""}
+            {priceDiff.toFixed(2)} kr/L ({priceDiff > 0 ? "+" : ""}
+            {priceDiffPercent}%)
+          </p>
+        ) : null}
       </div>
 
-      <div className="h-[240px] sm:h-[300px] md:h-[400px] w-full">
+      <p className="mb-3 text-xs text-muted-foreground">
+        Grafen viser de samme prisdelene som «Prissammensetting» (fra bunnen: {LAYER_LEGEND}).
+      </p>
+
+      <div className="h-[220px] sm:h-[280px] md:h-[340px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={stackedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <AreaChart data={stackedData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <XAxis
               dataKey="contract_code"
               type="category"
@@ -156,51 +175,37 @@ export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesFo
               tickLine={false}
               domain={yDomain}
               ticks={yTicks}
-              width={60}
+              width={56}
             />
             <Tooltip
               content={({ active, payload }) => {
                 if (!(active && payload?.length)) return null
                 const row = payload[0]?.payload as StackedFuturesRow
-                const fx = impliedUsdNok(row.price, row.price_nok_liter)
                 return (
-                  <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
-                    <p className="text-sm text-muted-foreground mb-2">{row.contract_month}</p>
-                    <p className="text-xs text-muted-foreground mb-2 font-mono">{row.contract_code}</p>
-                    <div className="space-y-1.5">
+                  <div className="min-w-[200px] rounded-lg border border-border bg-card p-3 shadow-lg">
+                    <p className="mb-2 text-sm font-medium text-foreground">{row.contract_month}</p>
+                    <p className="mb-2 text-sm font-semibold tabular-nums text-foreground">
+                      {formatKrPerLiter(row.total)}
+                    </p>
+                    <div className="space-y-1">
                       {PUMP_PRICE_STACK_LAYERS.map((layer) => (
-                        <div key={layer.key} className="flex items-center justify-between gap-4 text-sm">
-                          <span className="flex items-center gap-2 text-muted-foreground">
-                            <span
-                              className="size-2 shrink-0 rounded-full"
-                              style={{ backgroundColor: layer.color }}
-                            />
-                            {layer.name}
-                          </span>
-                          <span className="font-medium tabular-nums text-foreground">
-                            {formatKr(row[layer.key])}
+                        <div key={layer.key} className="flex justify-between gap-4 text-xs">
+                          <span className="text-muted-foreground">{layer.name}</span>
+                          <span className="tabular-nums text-foreground">
+                            {row[layer.key].toLocaleString("nb-NO", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}{" "}
+                            kr
                           </span>
                         </div>
                       ))}
-                      <div className="flex items-center justify-between gap-4 border-t border-border pt-2 mt-2 text-sm font-semibold text-foreground">
-                        <span>Sum pumpepris</span>
-                        <span className="tabular-nums">{formatKr(row.total)}</span>
-                      </div>
                     </div>
-                    {row.price > 0 && (
-                      <p className="text-xs text-muted-foreground/80 mt-2 tabular-nums">
-                        {row.price.toLocaleString("nb-NO", { maximumFractionDigits: 0 })} USD/MT
+                    {row.price > 0 ? (
+                      <p className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground tabular-nums">
+                        Råvare på børs: {row.price.toLocaleString("nb-NO", { maximumFractionDigits: 0 })} USD/MT
                       </p>
-                    )}
-                    {fx !== null && (
-                      <p className="text-xs text-muted-foreground/80 tabular-nums">
-                        USD/NOK ≈{" "}
-                        {fx.toLocaleString("nb-NO", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 4,
-                        })}
-                      </p>
-                    )}
+                    ) : null}
                   </div>
                 )
               }}
@@ -219,35 +224,34 @@ export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesFo
                 isAnimationActive={false}
               />
             ))}
-            {xCategories.map((code) => (
-              <ReferenceLine
-                key={code}
-                x={code}
-                stroke={MONTH_MARKER_STROKE}
-                strokeWidth={1}
-                strokeDasharray="4 5"
-              />
-            ))}
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:flex-wrap sm:justify-center">
-        {PUMP_PRICE_STACK_LAYERS.map((layer) => (
-          <span key={layer.key} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: layer.color }} />
-            {layer.name}
-          </span>
-        ))}
+      <div className="mt-6 overflow-x-auto rounded-xl border border-border">
+        <table className="w-full min-w-[280px] text-sm">
+          <thead>
+            <tr className="border-b border-border bg-secondary/40 text-left">
+              <th className="px-4 py-3 font-medium text-muted-foreground">Måned</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Estimert pumpepris</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stackedData.map((row) => (
+              <tr key={row.contract_code} className="border-b border-border last:border-b-0">
+                <td className="px-4 py-3 text-foreground">{row.contract_month}</td>
+                <td className="px-4 py-3 text-right text-base font-semibold tabular-nums text-foreground">
+                  {formatKrPerLiter(row.total)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-border">
-        <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
-          <span>Avgifter etter gjeldende modell (dato-uavhengig i prognosen)</span>
-          <span>Distribusjon og margin: {region.label.toLowerCase()}</span>
-          <span>Kontrakter: ICE Futures Europe (lavsvovel gasoil)</span>
-        </div>
-      </div>
+      <p className="mt-4 text-xs text-muted-foreground">
+        Avgifter som i dag gjennom hele perioden · Valuta {exchangeRate.toFixed(4)} USD/NOK · ICE lavsvovel gasoil
+      </p>
     </div>
   )
 }

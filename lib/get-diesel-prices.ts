@@ -1,5 +1,8 @@
 import { cacheLife, cacheTag } from "next/cache"
-import { buildFallbackDieselPricesPayload } from "@/lib/diesel-prices-fallback"
+import {
+  buildUnavailableDieselPricesPayload,
+  type DieselPricesPayload,
+} from "@/lib/diesel-prices-payload"
 import {
   fetchNorgesBankUsdNokSeries,
   USD_NOK_FALLBACK,
@@ -12,7 +15,7 @@ import {
   tradingViewBarsToHistorical,
 } from "@/lib/tradingview-ice-gasoil"
 
-export type DieselPricesPayload = ReturnType<typeof buildFallbackDieselPricesPayload>
+export type { DieselPricesPayload, DieselPricesCurrent, DieselPricesHistoricalRow } from "@/lib/diesel-prices-payload"
 
 const LITERS_PER_TON = 1176
 const HISTORY_DAYS = 90
@@ -48,7 +51,7 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
 
     const bars = sliceLastDailyBars(rawBars, HISTORY_DAYS)
     if (bars.length < 2) {
-      return buildFallbackDieselPricesPayload(spotUsdNok, exchangeSource, resolveUsdNok)
+      return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource)
     }
 
     const forwardContracts = await fetchNextSixIceUlsMonthlyContracts()
@@ -82,6 +85,6 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
         "Lavsvovel gasoil (ICE Europa): sammenhengende dagskurve + seks månedlige terminkontrakter",
     }
   } catch {
-    return buildFallbackDieselPricesPayload(spotUsdNok, exchangeSource, resolveUsdNok)
+    return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource)
   }
 }
