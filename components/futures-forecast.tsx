@@ -131,8 +131,9 @@ export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesFo
             <Hint label="Hva er dette?">
               <p>
                 Et grovt pumpeprisanslag per måned, basert på hva markedet legger til grunn for diesellevering den
-                måneden. Det er ikke det du betaler på en bestemt dag på stasjonen. Beregningen bruker dagens
-                valutakurs og avgifter, og en modellert andel for distribusjon i {region.label.toLowerCase()}.
+                måneden. Det er ikke det du betaler på en bestemt dag på stasjonen, og det er ikke en spådom om
+                fremtidig pumpepris. Beregningen bruker dagens valutakurs og avgifter, og en modellert andel for
+                distribusjon i {region.label.toLowerCase()}.
               </p>
             </Hint>
           </div>

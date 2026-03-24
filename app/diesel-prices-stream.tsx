@@ -41,7 +41,8 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
             </h2>
             <p className="text-muted-foreground max-w-xl">
               Se hvordan råvarepris, avgifter og modellert regional distribusjon
-              bygger opp prisestimatet.
+              bygger opp prisestimatet. Dette er pedagogikk og indikasjon — ikke
+              en fasit eller garanti for hva du betaler på stasjonen.
             </p>
             <p className="text-sm text-muted-foreground mt-3">
               Valgt region:{" "}

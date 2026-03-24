@@ -9,9 +9,9 @@ import { SITE_URL } from "@/lib/site-url"
 
 function regionDescription(profile: RegionPriceProfile): string {
   if (profile.id === "national") {
-    return "Følg dieselpriser fra ICE-børsen i sanntid. Se hvordan norske avgifter påvirker pumpeprisen, inkludert veibruksavgift, CO2-avgift og mva."
+    return "ICE-basert råvarepris oppdatert jevnlig. Veiledende modell av norske avgifter og pumpepris — ikke kjøpspris."
   }
-  return `ICE gasoil og veiledende pumpeprisestimat for ${profile.label}: avgifter, mva og modellert regional distribusjon og margin.`
+  return `ICE lavsvovel gasoil og veiledende pumpeprisestimat for ${profile.label}: avgifter, mva og modellert regional distribusjon og margin.`
 }
 
 export function regionPageMetadata(regionId: RegionId): Metadata {

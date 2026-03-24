@@ -35,6 +35,16 @@ export function Footer() {
                 </a>
               </li>
               <li>
+                <a
+                  href="https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/avgiftssatser-2026/id3121982/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
+                  Regjeringen (avgiftssatser)
+                </a>
+              </li>
+              <li>
                 <a href="https://lovdata.no" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                   Lovdata
                 </a>
@@ -50,7 +60,7 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4 text-sm">Om prisene</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Prisene er basert på ICE Gasoil futures og gir en indikasjon på råvarepris.
+              Prisene er basert på ICE lavsvovel gasoil (futures) og gir en indikasjon på råvarepris.
               Faktiske pumpepriser varierer.
             </p>
           </div>

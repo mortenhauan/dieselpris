@@ -28,7 +28,7 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
       title: "CO2-avgift",
       rate: "4,42",
       unit: "kr/L",
-      description: "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Øker årlig.",
+      description: "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Justeres i budsjettrunder.",
       trend: "Opp fra 3,17 kr (2024)"
     },
     {
@@ -140,9 +140,24 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
               </tbody>
             </table>
           </div>
-          <div className="p-6 border-t border-border">
+          <div className="space-y-3 p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
               Veibruksavgiften har blitt redusert, men CO2-avgiften øker mer. Samlet har avgiftene økt med 22 øre fra 2025 til 2026.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Modellen inkluderer ikke alle mulige små satser og særregler. Svovelavgift utløses for mineralolje med
+              svovelinnhold over 0,05 vektprosent; vanlig veidiesel (lavsvovel) ligger under denne grensen og får
+              normalt ikke denne avgiften. Andre mineraloljeprodukter eller avvikende svovelinnhold kan være annerledes.
+              Se satser og regelverk hos{" "}
+              <a
+                href="https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/avgiftssatser-2026/id3121982/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground underline underline-offset-2 hover:no-underline"
+              >
+                Regjeringen (avgiftssatser)
+              </a>
+              .
             </p>
           </div>
         </div>

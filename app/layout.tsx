@@ -12,9 +12,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Dieselpris.no – aktuelle dieselpriser og avgifter i Norge',
+  title: 'Dieselpris.no – veiledende dieselpriser og avgifter i Norge',
   description:
-    'Følg dieselpriser fra ICE-børsen i sanntid. Se hvordan norske avgifter påvirker pumpeprisen, inkludert veibruksavgift, CO2-avgift og mva.',
+    'ICE-basert råvarepris oppdatert jevnlig (ikke sanntid). Veiledende modell av avgifter og pumpepris — ikke kjøpspris eller prisgaranti.',
   openGraph: {
     type: 'website',
     locale: 'nb_NO',

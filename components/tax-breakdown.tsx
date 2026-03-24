@@ -122,7 +122,11 @@ export function TaxBreakdown({ rawPrice, regionId }: TaxBreakdownProps) {
           <span className="text-lg font-bold text-foreground">{taxPercent.toFixed(0)}%</span>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          {totalTaxes.toFixed(2)} kr av prisen går til staten
+          {totalTaxes.toFixed(2)} kr av prisen går til staten (veibruks, CO₂ og MVA i modellen).
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">
+          Enkelte andre satser er ikke med. Svovelavgift gjelder i utgangspunktet bare mineralolje med over 0,05 %
+          svovel — ikke typisk veidiesel.
         </p>
       </div>
     </div>
