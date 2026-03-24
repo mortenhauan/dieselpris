@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
+import { SITE_URL } from '@/lib/site-url'
 import './globals.css'
 
 const inter = Inter({ 
@@ -10,8 +11,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Dieselpris.no - Aktuelle dieselpriser og avgifter i Norge',
-  description: 'Følg dieselpriser fra ICE børsen i sanntid. Se hvordan norske avgifter påvirker pumpeprisen, inkludert veibruksavgift, CO2-avgift og mva.',
+  metadataBase: new URL(SITE_URL),
+  title: 'Dieselpris.no – aktuelle dieselpriser og avgifter i Norge',
+  description:
+    'Følg dieselpriser fra ICE-børsen i sanntid. Se hvordan norske avgifter påvirker pumpeprisen, inkludert veibruksavgift, CO2-avgift og mva.',
+  openGraph: {
+    type: 'website',
+    locale: 'nb_NO',
+    siteName: 'Dieselpris.no',
+    url: SITE_URL,
+  },
+  twitter: {
+    card: 'summary',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [
       {
