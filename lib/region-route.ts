@@ -1,15 +1,6 @@
-import {
-  REGION_PRICE_PROFILES,
-  type RegionId,
-} from "@/lib/regional-price-model"
-
-const validIds = new Set<string>(REGION_PRICE_PROFILES.map((p) => p.id))
-
-export function parseRegionRouteParam(segment: string): RegionId | null {
-  if (!validIds.has(segment)) return null
-  return segment as RegionId
-}
+import { DEFAULT_REGION_ID, type RegionId } from "@/lib/regional-price-model";
 
 export function regionPath(regionId: RegionId): string {
-  return `/${regionId}`
+  if (regionId === DEFAULT_REGION_ID) return "/";
+  return `/${regionId}`;
 }

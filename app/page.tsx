@@ -1,7 +1,9 @@
-import { redirect } from "next/navigation"
-import { DEFAULT_REGION_ID } from "@/lib/regional-price-model"
-import { regionPath } from "@/lib/region-route"
+import type { Metadata } from "next";
+import { regionPageMetadata } from "@/lib/region-page-metadata";
+import { RegionDieselShell } from "./region-diesel-shell";
 
-export default function HomePage() {
-  redirect(regionPath(DEFAULT_REGION_ID))
+export const metadata: Metadata = regionPageMetadata("national");
+
+export default async function Page() {
+  return <RegionDieselShell regionId="national" />;
 }
