@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
-import useSWR from "swr"
+import { useEffect, useMemo } from "react"
 import { Header } from "@/components/header"
 import { PriceHero } from "@/components/price-hero"
 import { PriceChart } from "@/components/price-chart"
@@ -12,10 +11,6 @@ import { RegionalMargins } from "@/components/regional-margins"
 import type { DieselPricesPayload } from "@/lib/get-diesel-prices"
 import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
 import { usePersistedRegionId } from "@/lib/use-persisted-region-id"
-
-const FIFTEEN_MIN_MS = 15 * 60 * 1000
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function postDebugLog(
   runId: string,
@@ -119,30 +114,16 @@ function collectFixedCandidates(viewportWidth: number) {
 }
 
 type Props = {
-  initialData: DieselPricesPayload
+  data: DieselPricesPayload
 }
 
-export function DieselPrisPageClient({ initialData }: Props) {
+export function DieselPrisPageClient({ data }: Props) {
   const [selectedRegionId, setSelectedRegionId] = usePersistedRegionId()
-  const { data, error, isLoading } = useSWR<DieselPricesPayload>("/api/diesel-prices", fetcher, {
-    fallbackData: initialData,
-    refreshInterval: FIFTEEN_MIN_MS,
-    revalidateOnMount: false,
-    revalidateOnFocus: false,
-  })
-
-  const currentPrice = data?.current ?? {
-    price_usd_mt: 1282.0,
-    price_nok_liter: 11.98,
-    change: -5.75,
-    change_percent: -0.45,
-  }
-
-  const updatedAt = data?.updated_at ?? ""
-  const contracts = data?.contracts ?? []
-  const historical = data?.historical ?? []
-  const exchangeRate = data?.exchange_rate?.usd_nok ?? 11
-  const showChartLoading = isLoading && historical.length === 0
+  const currentPrice = data.current
+  const updatedAt = data.updated_at
+  const contracts = data.contracts
+  const historical = data.historical
+  const exchangeRate = data.exchange_rate.usd_nok
   const selectedRegion = useMemo(() => getRegionPriceProfile(selectedRegionId), [selectedRegionId])
 
   useEffect(() => {
@@ -183,7 +164,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
         historicalCount: historical.length,
         contractsCount: contracts.length,
         selectedRegionId,
-        hasError: Boolean(error),
+        hasError: false,
       })
       // #endregion
 
@@ -209,7 +190,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
     return () => {
       window.cancelAnimationFrame(frame)
     }
-  }, [contracts.length, error, historical.length, selectedRegionId])
+  }, [contracts.length, historical.length, selectedRegionId])
 
   return (
     <div className="min-h-screen bg-background">
@@ -221,8 +202,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
           priceNokLiter={currentPrice.price_nok_liter}
           changePercent={currentPrice.change_percent}
           updatedAt={updatedAt}
-          isLoading={showChartLoading}
-          exchangeSource={data?.exchange_rate?.source}
+          exchangeSource={data.exchange_rate.source}
         />
 
         <section id="priser" className="py-16 md:py-24 border-t border-border">
@@ -254,7 +234,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
                     <PriceChart data={historical} regionId={selectedRegionId} />
                   ) : (
                     <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                      {showChartLoading ? "Laster prisdata..." : "Ingen data tilgjengelig"}
+                      Ingen data tilgjengelig
                     </div>
                   )}
                 </div>
@@ -336,11 +316,6 @@ export function DieselPrisPageClient({ initialData }: Props) {
         </section>
       </main>
 
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-destructive text-destructive-foreground px-4 py-3 rounded-xl shadow-lg text-sm font-medium">
-          Kunne ikke laste prisdata. Prøv igjen senere.
-        </div>
-      )}
     </div>
   )
 }

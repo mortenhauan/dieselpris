@@ -2,7 +2,7 @@
 
 Web app that helps **Norwegian users** make sense of **diesel prices**: what drives the pump price, how taxes and margins fit in, and how wholesale or futures-related benchmarks move over time.
 
-Data is served from the app’s own API (`/api/diesel-prices`) so the UI can stay simple and fast. TradingView-backed prices are cached on the server with **`use cache`** and revalidated about every **15 minutes**. USD→NOK for NOK/litre uses **Norges Bank** open data (`data.norges-bank.no`) when available, with a fixed fallback if the request fails. The goal is a clear explanation—not a trading or price-guarantee tool.
+The home page is a **server component** that loads prices with **`getDieselPricesData()`**, which uses Next.js **Cache Components** (`"use cache"`, `cacheLife`, `cacheTag`) and revalidates about every **30 minutes**. The client UI only handles interactivity (e.g. region); it does not refetch price payloads. USD→NOK for NOK/litre uses **Norges Bank** open data (`data.norges-bank.no`) when available, with a fixed fallback if the request fails. The goal is a clear explanation—not a trading or price-guarantee tool.
 
 ## Features
 
@@ -13,10 +13,9 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 
 ## Tech stack
 
-- [Next.js](https://nextjs.org/) 16 (App Router)
+- [Next.js](https://nextjs.org/) 16 (App Router, `cacheComponents`)
 - React 19, TypeScript
 - [Tailwind CSS](https://tailwindcss.com/) 4
-- [SWR](https://swr.vercel.app/) for client fetching
 - [Convex](https://www.convex.dev/) for database and server functions ([`convex/`](./convex/README.md))
 - [pnpm](https://pnpm.io/) as package manager
 
@@ -59,7 +58,7 @@ Optional: if you later read **`NEXT_PUBLIC_CONVEX_SITE_URL`** in the app (HTTP a
 
 ## Project layout
 
-- `app/` — routes, layout, and API routes (e.g. `app/api/diesel-prices/`)
+- `app/` — routes and layout
 - `components/` — UI and feature blocks (charts, tax explainers, etc.)
 - `convex/` — Convex schema, queries, mutations, actions ([readme](convex/README.md))
 - `lib/` — shared utilities ([readme](./lib/README.md))

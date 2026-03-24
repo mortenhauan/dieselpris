@@ -16,7 +16,7 @@ export type DieselPricesPayload = ReturnType<typeof buildFallbackDieselPricesPay
 
 const LITERS_PER_TON = 1176
 const HISTORY_DAYS = 90
-const REVALIDATE_SECONDS = 15 * 60
+const REVALIDATE_SECONDS = 30 * 60
 
 function sliceLastDailyBars<T extends { time: number }>(bars: T[], max: number): T[] {
   const sorted = [...bars].sort((a, b) => a.time - b.time)
