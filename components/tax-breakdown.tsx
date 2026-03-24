@@ -95,7 +95,11 @@ export const TaxBreakdown = function TaxBreakdown({
       </div>
 
       <div className="relative h-48 mb-6">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ height: 192, width: 400 }}
+        >
           <PieChart>
             <Pie
               data={components}

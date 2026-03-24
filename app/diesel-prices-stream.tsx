@@ -8,6 +8,7 @@ import { TaxBreakdown } from "@/components/tax-breakdown";
 import { TaxExplainer } from "@/components/tax-explainer";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import { getDieselPricesData } from "@/lib/get-diesel-prices";
+import { rawPlusPublicDutiesNokPerLiter } from "@/lib/pump-price-model";
 import { getRegionPriceProfile } from "@/lib/regional-price-model";
 import type { RegionId } from "@/lib/regional-price-model";
 
@@ -23,6 +24,15 @@ export const DieselPricesStream = async function DieselPricesStream({
   const { historical } = data;
   const exchangeRate = data.exchange_rate.usd_nok;
   const hasLive = currentPrice !== null;
+  const dutyReferenceDate =
+    data.historical.at(-1)?.date ?? data.updated_at.slice(0, 10);
+  const priceNokLiterPlusDuties =
+    hasLive && currentPrice
+      ? rawPlusPublicDutiesNokPerLiter(
+          currentPrice.price_nok_liter,
+          dutyReferenceDate
+        )
+      : 0;
 
   let forecastBlock: ReactNode;
   if (hasLive) {
@@ -53,6 +63,7 @@ export const DieselPricesStream = async function DieselPricesStream({
         <PriceHero
           priceUsdMt={currentPrice.price_usd_mt}
           priceNokLiter={currentPrice.price_nok_liter}
+          priceNokLiterPlusDuties={priceNokLiterPlusDuties}
           changePercent={currentPrice.change_percent}
           updatedAt={data.updated_at}
           exchangeSource={data.exchange_rate.source}

@@ -266,7 +266,11 @@ export const FuturesForecast = function FuturesForecast({
       </p>
 
       <div className="h-[220px] sm:h-[280px] md:h-[340px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ height: 280, width: 900 }}
+        >
           <AreaChart
             data={stackedData}
             margin={{ bottom: 0, left: 0, right: 8, top: 8 }}

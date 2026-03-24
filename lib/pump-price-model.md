@@ -33,6 +33,10 @@ If the chart later expands further back in time, this schedule should be extende
 - Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026`
 - Lovdata, `Stortingsvedtak om veibruksavgift på drivstoff for 2025`
 
+## Hero slice
+
+`rawPlusPublicDutiesNokPerLiter` reuses the same veibruks, CO₂, and MVA stacking as the full pump model, but skips the modeled `distribution` layer. Used next to the pure raw NOK/liter figure on the landing hero.
+
 ## Non-tax assumption
 
 `distribution` is not an official tax rate. The national default remains in this file, while region-specific estimate inputs live in `regional-price-model.ts`.

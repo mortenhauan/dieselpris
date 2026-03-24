@@ -236,7 +236,11 @@ export const PriceChart = function PriceChart({
   return (
     <div className="w-full">
       <div className="h-[240px] sm:h-[300px] md:h-[400px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ height: 320, width: 800 }}
+        >
           <AreaChart
             data={stackedData}
             margin={{ bottom: 0, left: 0, right: 10, top: 10 }}

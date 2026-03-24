@@ -1,6 +1,7 @@
 "use client";
 
 import { RefreshCw, Clock, Info, HelpCircle } from "lucide-react";
+import Link from "next/link";
 
 import {
   Tooltip,
@@ -38,12 +39,18 @@ const INSTRUMENT_SUMMARY = "Europeisk referansepris for dieselråvare";
 const INSTRUMENT_TOOLTIP_DETAIL =
   "Dette er den europeiske markedsprisen for dieselråvaren som brukes som referanse i markedet. Prisen vises i USD per tonn og sier noe om råvarekostnaden, ikke hva du betaler på stasjonen.";
 
-const RAW_NOK_TOOLTIP_SUMMARY = "Omregnet råvarepris i kroner per liter";
+const RAW_NOK_TOOLTIP_SUMMARY = "Estimert råvarepris i kroner per liter";
 
 const RAW_NOK_TOOLTIP_WEIGHT = `Omregning tonn → liter bruker ${DIESEL_LITERS_PER_METRIC_TON} liter per metrisk tonn som fast vekt/tetthet. I praksis varierer liter per tonn litt med temperatur og produkt — tallet her er en forenklet modell.`;
 
 const RAW_NOK_TOOLTIP_FORMULA =
   "Tallet er markedsprisen omregnet fra USD per tonn til kroner per liter. Det er bare råvarekostnad — ikke avgifter, distribusjon, margin eller MVA.";
+
+const PLUS_DUTIES_TOOLTIP_SUMMARY =
+  "Estimert råvarepris med veibruks- og CO₂-avgift og MVA";
+
+const PLUS_DUTIES_TOOLTIP_DETAIL =
+  "Vi legger på de nasjonale satsene som i prissammensettingen under, og beregner MVA på summen — men uten modellert distribusjon eller stasjonsmargin.";
 
 const rawNokTooltipSourceLine = function rawNokTooltipSourceLine(
   exchangeSource?: string
@@ -72,6 +79,7 @@ const exchangeRateFooterBlurb = function exchangeRateFooterBlurb(
 interface PriceHeroProps {
   priceUsdMt: number;
   priceNokLiter: number;
+  priceNokLiterPlusDuties: number;
   changePercent: number;
   updatedAt: string;
   isLoading?: boolean;
@@ -102,6 +110,35 @@ const InstrumentHint = function InstrumentHint() {
           {INSTRUMENT_SUMMARY}
         </p>
         <p>{INSTRUMENT_TOOLTIP_DETAIL}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
+const PlusDutiesHint = function PlusDutiesHint() {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+          )}
+          aria-label={`Forklaring: ${PLUS_DUTIES_TOOLTIP_SUMMARY}`}
+        >
+          <Info className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        align="start"
+        sideOffset={6}
+        className={tooltipContentClass}
+      >
+        <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
+          {PLUS_DUTIES_TOOLTIP_SUMMARY}
+        </p>
+        <p>{PLUS_DUTIES_TOOLTIP_DETAIL}</p>
       </TooltipContent>
     </Tooltip>
   );
@@ -216,6 +253,7 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
 export const PriceHero = function PriceHero({
   priceUsdMt,
   priceNokLiter,
+  priceNokLiterPlusDuties,
   changePercent,
   updatedAt,
   isLoading,
@@ -234,13 +272,15 @@ export const PriceHero = function PriceHero({
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
             Dagens råvarepris
           </h1>
-          <p className="text-muted-foreground mb-10 max-w-xl text-pretty leading-relaxed">
-            Her ser du dagens råvarepris på diesel, både i USD per tonn og
-            omregnet til kroner per liter før avgifter, distribusjon og margin.
+          <p className="text-muted-foreground mb-10 max-w-2xl text-pretty leading-relaxed">
+            Her ser du børsnotert råvare i dollar per tonn, samme råvare i
+            kroner per liter uten avgifter — og råvare pluss veibruks- og
+            CO₂-avgift og MVA. Modellert distribusjon og stasjonens påslag er
+            ikke med i det siste tallet.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="bg-foreground text-background rounded-2xl p-8 md:p-10 flex flex-col justify-between">
             <div>
               <div
@@ -296,7 +336,7 @@ export const PriceHero = function PriceHero({
                   "flex items-center gap-1.5 text-muted-foreground text-sm"
                 )}
               >
-                <span>Råvarepris i NOK</span>
+                <span>Estimert råvarepris i NOK</span>
                 <RawNokHint exchangeSource={exchangeSource} />
               </div>
               <div className="flex items-baseline gap-2">
@@ -316,6 +356,43 @@ export const PriceHero = function PriceHero({
             <p className="text-muted-foreground text-sm mt-8 leading-snug">
               Før avgifter og margin.
               {exchangeRateFooterBlurb(exchangeSource)}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-8 md:p-10 flex flex-col justify-between md:col-span-2 lg:col-span-1">
+            <div>
+              <div
+                className={cn(
+                  metaRowClass,
+                  "flex items-center gap-1.5 text-muted-foreground text-sm"
+                )}
+              >
+                <span>Estimert råvarepris med avgifter</span>
+                <PlusDutiesHint />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={cn(
+                    "text-5xl md:text-6xl font-bold tracking-tight text-foreground",
+                    isLoading && "animate-pulse"
+                  )}
+                >
+                  {priceNokLiterPlusDuties.toFixed(2)}
+                </span>
+                <span className="text-muted-foreground text-lg font-medium">
+                  kr/L
+                </span>
+              </div>
+            </div>
+            <p className="text-muted-foreground text-sm mt-8 leading-snug">
+              Dette tallet er før{" "}
+              <Link
+                href="#distribusjon"
+                className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+              >
+                distribusjon og påslag
+              </Link>{" "}
+              på stasjonen.
             </p>
           </div>
         </div>

@@ -119,3 +119,15 @@ export const pumpPriceComponents = function pumpPriceComponents(
     veibruks,
   };
 };
+
+/** Råvare (NOK/L) + veibruks + CO₂ + MVA — samme MVA-grunnlag som i `pumpPriceComponents`, men uten distribusjon/margin. */
+export const rawPlusPublicDutiesNokPerLiter =
+  function rawPlusPublicDutiesNokPerLiter(
+    rawNokPerLiter: number,
+    atDate?: string | Date
+  ): number {
+    const rates = getPumpPriceRates(atDate);
+    const beforeMva = rawNokPerLiter + rates.veibruks + rates.co2;
+    const mva = beforeMva * rates.mvaRate;
+    return beforeMva + mva;
+  };
