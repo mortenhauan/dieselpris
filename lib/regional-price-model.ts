@@ -1,10 +1,10 @@
 export type RegionId =
   | "national"
-  | "oslo-east"
-  | "south"
-  | "west"
-  | "trondelag"
-  | "north";
+  | "ost"
+  | "sor"
+  | "vest"
+  | "midt"
+  | "nord";
 
 export type RegionPriceProfile = {
   id: RegionId;
@@ -30,7 +30,7 @@ export const REGION_PRICE_PROFILES: ReadonlyArray<RegionPriceProfile> = [
     ],
   },
   {
-    id: "oslo-east",
+    id: "ost",
     label: "Østlandsområdet",
     shortLabel: "Østlandet",
     distributionNokPerLiter: 3.2,
@@ -43,7 +43,7 @@ export const REGION_PRICE_PROFILES: ReadonlyArray<RegionPriceProfile> = [
     ],
   },
   {
-    id: "south",
+    id: "sor",
     label: "Sørlandet",
     shortLabel: "Sørlandet",
     distributionNokPerLiter: 3.35,
@@ -56,7 +56,7 @@ export const REGION_PRICE_PROFILES: ReadonlyArray<RegionPriceProfile> = [
     ],
   },
   {
-    id: "west",
+    id: "vest",
     label: "Vestlandet",
     shortLabel: "Vestlandet",
     distributionNokPerLiter: 3.45,
@@ -69,9 +69,9 @@ export const REGION_PRICE_PROFILES: ReadonlyArray<RegionPriceProfile> = [
     ],
   },
   {
-    id: "trondelag",
-    label: "Trøndelag",
-    shortLabel: "Trøndelag",
+    id: "midt",
+    label: "Midt-Norge",
+    shortLabel: "Midt-Norge",
     distributionNokPerLiter: 3.7,
     summary:
       "Litt høyere modellert påslag enn snittet, særlig utenfor de største markedene.",
@@ -82,7 +82,7 @@ export const REGION_PRICE_PROFILES: ReadonlyArray<RegionPriceProfile> = [
     ],
   },
   {
-    id: "north",
+    id: "nord",
     label: "Nord-Norge",
     shortLabel: "Nord-Norge",
     distributionNokPerLiter: 4.1,

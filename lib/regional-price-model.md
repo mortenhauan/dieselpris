@@ -25,11 +25,11 @@ It only models the `distribution + margin` part of the estimate, while:
 
 The first version uses broad practical regions:
 
-- `Oslo og østlandsområdet`
-- `Sørlandet`
-- `Vestlandet`
-- `Trøndelag`
-- `Nord-Norge`
+- `Oslo og østlandsområdet` (rute: `/ost`)
+- `Sørlandet` (`/sor`)
+- `Vestlandet` (`/vest`)
+- `Midt-Norge` (`/midt`)
+- `Nord-Norge` (`/nord`)
 
 There is also a `Norge (snitt)` fallback so the page still has a neutral default before the user chooses a region.
 

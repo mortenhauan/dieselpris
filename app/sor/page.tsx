@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { regionPageMetadata } from "@/lib/region-page-metadata";
 import { RegionDieselShell } from "../region-diesel-shell";
 
-export const metadata: Metadata = regionPageMetadata("west");
+export const metadata: Metadata = regionPageMetadata("sor");
 
 export default function Page() {
-  return <RegionDieselShell regionId="west" />;
+  return <RegionDieselShell regionId="sor" />;
 }

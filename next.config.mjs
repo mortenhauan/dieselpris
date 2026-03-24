@@ -17,7 +17,16 @@ const nextConfig = {
     unoptimized: true,
   },
   async redirects() {
-    return [{ source: "/national", destination: "/", permanent: true }];
+    return [
+      { source: "/national", destination: "/", permanent: true },
+      { source: "/oslo-east", destination: "/ost", permanent: true },
+      { source: "/south", destination: "/sor", permanent: true },
+      { source: "/øst", destination: "/ost", permanent: true },
+      { source: "/sør", destination: "/sor", permanent: true },
+      { source: "/west", destination: "/vest", permanent: true },
+      { source: "/trondelag", destination: "/midt", permanent: true },
+      { source: "/north", destination: "/nord", permanent: true },
+    ];
   },
 }
 
