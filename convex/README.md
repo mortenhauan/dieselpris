@@ -8,7 +8,7 @@ Real-time database and server functions for dieselpris. Schema lives in [`schema
 
 ## Develop
 
-Run `pnpm convex:dev` from the repo root (keep it running while you change `convex/`). It syncs functions and refreshes `convex/_generated/`.
+Run `pnpm convex:dev` from the repo root (keep it running while you change `convex/`). It syncs functions to the **dev deployment** named in `CONVEX_DEPLOYMENT` and refreshes `convex/_generated/`. Root `.env.local` must match the dashboard (cloud URL + site URL for HTTP actions).
 
 Production: `pnpm exec convex deploy` when you are ready to ship (separate from daily dev).
 

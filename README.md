@@ -28,13 +28,13 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 
 ```bash
 pnpm install
-pnpm convex:dev   # terminal 1: Convex sync + local DB (first run logs you in or use anonymous agent mode)
+pnpm convex:dev   # terminal 1: sync functions to your Convex dev deployment
 pnpm dev          # terminal 2: Next.js
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Convex writes `NEXT_PUBLIC_CONVEX_URL` to `.env.local` when you run `pnpm convex:dev`. Copy [`.env.example`](./.env.example) if you need a template; set the same variables in production (e.g. Vercel).
+`.env.local` should set `CONVEX_DEPLOYMENT`, `NEXT_PUBLIC_CONVEX_URL`, and `NEXT_PUBLIC_CONVEX_SITE_URL` (from the deployment **Summary** in the Convex dashboard, or auto-written when `pnpm convex:dev` configures the project). See [`.env.example`](./.env.example). Use the same public URL variables in production hosting (e.g. Vercel).
 
 ## Scripts
 
