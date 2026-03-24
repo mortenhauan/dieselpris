@@ -1,13 +1,13 @@
-function PulseBlock({ className }: { className?: string }) {
+const PulseBlock = function PulseBlock({ className }: { className?: string }) {
   return (
     <div
       className={`animate-pulse rounded-2xl bg-muted/60 ${className ?? ""}`}
       aria-hidden
     />
-  )
-}
+  );
+};
 
-export function DieselPageSkeleton() {
+export const DieselPageSkeleton = function DieselPageSkeleton() {
   return (
     <main>
       <section className="py-16 md:py-24">
@@ -62,5 +62,5 @@ export function DieselPageSkeleton() {
         </div>
       </section>
     </main>
-  )
-}
+  );
+};

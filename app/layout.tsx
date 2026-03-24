@@ -1,56 +1,58 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import { Footer } from '@/components/footer'
-import { SITE_URL } from '@/lib/site-url'
-import './globals.css'
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ 
+import { Footer } from "@/components/footer";
+import { SITE_URL } from "@/lib/site-url";
+
+import "./globals.css";
+
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter"
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: 'Dieselpris.no – veiledende dieselpriser og avgifter i Norge',
   description:
-    'ICE-basert råvarepris oppdatert jevnlig (ikke sanntid). Veiledende modell av avgifter og pumpepris — ikke kjøpspris eller prisgaranti.',
-  openGraph: {
-    type: 'website',
-    locale: 'nb_NO',
-    siteName: 'Dieselpris.no',
-    url: SITE_URL,
-  },
-  twitter: {
-    card: 'summary',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "ICE-basert råvarepris oppdatert jevnlig (ikke sanntid). Veiledende modell av avgifter og pumpepris — ikke kjøpspris eller prisgaranti.",
   icons: {
+    apple: "/apple-icon.png",
     icon: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
+        media: "(prefers-color-scheme: light)",
+        url: "/icon-light-32x32.png",
       },
       {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
+        media: "(prefers-color-scheme: dark)",
+        url: "/icon-dark-32x32.png",
       },
       {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        type: "image/svg+xml",
+        url: "/icon.svg",
       },
     ],
-    apple: '/apple-icon.png',
   },
-}
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    locale: "nb_NO",
+    siteName: "Dieselpris.no",
+    type: "website",
+    url: SITE_URL,
+  },
+  robots: {
+    follow: true,
+    index: true,
+  },
+  title: "Dieselpris.no – veiledende dieselpriser og avgifter i Norge",
+  twitter: {
+    card: "summary",
+  },
+};
 
-export default function RootLayout({
+const RootLayout = function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="no">
@@ -60,5 +62,6 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
-  )
-}
+  );
+};
+export default RootLayout;

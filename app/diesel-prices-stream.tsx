@@ -1,24 +1,51 @@
-import { PriceHero, PriceHeroUnavailable } from "@/components/price-hero"
-import { PriceChart } from "@/components/price-chart"
-import { TaxBreakdown } from "@/components/tax-breakdown"
-import { TaxExplainer } from "@/components/tax-explainer"
-import { FuturesForecast } from "@/components/futures-forecast"
-import { RegionalMargins } from "@/components/regional-margins"
-import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
-import { getDieselPricesData } from "@/lib/get-diesel-prices"
-import {
-  getRegionPriceProfile,
-  type RegionId,
-} from "@/lib/regional-price-model"
+import type { ReactNode } from "react";
 
-export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
-  const data = await getDieselPricesData()
-  const region = getRegionPriceProfile(regionId)
-  const currentPrice = data.current
-  const contracts = data.contracts
-  const historical = data.historical
-  const exchangeRate = data.exchange_rate.usd_nok
-  const hasLive = currentPrice !== null
+import { FuturesForecast } from "@/components/futures-forecast";
+import { PriceChart } from "@/components/price-chart";
+import { PriceHero, PriceHeroUnavailable } from "@/components/price-hero";
+import { RegionalMargins } from "@/components/regional-margins";
+import { TaxBreakdown } from "@/components/tax-breakdown";
+import { TaxExplainer } from "@/components/tax-explainer";
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
+import { getDieselPricesData } from "@/lib/get-diesel-prices";
+import { getRegionPriceProfile } from "@/lib/regional-price-model";
+import type { RegionId } from "@/lib/regional-price-model";
+
+export const DieselPricesStream = async function DieselPricesStream({
+  regionId,
+}: {
+  regionId: RegionId;
+}) {
+  const data = await getDieselPricesData();
+  const region = getRegionPriceProfile(regionId);
+  const currentPrice = data.current;
+  const { contracts } = data;
+  const { historical } = data;
+  const exchangeRate = data.exchange_rate.usd_nok;
+  const hasLive = currentPrice !== null;
+
+  let forecastBlock: ReactNode;
+  if (hasLive) {
+    forecastBlock =
+      contracts.length > 0 ? (
+        <FuturesForecast
+          contracts={contracts}
+          exchangeRate={exchangeRate}
+          regionId={regionId}
+        />
+      ) : (
+        <p className="text-sm text-muted-foreground max-w-2xl">
+          Måned-for-måned-oversikten mangler akkurat nå. Grafen med siste
+          måneder og dagens råvarepris over fungerer som vanlig.
+        </p>
+      );
+  } else {
+    forecastBlock = (
+      <p className="text-sm text-muted-foreground max-w-2xl">
+        Prognosen kan ikke vises akkurat nå. Sjekk igjen senere i dag.
+      </p>
+    );
+  }
 
   return (
     <main>
@@ -47,7 +74,9 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
             </p>
             <p className="text-sm text-muted-foreground mt-3">
               Valgt region:{" "}
-              <span className="font-medium text-foreground">{region.label}</span>
+              <span className="font-medium text-foreground">
+                {region.label}
+              </span>
               . Dette påvirker bare estimatene under, ikke den nasjonale
               råvareprisen øverst.
             </p>
@@ -62,7 +91,8 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Estimert pumpepris for {region.label.toLowerCase()}.
-                    Historiske punkter bruker avgiftssatsene som gjaldt på datoen.
+                    Historiske punkter bruker avgiftssatsene som gjaldt på
+                    datoen.
                   </p>
                 </div>
                 {historical.length > 0 ? (
@@ -77,26 +107,45 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
 
             <div className="lg:col-span-2 h-full">
               {hasLive ? (
-                <TaxBreakdown rawPrice={currentPrice.price_nok_liter} regionId={regionId} />
+                <TaxBreakdown
+                  rawPrice={currentPrice.price_nok_liter}
+                  regionId={regionId}
+                />
               ) : (
                 <div className="bg-card rounded-2xl border border-border p-6 md:p-8 h-full flex items-center justify-center text-center text-sm text-muted-foreground">
-                  Straks dagens råvarepris er på plass, ser du her hvordan den fordeles på avgifter og margin.
+                  Straks dagens råvarepris er på plass, ser du her hvordan den
+                  fordeles på avgifter og margin.
                 </div>
               )}
             </div>
           </div>
 
           <div className="mt-8 max-w-2xl rounded-xl border border-border bg-secondary/40 p-5 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground mb-2">Avvik fra stasjonspris?</p>
+            <p className="font-medium text-foreground mb-2">
+              Avvik fra stasjonspris?
+            </p>
             <p className="mb-3 leading-relaxed">
-              Estimatet bygger på børsens referansekurs (ICE), nasjonale avgifter og ett modellert påslag per region.
-              Pumpeprisen du ser kan ligge annerledes fordi blant annet:
+              Estimatet bygger på børsens referansekurs (ICE), nasjonale
+              avgifter og ett modellert påslag per region. Pumpeprisen du ser
+              kan ligge annerledes fordi blant annet:
             </p>
             <ul className="list-disc space-y-1.5 pl-5 leading-relaxed">
-              <li>stasjonen kjøper inn og setter pris ved et annet tidspunkt enn siste børskurs vi viser</li>
-              <li>kjede, kampanjer og lokal konkurranse trekker prisen opp eller ned</li>
-              <li>faktisk frakt, margin og stasjonstype varierer mer enn ett tall per region</li>
-              <li>produktvalg (f.eks. innmiks) og lokale forhold ikke er med i modellen</li>
+              <li>
+                stasjonen kjøper inn og setter pris ved et annet tidspunkt enn
+                siste børskurs vi viser
+              </li>
+              <li>
+                kjede, kampanjer og lokal konkurranse trekker prisen opp eller
+                ned
+              </li>
+              <li>
+                faktisk frakt, margin og stasjonstype varierer mer enn ett tall
+                per region
+              </li>
+              <li>
+                produktvalg (f.eks. innmiks) og lokale forhold ikke er med i
+                modellen
+              </li>
             </ul>
           </div>
         </div>
@@ -109,22 +158,12 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
               Prisprognose
             </h2>
             <p className="text-muted-foreground max-w-xl">
-              Et grovt bilde av om pumpeprisen kan ligge høyere eller lavere måned for måned fremover — ut fra hva
-              diesel handles til på børsen for hver måned.
+              Et grovt bilde av om pumpeprisen kan ligge høyere eller lavere
+              måned for måned fremover — ut fra hva diesel handles til på børsen
+              for hver måned.
             </p>
           </div>
-          {!hasLive ? (
-            <p className="text-sm text-muted-foreground max-w-2xl">
-              Prognosen kan ikke vises akkurat nå. Sjekk igjen senere i dag.
-            </p>
-          ) : contracts.length > 0 ? (
-            <FuturesForecast contracts={contracts} exchangeRate={exchangeRate} regionId={regionId} />
-          ) : (
-            <p className="text-sm text-muted-foreground max-w-2xl">
-              Måned-for-måned-oversikten mangler akkurat nå. Grafen med siste måneder og dagens råvarepris over fungerer
-              som vanlig.
-            </p>
-          )}
+          {forecastBlock}
         </div>
       </section>
 
@@ -133,7 +172,9 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
       </section>
 
       <section id="avgifter">
-        <TaxExplainer rawPrice={hasLive ? currentPrice.price_nok_liter : null} />
+        <TaxExplainer
+          rawPrice={hasLive ? currentPrice.price_nok_liter : null}
+        />
       </section>
 
       <section className="py-16 md:py-24 bg-secondary/50">
@@ -156,13 +197,15 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
               <strong className="text-foreground">
                 USD per metrisk tonn (MT)
               </strong>
-              . For å få literpris i Norge regnes det om fra tonn til liter (1 MT =
-              ca. {DIESEL_LITERS_PER_METRIC_TON} liter diesel som fast antagelse — faktisk tetthet kan
-              variere litt) og fra USD til NOK ut fra dagens valutakurs.
+              . For å få literpris i Norge regnes det om fra tonn til liter (1
+              MT = ca. {DIESEL_LITERS_PER_METRIC_TON} liter diesel som fast
+              antagelse — faktisk tetthet kan variere litt) og fra USD til NOK
+              ut fra dagens valutakurs.
             </p>
             {hasLive ? (
               <p>
-                Frontkontrakten (ICE gasoil, sammenhengende serie) ligger typisk rundt{" "}
+                Frontkontrakten (ICE gasoil, sammenhengende serie) ligger typisk
+                rundt{" "}
                 <strong className="text-foreground">
                   ${" "}
                   {currentPrice.price_usd_mt.toLocaleString("nb-NO", {
@@ -173,23 +216,25 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
                 , tilsvarende ca.{" "}
                 <strong className="text-foreground">
                   {currentPrice.price_nok_liter.toLocaleString("nb-NO", {
-                    minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
                   })}{" "}
                   kr per liter
                 </strong>{" "}
-                i ren råvarepris (avhengig av valutakurs). Med distribusjon, margin og avgifter blir det et
-                prisestimat du kan justere etter region lenger opp på siden.
+                i ren råvarepris (avhengig av valutakurs). Med distribusjon,
+                margin og avgifter blir det et prisestimat du kan justere etter
+                region lenger opp på siden.
               </p>
             ) : (
               <p>
-                Når kursene er tilbake, ligger et konkret eksempel her: frontkontrakten i USD per tonn og
-                tilsvarende råvarepris i kroner per liter.
+                Når kursene er tilbake, ligger et konkret eksempel her:
+                frontkontrakten i USD per tonn og tilsvarende råvarepris i
+                kroner per liter.
               </p>
             )}
           </div>
         </div>
       </section>
     </main>
-  )
-}
+  );
+};

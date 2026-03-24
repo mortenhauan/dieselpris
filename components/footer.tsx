@@ -1,8 +1,8 @@
-import { Droplet } from "lucide-react"
+import { Droplet } from "lucide-react";
 
-const copyrightYear = 2026
+const copyrightYear = 2026;
 
-export function Footer() {
+export const Footer = function Footer() {
   return (
     <footer className="border-t border-border py-16">
       <div className="max-w-6xl mx-auto px-6">
@@ -12,25 +12,35 @@ export function Footer() {
               <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
                 <Droplet className="h-4 w-4 text-background" />
               </div>
-              <span className="text-base font-semibold tracking-tight text-foreground">dieselpris</span>
+              <span className="text-base font-semibold tracking-tight text-foreground">
+                dieselpris
+              </span>
             </div>
             <div className="max-w-md space-y-3 text-sm leading-relaxed text-muted-foreground">
               <p>
-                Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige satser slik de er
-                oppgitt i kildene.
+                Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige
+                satser slik de er oppgitt i kildene.
               </p>
               <p className="text-xs leading-relaxed">
-                Tall og forklaringer er veiledende og kan inneholde feil eller forenklinger. Ikke
-                finansrådgivning eller prisgaranti — verifiser mot kildene ved viktige beslutninger.
+                Tall og forklaringer er veiledende og kan inneholde feil eller
+                forenklinger. Ikke finansrådgivning eller prisgaranti —
+                verifiser mot kildene ved viktige beslutninger.
               </p>
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-4 text-sm">Kilder</h3>
+            <h3 className="font-semibold text-foreground mb-4 text-sm">
+              Kilder
+            </h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <a href="https://www.ice.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                <a
+                  href="https://www.ice.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
                   ICE Futures Europe
                 </a>
               </li>
@@ -45,12 +55,22 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://lovdata.no" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                <a
+                  href="https://lovdata.no"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
                   Lovdata
                 </a>
               </li>
               <li>
-                <a href="https://www.norges-bank.no" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                <a
+                  href="https://www.norges-bank.no"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
                   Norges Bank
                 </a>
               </li>
@@ -58,10 +78,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-4 text-sm">Om prisene</h3>
+            <h3 className="font-semibold text-foreground mb-4 text-sm">
+              Om prisene
+            </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Prisene er basert på ICE lavsvovel gasoil (futures) og gir en indikasjon på råvarepris.
-              Faktiske pumpepriser varierer.
+              Prisene er basert på ICE lavsvovel gasoil (futures) og gir en
+              indikasjon på råvarepris. Faktiske pumpepriser varierer.
             </p>
           </div>
         </div>
@@ -71,5 +93,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};

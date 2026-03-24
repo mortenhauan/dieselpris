@@ -1,51 +1,58 @@
-"use client"
+"use client";
 
-import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react"
-import { pumpPriceComponents } from "@/lib/pump-price-model"
+import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react";
 
-type TaxExplainerProps = {
-  rawPrice: number | null
+import { pumpPriceComponents } from "@/lib/pump-price-model";
+
+interface TaxExplainerProps {
+  rawPrice: number | null;
 }
 
-export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
-  const components = rawPrice !== null ? pumpPriceComponents(rawPrice) : null
+export const TaxExplainer = function TaxExplainer({
+  rawPrice,
+}: TaxExplainerProps) {
+  const components = rawPrice === null ? null : pumpPriceComponents(rawPrice);
   const taxPercent =
     components && components.total > 0
-      ? ((components.veibruks + components.co2 + components.mva) / components.total) * 100
-      : null
+      ? ((components.veibruks + components.co2 + components.mva) /
+          components.total) *
+        100
+      : null;
 
   const taxItems = [
     {
+      description:
+        "Dekker samfunnets kostnader ved bilbruk – veislitasje, ulykker og kødannelse.",
       icon: Truck,
-      title: "Veibruksavgift",
       rate: "2,28",
+      title: "Veibruksavgift",
+      trend: "Ned fra 2,71 kr (2024)",
       unit: "kr/L",
-      description: "Dekker samfunnets kostnader ved bilbruk – veislitasje, ulykker og kødannelse.",
-      trend: "Ned fra 2,71 kr (2024)"
     },
     {
+      description:
+        "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Justeres i budsjettrunder.",
       icon: Leaf,
-      title: "CO2-avgift",
       rate: "4,42",
+      title: "CO2-avgift",
+      trend: "Opp fra 3,17 kr (2024)",
       unit: "kr/L",
-      description: "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Justeres i budsjettrunder.",
-      trend: "Opp fra 3,17 kr (2024)"
     },
     {
-      icon: Receipt,
-      title: "Merverdiavgift",
-      rate: "25",
-      unit: "%",
       description: "Beregnes av totalprisen inkludert alle andre avgifter.",
-      trend: "Uendret"
+      icon: Receipt,
+      rate: "25",
+      title: "Merverdiavgift",
+      trend: "Uendret",
+      unit: "%",
     },
-  ]
+  ];
 
   const historicalData = [
-    { year: "2024", vei: "2,71", co2: "3,17", total: "5,88" },
-    { year: "2025", vei: "2,69", co2: "3,79", total: "6,48" },
-    { year: "2026", vei: "2,28", co2: "4,42", total: "6,70", current: true },
-  ]
+    { co2: "3,17", total: "5,88", vei: "2,71", year: "2024" },
+    { co2: "3,79", total: "6,48", vei: "2,69", year: "2025" },
+    { co2: "4,42", current: true, total: "6,70", vei: "2,28", year: "2026" },
+  ];
 
   return (
     <section className="py-16 md:py-24 bg-secondary/50">
@@ -55,14 +62,16 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
             Norske dieselavgifter
           </h2>
           <p className="text-muted-foreground max-w-xl">
-            {taxPercent !== null ? (
+            {taxPercent === null ? (
               <>
-                Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av pumpeprisen til staten i form av
-                veibruksavgift, CO2-avgift og MVA.
+                Andelen som går til staten avhenger av råvareprisen. Med en
+                fersk råvarepris vises tallet her.
               </>
             ) : (
               <>
-                Andelen som går til staten avhenger av råvareprisen. Med en fersk råvarepris vises tallet her.
+                Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av
+                pumpeprisen til staten i form av veibruksavgift, CO2-avgift og
+                MVA.
               </>
             )}
           </p>
@@ -70,17 +79,26 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
 
         {/* Tax cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-12">
-          {taxItems.map((item, index) => (
-            <div key={index} className="bg-card rounded-2xl border border-border p-6">
+          {taxItems.map((item) => (
+            <div
+              key={item.title}
+              className="bg-card rounded-2xl border border-border p-6"
+            >
               <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center mb-5">
                 <item.icon className="h-6 w-6 text-background" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                {item.title}
+              </h3>
               <div className="flex items-baseline gap-1 mb-3">
-                <span className="text-4xl font-bold text-foreground">{item.rate}</span>
+                <span className="text-4xl font-bold text-foreground">
+                  {item.rate}
+                </span>
                 <span className="text-muted-foreground">{item.unit}</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                {item.description}
+              </p>
               <div className="flex items-center gap-2 text-sm">
                 <ArrowRight className="h-4 w-4 text-accent" />
                 <span className="text-accent font-medium">{item.trend}</span>
@@ -92,45 +110,71 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
         {/* Historical table */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="p-6 md:p-8 border-b border-border">
-            <h3 className="font-semibold text-foreground">Utvikling over tid</h3>
-            <p className="text-sm text-muted-foreground">Faste avgifter per liter (ekskl. MVA)</p>
+            <h3 className="font-semibold text-foreground">
+              Utvikling over tid
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Faste avgifter per liter (ekskl. MVA)
+            </p>
           </div>
           <div className="overflow-x-visible md:overflow-x-auto">
             <table className="w-full">
               <thead className="hidden md:table-header-group">
                 <tr className="bg-secondary/50">
-                  <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">År</th>
-                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Veibruksavgift</th>
-                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">CO2-avgift</th>
-                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Sum avgifter</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">
+                    År
+                  </th>
+                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">
+                    Veibruksavgift
+                  </th>
+                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">
+                    CO2-avgift
+                  </th>
+                  <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">
+                    Sum avgifter
+                  </th>
                 </tr>
               </thead>
               <tbody className="block md:table-row-group">
-                {historicalData.map((row, index) => (
+                {historicalData.map((row) => (
                   <tr
-                    key={index}
+                    key={row.year}
                     className={`block border-t border-border p-4 first:border-t-0 md:table-row md:p-0 ${row.current ? "bg-foreground text-background" : ""}`}
                   >
-                    <td className={`block pb-3 font-semibold md:table-cell md:px-6 md:py-4 ${row.current ? "" : "text-foreground"}`}>
-                      <span className={`block text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                    <td
+                      className={`block pb-3 font-semibold md:table-cell md:px-6 md:py-4 ${row.current ? "" : "text-foreground"}`}
+                    >
+                      <span
+                        className={`block text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}
+                      >
                         År
                       </span>
                       {row.year}
                     </td>
-                    <td className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}>
-                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                    <td
+                      className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}
+                    >
+                      <span
+                        className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}
+                      >
                         Veibruksavgift
                       </span>
                       <span>{row.vei} kr</span>
                     </td>
-                    <td className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}>
-                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                    <td
+                      className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}
+                    >
+                      <span
+                        className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}
+                      >
                         CO2-avgift
                       </span>
                       <span>{row.co2} kr</span>
                     </td>
                     <td className="flex items-center justify-between gap-4 py-2 font-bold tabular-nums md:table-cell md:px-6 md:py-4 md:text-right">
-                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                      <span
+                        className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}
+                      >
                         Sum avgifter
                       </span>
                       <span>{row.total} kr</span>
@@ -142,13 +186,16 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
           </div>
           <div className="space-y-3 p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
-              Veibruksavgiften har blitt redusert, men CO2-avgiften øker mer. Samlet har avgiftene økt med 22 øre fra 2025 til 2026.
+              Veibruksavgiften har blitt redusert, men CO2-avgiften øker mer.
+              Samlet har avgiftene økt med 22 øre fra 2025 til 2026.
             </p>
             <p className="text-xs text-muted-foreground">
-              Modellen inkluderer ikke alle mulige små satser og særregler. Svovelavgift utløses for mineralolje med
-              svovelinnhold over 0,05 vektprosent; vanlig veidiesel (lavsvovel) ligger under denne grensen og får
-              normalt ikke denne avgiften. Andre mineraloljeprodukter eller avvikende svovelinnhold kan være annerledes.
-              Se satser og regelverk hos{" "}
+              Modellen inkluderer ikke alle mulige små satser og særregler.
+              Svovelavgift utløses for mineralolje med svovelinnhold over 0,05
+              vektprosent; vanlig veidiesel (lavsvovel) ligger under denne
+              grensen og får normalt ikke denne avgiften. Andre
+              mineraloljeprodukter eller avvikende svovelinnhold kan være
+              annerledes. Se satser og regelverk hos{" "}
               <a
                 href="https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/avgiftssatser-2026/id3121982/"
                 target="_blank"
@@ -163,5 +210,5 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

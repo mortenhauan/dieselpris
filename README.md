@@ -39,13 +39,14 @@ The repo includes [`vercel.ts`](./vercel.ts) ([programmatic Vercel config](https
 
 ## Scripts
 
-| Command          | Description            |
-| ---------------- | ---------------------- |
-| `pnpm dev`       | Development server     |
-| `pnpm build`     | Production build       |
-| `pnpm start`     | Run production server  |
-| `pnpm lint`      | ESLint                 |
-| `pnpm typecheck` | TypeScript (no emit)   |
+| Command                    | Description                           |
+| -------------------------- | ------------------------------------- |
+| `pnpm dev`                 | Development server                    |
+| `pnpm build`               | Production build                      |
+| `pnpm start`               | Run production server                 |
+| `pnpm lint` / `pnpm check` | Ultracite (Oxlint + Oxfmt), read-only |
+| `pnpm fix`                 | Ultracite auto-fix / format           |
+| `pnpm typecheck`           | TypeScript (no emit)                  |
 
 ## Project layout
 

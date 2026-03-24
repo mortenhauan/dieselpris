@@ -1,1 +1,1 @@
-export const SITE_URL = "https://dieselpris.no" as const
+export const SITE_URL = "https://dieselpris.no" as const;

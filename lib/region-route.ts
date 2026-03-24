@@ -1,6 +1,9 @@
-import { DEFAULT_REGION_ID, type RegionId } from "@/lib/regional-price-model";
+import { DEFAULT_REGION_ID } from "@/lib/regional-price-model";
+import type { RegionId } from "@/lib/regional-price-model";
 
-export function regionPath(regionId: RegionId): string {
-  if (regionId === DEFAULT_REGION_ID) return "/";
+export const regionPath = function regionPath(regionId: RegionId): string {
+  if (regionId === DEFAULT_REGION_ID) {
+    return "/";
+  }
   return `/${regionId}`;
-}
+};

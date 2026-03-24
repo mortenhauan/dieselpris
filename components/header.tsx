@@ -1,13 +1,10 @@
 "use client";
 
+import { Fuel } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fuel } from "lucide-react";
-import {
-  REGION_PRICE_PROFILES,
-  type RegionId,
-} from "@/lib/regional-price-model";
-import { regionPath } from "@/lib/region-route";
+import { useCallback } from "react";
+
 import {
   Select,
   SelectContent,
@@ -15,13 +12,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { regionPath } from "@/lib/region-route";
+import { REGION_PRICE_PROFILES } from "@/lib/regional-price-model";
+import type { RegionId } from "@/lib/regional-price-model";
 
-type HeaderProps = {
+interface HeaderProps {
   selectedRegionId: RegionId;
-};
+}
 
-export function Header({ selectedRegionId }: HeaderProps) {
+export const Header = function Header({ selectedRegionId }: HeaderProps) {
   const router = useRouter();
+  const onRegionChange = useCallback(
+    (value: string) => {
+      router.push(regionPath(value as RegionId));
+    },
+    [router]
+  );
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="max-w-6xl mx-auto px-6 py-4">
@@ -42,12 +48,7 @@ export function Header({ selectedRegionId }: HeaderProps) {
               >
                 Region
               </span>
-              <Select
-                value={selectedRegionId}
-                onValueChange={(value) => {
-                  router.push(regionPath(value as RegionId));
-                }}
-              >
+              <Select value={selectedRegionId} onValueChange={onRegionChange}>
                 <SelectTrigger
                   aria-labelledby="region-select-label"
                   size="sm"
@@ -90,4 +91,4 @@ export function Header({ selectedRegionId }: HeaderProps) {
       </div>
     </header>
   );
-}
+};
