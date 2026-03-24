@@ -3,6 +3,7 @@
 import { Info } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
 import {
   PUMP_PRICE_STACK_LAYERS,
   type PumpPriceLayerKey,
@@ -24,6 +25,7 @@ const BREAKDOWN_HINTS: Record<PumpPriceLayerKey, string> = {
 
 interface TaxBreakdownProps {
   rawPrice: number
+  regionId: RegionId
 }
 
 function BreakdownHint({ label, description }: { label: string; description: string }) {
@@ -45,8 +47,9 @@ function BreakdownHint({ label, description }: { label: string; description: str
   )
 }
 
-export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
-  const c = pumpPriceComponents(rawPrice)
+export function TaxBreakdown({ rawPrice, regionId }: TaxBreakdownProps) {
+  const region = getRegionPriceProfile(regionId)
+  const c = pumpPriceComponents(rawPrice, regionId)
   const components = PUMP_PRICE_STACK_LAYERS.map((layer) => ({
     key: layer.key,
     name: layer.name,
@@ -63,7 +66,7 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
     <div className="bg-card rounded-2xl border border-border p-6 md:p-8 h-full">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground mb-1">Prissammensetting</h3>
-        <p className="text-sm text-muted-foreground">Slik er pumpeprisen bygget opp</p>
+        <p className="text-sm text-muted-foreground">Estimert pumpepris for {region.label.toLowerCase()}</p>
       </div>
 
       <div className="relative h-48 mb-6">

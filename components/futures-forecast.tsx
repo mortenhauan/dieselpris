@@ -1,6 +1,5 @@
 "use client"
 
-import { useMemo } from "react"
 import {
   Area,
   AreaChart,
@@ -12,6 +11,7 @@ import {
   Legend,
 } from "recharts"
 import { pumpPriceComponents } from "@/lib/pump-price-model"
+import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
 
 interface Contract {
   contract_code: string
@@ -24,6 +24,7 @@ interface Contract {
 interface FuturesForecastProps {
   contracts: Contract[]
   exchangeRate: number
+  regionId: RegionId
 }
 
 type ChartRow = {
@@ -87,29 +88,26 @@ function FuturesAreaTooltip({ active, payload, label, chartData }: FuturesToolti
   return null
 }
 
-export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProps) {
-  const chartData = useMemo(() => {
-    const litersPerTon = 1176
+export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesForecastProps) {
+  const region = getRegionPriceProfile(regionId)
+  const litersPerTon = 1176
+  const chartData = contracts.map((contract) => {
+    const rawPrice = (contract.last_price * exchangeRate) / litersPerTon
+    const parts = pumpPriceComponents(rawPrice, regionId)
 
-    return contracts.map((contract) => {
-      // Convert USD/MT to NOK/liter
-      const rawPrice = (contract.last_price * exchangeRate) / litersPerTon
-      const parts = pumpPriceComponents(rawPrice)
-
-      return {
-        month: contract.contract_month,
-        code: contract.contract_code,
-        rawPrice: parts.raw,
-        veibruksavgift: parts.veibruks,
-        co2Avgift: parts.co2,
-        distribusjon: parts.distribution,
-        mva: parts.mva,
-        total: parts.total,
-        change: contract.change,
-        changePercent: contract.change_percent,
-      }
-    })
-  }, [contracts, exchangeRate])
+    return {
+      month: contract.contract_month,
+      code: contract.contract_code,
+      rawPrice: parts.raw,
+      veibruksavgift: parts.veibruks,
+      co2Avgift: parts.co2,
+      distribusjon: parts.distribution,
+      mva: parts.mva,
+      total: parts.total,
+      change: contract.change,
+      changePercent: contract.change_percent,
+    }
+  })
 
   const firstPrice = chartData[0]?.total ?? 0
   const lastPrice = chartData[chartData.length - 1]?.total ?? 0
@@ -123,8 +121,9 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
           Estimert pumpepris fremover
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-          Basert på terminkontrakter fra ICE-børsen viser vi estimert pumpepris for kommende måneder.
-          Diagrammet viser alle kostnadskomponenter stablet oppover: råvarepris, avgifter, distribusjon og MVA.
+          Basert på terminkontrakter fra ICE-børsen viser vi estimert pumpepris for kommende måneder i{" "}
+          {region.label.toLowerCase()}. Diagrammet viser råvarepris, avgifter, distribusjon og MVA stablet oppå
+          hverandre.
         </p>
       </div>
 
@@ -261,7 +260,7 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
           <span>Avgifter basert på 2026-satser</span>
-          <span>Distribusjon: gjennomsnitt for Norge</span>
+          <span>Distribusjon og margin: {region.label.toLowerCase()}</span>
           <span>Kilde: ICE Futures Europe</span>
         </div>
       </div>

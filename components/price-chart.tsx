@@ -15,6 +15,7 @@ import {
   type PumpPriceLayerKey,
   pumpPriceComponents,
 } from "@/lib/pump-price-model"
+import type { RegionId } from "@/lib/regional-price-model"
 
 /** Matches API `historical` rows: ICE close USD/MT + NOK/liter (råvare). */
 interface HistoricalData {
@@ -28,6 +29,7 @@ type StackedRow = HistoricalData &
 
 interface PriceChartProps {
   data: HistoricalData[]
+  regionId: RegionId
 }
 
 const Y_STEP_KR = 5
@@ -40,9 +42,9 @@ function impliedUsdNok(priceUsdMt: number, nokPerLiter: number): number | null {
   return Number.isFinite(v) ? v : null
 }
 
-function toStackedRows(data: HistoricalData[]): StackedRow[] {
+function toStackedRows(data: HistoricalData[], regionId: RegionId): StackedRow[] {
   return data.map((row) => {
-    const parts = pumpPriceComponents(row.price_nok_liter, row.date)
+    const parts = pumpPriceComponents(row.price_nok_liter, regionId, row.date)
     return {
       ...row,
       raw: parts.raw,
@@ -108,8 +110,8 @@ function axisTicksFromStacked(data: StackedRow[]) {
   }
 }
 
-export function PriceChart({ data }: PriceChartProps) {
-  const stackedData = useMemo(() => toStackedRows(data), [data])
+export function PriceChart({ data, regionId }: PriceChartProps) {
+  const stackedData = useMemo(() => toStackedRows(data, regionId), [data, regionId])
   const { monthCategories, yTicks, yDomain, spanYears } = useMemo(
     () => axisTicksFromStacked(stackedData),
     [stackedData],
@@ -132,9 +134,10 @@ export function PriceChart({ data }: PriceChartProps) {
     `${value.toLocaleString("nb-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr`
 
   return (
-    <div className="h-[300px] md:h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={stackedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+    <div className="w-full">
+      <div className="h-[240px] sm:h-[300px] md:h-[400px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={stackedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <XAxis
             dataKey="date"
             type="category"
@@ -223,9 +226,10 @@ export function PriceChart({ data }: PriceChartProps) {
               strokeDasharray="4 5"
             />
           ))}
-        </AreaChart>
-      </ResponsiveContainer>
-      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 justify-center">
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:flex-wrap sm:justify-center">
         {PUMP_PRICE_STACK_LAYERS.map((layer) => (
           <span key={layer.key} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: layer.color }} />

@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { Header } from "@/components/header"
 import { PriceHero } from "@/components/price-hero"
@@ -9,6 +10,7 @@ import { TaxExplainer } from "@/components/tax-explainer"
 import { FuturesForecast } from "@/components/futures-forecast"
 import { RegionalMargins } from "@/components/regional-margins"
 import type { DieselPricesPayload } from "@/lib/get-diesel-prices"
+import { DEFAULT_REGION_ID, getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
 
 const FIFTEEN_MIN_MS = 15 * 60 * 1000
 
@@ -19,6 +21,7 @@ type Props = {
 }
 
 export function DieselPrisPageClient({ initialData }: Props) {
+  const [selectedRegionId, setSelectedRegionId] = useState<RegionId>(DEFAULT_REGION_ID)
   const { data, error, isLoading } = useSWR<DieselPricesPayload>("/api/diesel-prices", fetcher, {
     fallbackData: initialData,
     refreshInterval: FIFTEEN_MIN_MS,
@@ -38,10 +41,11 @@ export function DieselPrisPageClient({ initialData }: Props) {
   const historical = data?.historical ?? []
   const exchangeRate = data?.exchange_rate?.usd_nok ?? 11
   const showChartLoading = isLoading && historical.length === 0
+  const selectedRegion = useMemo(() => getRegionPriceProfile(selectedRegionId), [selectedRegionId])
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header selectedRegionId={selectedRegionId} onRegionChange={setSelectedRegionId} />
 
       <main>
         <PriceHero
@@ -60,7 +64,11 @@ export function DieselPrisPageClient({ initialData }: Props) {
                 Prissammensetting
               </h2>
               <p className="text-muted-foreground max-w-xl">
-                Se hvordan pumpeprisen er bygget opp, fra råvarepris til endelig pris.
+                Se hvordan råvarepris, avgifter og modellert regional distribusjon bygger opp prisestimatet.
+              </p>
+              <p className="text-sm text-muted-foreground mt-3">
+                Valgt region: <span className="font-medium text-foreground">{selectedRegion.label}</span>. Dette
+                påvirker bare estimatene under, ikke den nasjonale råvareprisen øverst.
               </p>
             </div>
 
@@ -70,11 +78,12 @@ export function DieselPrisPageClient({ initialData }: Props) {
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-foreground mb-1">Estimert pumpepris (90 dager)</h3>
                     <p className="text-sm text-muted-foreground">
-                      Estimert pumpepris (kr/l). Historiske punkter bruker avgiftssatsene som gjaldt på datoen.
+                      Estimert pumpepris for {selectedRegion.label.toLowerCase()}. Historiske punkter bruker
+                      avgiftssatsene som gjaldt på datoen.
                     </p>
                   </div>
                   {historical.length > 0 ? (
-                    <PriceChart data={historical} />
+                    <PriceChart data={historical} regionId={selectedRegionId} />
                   ) : (
                     <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                       {showChartLoading ? "Laster prisdata..." : "Ingen data tilgjengelig"}
@@ -84,7 +93,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
               </div>
 
               <div className="lg:col-span-2 h-full">
-                <TaxBreakdown rawPrice={currentPrice.price_nok_liter} />
+                <TaxBreakdown rawPrice={currentPrice.price_nok_liter} regionId={selectedRegionId} />
               </div>
             </div>
           </div>
@@ -97,11 +106,12 @@ export function DieselPrisPageClient({ initialData }: Props) {
                 Prisprognose
               </h2>
               <p className="text-muted-foreground max-w-xl">
-                Estimert pumpepris basert på terminkontrakter fra ICE-børsen med alle avgifter inkludert.
+                Estimert pumpepris for {selectedRegion.label.toLowerCase()}, basert på terminkontrakter fra ICE-børsen
+                og dagens avgifter.
               </p>
             </div>
             {contracts.length > 0 ? (
-              <FuturesForecast contracts={contracts} exchangeRate={exchangeRate} />
+              <FuturesForecast contracts={contracts} exchangeRate={exchangeRate} regionId={selectedRegionId} />
             ) : (
               <p className="text-sm text-muted-foreground max-w-2xl">
                 Terminkurve med flere måneder vises når vi har kontraktsrekke fra børsen. Akkurat nå viser vi én
@@ -112,7 +122,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
         </section>
 
         <section id="distribusjon">
-          <RegionalMargins />
+          <RegionalMargins selectedRegionId={selectedRegionId} />
         </section>
 
         <section id="avgifter">
@@ -150,8 +160,8 @@ export function DieselPrisPageClient({ initialData }: Props) {
                   })}{" "}
                   kr per liter
                 </strong>{" "}
-                i ren råvarepris (avhengig av valutakurs). Legg til distribusjon, margin og avgifter, og du ender
-                på en pumpepris rundt 21–23 kr per liter.
+                i ren råvarepris (avhengig av valutakurs). Når vi legger til distribusjon, margin og avgifter, får du
+                et prisestimat som kan justeres etter region lenger opp på siden.
               </p>
             </div>
           </div>

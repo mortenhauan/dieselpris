@@ -1,8 +1,10 @@
+import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
+
 export type PumpPriceRates = {
   veibruks: number
   co2: number
   mvaRate: number
-  distribution: number
+  defaultDistribution: number
 }
 
 type ScheduledPumpPriceRates = PumpPriceRates & {
@@ -15,7 +17,7 @@ type ScheduledPumpPriceRates = PumpPriceRates & {
  * - Regjeringen: Avgiftssatser 2026 (med 2025/2026-tabell)
  * - Skatteetaten: Veibruksavgift på drivstoff / Merverdiavgift
  *
- * Distribusjon er fortsatt en modellert, fast margin og ikke en offentlig avgiftssats.
+ * Distribusjon er fortsatt en modellert margin og ikke en offentlig avgiftssats.
  */
 export const PUMP_PRICE_RATE_SCHEDULE: ReadonlyArray<ScheduledPumpPriceRates> = [
   {
@@ -23,14 +25,14 @@ export const PUMP_PRICE_RATE_SCHEDULE: ReadonlyArray<ScheduledPumpPriceRates> = 
     veibruks: 2.69,
     co2: 3.79,
     mvaRate: 0.25,
-    distribution: 3.5,
+    defaultDistribution: 3.5,
   },
   {
     effectiveFrom: "2026-01-01",
     veibruks: 2.28,
     co2: 4.42,
     mvaRate: 0.25,
-    distribution: 3.5,
+    defaultDistribution: 3.5,
   },
 ] as const
 
@@ -58,7 +60,7 @@ export function getPumpPriceRates(atDate?: string | Date): PumpPriceRates {
 export const VEIBRUKSAVGIFT = getPumpPriceRates().veibruks
 export const CO2_AVGIFT = getPumpPriceRates().co2
 export const MVA_RATE = getPumpPriceRates().mvaRate
-export const DISTRIBUTION_MARGIN = getPumpPriceRates().distribution
+export const DISTRIBUTION_MARGIN = getPumpPriceRates().defaultDistribution
 
 export type PumpPriceLayerKey = "raw" | "distribution" | "veibruks" | "co2" | "mva"
 
@@ -79,10 +81,13 @@ export const PUMP_PRICE_STACK_LAYERS: ReadonlyArray<{
 
 export function pumpPriceComponents(
   rawNokPerLiter: number,
+  regionId?: RegionId,
   atDate?: string | Date,
 ): PumpPriceComponents {
   const rates = getPumpPriceRates(atDate)
-  const distribution = rates.distribution
+  const distribution = regionId
+    ? getRegionPriceProfile(regionId).distributionNokPerLiter
+    : rates.defaultDistribution
   const veibruks = rates.veibruks
   const co2 = rates.co2
   const priceBeforeMva = rawNokPerLiter + distribution + veibruks + co2

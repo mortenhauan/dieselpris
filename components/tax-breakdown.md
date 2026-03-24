@@ -4,7 +4,9 @@ Estimated pump-price breakdown card shown on the diesel price page.
 
 ## Intent
 
-Help users understand what makes up the pump price without requiring tax or commodity-market knowledge.
+Help users understand what makes up the estimated pump price without requiring tax or commodity-market knowledge.
+
+The card now reflects the selected region for the modeled `distribution` part of the estimate, while public taxes remain national.
 
 The item labels stay short in the main list, while the info buttons provide short plain-language explanations for:
 

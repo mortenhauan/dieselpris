@@ -14,6 +14,8 @@ Keep one source of truth for how the app turns a raw diesel price in `NOK/liter`
 
 The model is used by the current price breakdown, the 90-day history chart, and the futures-based forecast so the same math is applied everywhere.
 
+Regional selection is layered on top through [`regional-price-model.ts`](./regional-price-model.ts). Public taxes remain national, while the modeled `distribution` part can vary by selected region.
+
 ## Historical handling
 
 The tax schedule is date-aware. This matters because the 90-day chart can span a year boundary.
@@ -33,4 +35,6 @@ If the chart later expands further back in time, this schedule should be extende
 
 ## Non-tax assumption
 
-`distribution` is not an official tax rate. It remains a fixed model assumption for now, so historical correctness in this file covers the public avgifter and `MVA`, not changing retail margins over time.
+`distribution` is not an official tax rate. The national default remains in this file, while region-specific estimate inputs live in `regional-price-model.ts`.
+
+Historical correctness in this file covers the public avgifter and `MVA`, not changing retail margins over time.

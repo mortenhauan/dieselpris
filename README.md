@@ -9,7 +9,7 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 - Current price context and change (USD/MT and NOK/litre where applicable)
 - Historical chart and futures curve-style views with date-aware public avgifter
 - Tax breakdown and plain-language explainers
-- Regional margin perspectives
+- Regional estimate selector and margin explainer
 
 ## Tech stack
 
