@@ -140,9 +140,8 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
               <strong className="text-foreground">
                 USD per metrisk tonn (MT)
               </strong>
-              . For å beregne prisen per liter i Norge, må vi regne om fra tonn
-              til liter (1 MT = ca. 1176 liter diesel) og fra USD til NOK basert
-              på dagens valutakurs.
+              . For å få literpris i Norge regnes det om fra tonn til liter (1 MT =
+              ca. 1176 liter diesel) og fra USD til NOK ut fra dagens valutakurs.
             </p>
             {hasLive ? (
               <p>
@@ -162,13 +161,13 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
                   })}{" "}
                   kr per liter
                 </strong>{" "}
-                i ren råvarepris (avhengig av valutakurs). Når vi legger til distribusjon, margin og avgifter, får du
-                et prisestimat som kan justeres etter region lenger opp på siden.
+                i ren råvarepris (avhengig av valutakurs). Med distribusjon, margin og avgifter blir det et
+                prisestimat du kan justere etter region lenger opp på siden.
               </p>
             ) : (
               <p>
-                Når live kurser er tilbake, viser vi et konkret eksempel på frontkontrakten i USD per tonn og
-                tilsvarende råvarepris i kroner per liter her.
+                Når kursene er tilbake, ligger et konkret eksempel her: frontkontrakten i USD per tonn og
+                tilsvarende råvarepris i kroner per liter.
               </p>
             )}
           </div>

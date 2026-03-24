@@ -31,7 +31,7 @@ const INSTRUMENT_TOOLTIP_DETAIL =
 const RAW_NOK_TOOLTIP_SUMMARY = "Omregnet råvarepris i kroner per liter"
 
 const RAW_NOK_TOOLTIP_FORMULA =
-  "Her har vi regnet om markedsprisen fra USD per tonn til kroner per liter. Tallet viser bare råvarekostnaden og inkluderer ikke avgifter, distribusjon, margin eller MVA."
+  "Tallet er markedsprisen omregnet fra USD per tonn til kroner per liter. Det er bare råvarekostnad — ikke avgifter, distribusjon, margin eller MVA."
 
 function rawNokTooltipSourceLine(exchangeSource?: string): string {
   if (exchangeSource?.includes("Norges Bank")) {
@@ -40,7 +40,7 @@ function rawNokTooltipSourceLine(exchangeSource?: string): string {
   if (exchangeSource?.trim()) {
     return `Valutakilde: ${exchangeSource.trim()}.`
   }
-  return "Når vi ikke får kurs fra Norges Bank, bruker vi en fast reservekurs for USD/NOK."
+  return "Uten fersk kurs fra Norges Bank brukes en fast reservekurs for USD/NOK."
 }
 
 interface PriceHeroProps {

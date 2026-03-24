@@ -71,7 +71,7 @@ export function RegionalMargins({ selectedRegionId }: RegionalMarginsProps) {
               <div>
                 <h3 className="text-lg font-semibold text-foreground">Regionale forskjeller</h3>
                 <p className="text-sm text-muted-foreground">
-                  Slik justerer vi prisestimatet per region. Valgt region er markert.
+                  Prisestimatet varierer litt per region ut fra transport og konkurranse. Valgt region er markert.
                 </p>
               </div>
             </div>

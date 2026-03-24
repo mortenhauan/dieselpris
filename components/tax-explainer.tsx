@@ -62,7 +62,7 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
               </>
             ) : (
               <>
-                Andelen som går til staten avhenger av råvareprisen. Når vi har live pris, viser vi et tall her.
+                Andelen som går til staten avhenger av råvareprisen. Med en fersk råvarepris vises tallet her.
               </>
             )}
           </p>
