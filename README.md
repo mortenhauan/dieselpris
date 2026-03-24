@@ -17,6 +17,7 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 - React 19, TypeScript
 - [Tailwind CSS](https://tailwindcss.com/) 4
 - [SWR](https://swr.vercel.app/) for client fetching
+- [Convex](https://www.convex.dev/) for database and server functions ([`convex/`](./convex/README.md))
 - [pnpm](https://pnpm.io/) as package manager
 
 ## Requirements
@@ -27,10 +28,13 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 
 ```bash
 pnpm install
-pnpm dev
+pnpm convex:dev   # terminal 1: Convex sync + local DB (first run logs you in or use anonymous agent mode)
+pnpm dev          # terminal 2: Next.js
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Convex writes `NEXT_PUBLIC_CONVEX_URL` to `.env.local` when you run `pnpm convex:dev`. Copy [`.env.example`](./.env.example) if you need a template; set the same variables in production (e.g. Vercel).
 
 ## Scripts
 
@@ -41,11 +45,13 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm start`   | Run production server    |
 | `pnpm lint`    | ESLint                   |
 | `pnpm typecheck` | TypeScript (no emit)   |
+| `pnpm convex:dev` | Convex dev server (DB + function deploy) |
 
 ## Project layout
 
 - `app/` — routes, layout, and API routes (e.g. `app/api/diesel-prices/`)
 - `components/` — UI and feature blocks (charts, tax explainers, etc.)
+- `convex/` — Convex schema, queries, mutations, actions ([readme](convex/README.md))
 - `lib/` — shared utilities
 
 ## Data and responsibility
