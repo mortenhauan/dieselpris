@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   title: "Dieselpris.no – veiledende dieselpriser og avgifter i Norge",
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
   },
 };
 

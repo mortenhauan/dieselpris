@@ -27,11 +27,13 @@ export const regionPageMetadata = function regionPageMetadata(
     description,
     openGraph: {
       description,
+      siteName: "Dieselpris.no",
       title,
       url: canonical,
     },
     title,
     twitter: {
+      card: "summary_large_image",
       description,
       title,
     },
