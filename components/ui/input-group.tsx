@@ -102,6 +102,7 @@ const InputGroupAddon = function InputGroupAddon({
       className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={handleAddonPointerDown}
       onKeyDown={handleAddonKeyDown}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- keyboard focus moves to adjacent input; group keeps semantics when addon contains buttons
       tabIndex={0}
       {...props}
     />
