@@ -9,9 +9,9 @@ const regionDescription = function regionDescription(
   profile: RegionPriceProfile
 ): string {
   if (profile.id === "national") {
-    return "ICE-basert råvarepris oppdatert jevnlig. Veiledende modell av norske avgifter og pumpepris — ikke kjøpspris.";
+    return "Forstå bedre råvarepriser og avgifter på diesel i Norge.";
   }
-  return `ICE lavsvovel gasoil og veiledende pumpeprisestimat for ${profile.label}: avgifter, mva og modellert regional distribusjon og margin.`;
+  return `Forstå bedre hvordan råvarepriser, avgifter og regionale forskjeller påvirker diesel i ${profile.label}.`;
 };
 
 export const regionPageMetadata = function regionPageMetadata(

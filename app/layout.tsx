@@ -13,8 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  description:
-    "ICE-basert råvarepris oppdatert jevnlig (ikke sanntid). Veiledende modell av avgifter og pumpepris — ikke kjøpspris eller prisgaranti.",
+  description: "Forstå bedre råvarepriser og avgifter på diesel i Norge.",
   icons: {
     apple: "/apple-icon.png",
     icon: [
@@ -43,7 +42,8 @@ export const metadata: Metadata = {
     follow: true,
     index: true,
   },
-  title: "Dieselpris.no – veiledende dieselpriser og avgifter i Norge",
+  title:
+    "Dieselpris.no – forstå bedre råvarepriser og avgifter på diesel i Norge",
   twitter: {
     card: "summary_large_image",
   },
