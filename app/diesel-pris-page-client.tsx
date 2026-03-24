@@ -70,7 +70,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-foreground mb-1">Estimert pumpepris (90 dager)</h3>
                     <p className="text-sm text-muted-foreground">
-                      Estimert pumpepris (kr/l). Faktisk pumpepris varierer mellom stasjoner og regioner.
+                      Estimert pumpepris (kr/l). Historiske punkter bruker avgiftssatsene som gjaldt på datoen.
                     </p>
                   </div>
                   {historical.length > 0 ? (
@@ -116,7 +116,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
         </section>
 
         <section id="avgifter">
-          <TaxExplainer />
+          <TaxExplainer rawPrice={currentPrice.price_nok_liter} />
         </section>
 
         <section className="py-16 md:py-24 bg-secondary/50">

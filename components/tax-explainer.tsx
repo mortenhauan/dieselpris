@@ -1,8 +1,17 @@
 "use client"
 
 import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react"
+import { pumpPriceComponents } from "@/lib/pump-price-model"
 
-export function TaxExplainer() {
+type TaxExplainerProps = {
+  rawPrice: number
+}
+
+export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
+  const components = pumpPriceComponents(rawPrice)
+  const totalTaxes = components.veibruks + components.co2 + components.mva
+  const taxPercent = (totalTaxes / components.total) * 100
+
   const taxItems = [
     {
       icon: Truck,
@@ -44,7 +53,8 @@ export function TaxExplainer() {
             Norske dieselavgifter
           </h2>
           <p className="text-muted-foreground max-w-xl">
-            Over 60 % av pumpeprisen går til staten i form av avgifter.
+            Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av pumpeprisen til staten i form av
+            veibruksavgift, CO2-avgift og MVA.
           </p>
         </div>
 

@@ -1,0 +1,36 @@
+# `pump-price-model.ts`
+
+Shared pricing model for estimated diesel pump price.
+
+## Intent
+
+Keep one source of truth for how the app turns a raw diesel price in `NOK/liter` into a pump-price estimate:
+
+- raw price
+- distribution / margin estimate
+- `veibruksavgift`
+- `CO2-avgift`
+- `MVA`
+
+The model is used by the current price breakdown, the 90-day history chart, and the futures-based forecast so the same math is applied everywhere.
+
+## Historical handling
+
+The tax schedule is date-aware. This matters because the 90-day chart can span a year boundary.
+
+- `2025-01-01`: `veibruksavgift 2.69`, `CO2-avgift 3.79`, `MVA 25%`
+- `2026-01-01`: `veibruksavgift 2.28`, `CO2-avgift 4.42`, `MVA 25%`
+
+If the chart later expands further back in time, this schedule should be extended with older official rates instead of reusing the newest year for all points.
+
+## Sources
+
+- Regjeringen, `Avgiftssatser 2026`: includes side-by-side 2025 and 2026 rates for diesel-related særavgifter
+- Skatteetaten, `Veibruksavgift på drivstoff`: confirms current `2026` diesel veibruksavgift
+- Skatteetaten, `Merverdiavgift`: confirms general `25 %` sats
+- Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026`
+- Lovdata, `Stortingsvedtak om veibruksavgift på drivstoff for 2025`
+
+## Non-tax assumption
+
+`distribution` is not an official tax rate. It remains a fixed model assumption for now, so historical correctness in this file covers the public avgifter and `MVA`, not changing retail margins over time.

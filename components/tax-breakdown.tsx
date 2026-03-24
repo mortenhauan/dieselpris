@@ -1,21 +1,58 @@
 "use client"
 
+import { Info } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   PUMP_PRICE_STACK_LAYERS,
+  type PumpPriceLayerKey,
   pumpPriceComponents,
 } from "@/lib/pump-price-model"
+
+const breakdownTooltipClass =
+  "max-w-[min(18rem,calc(100vw-2rem))] text-xs leading-relaxed px-3 py-2.5 font-normal tracking-normal"
+
+const BREAKDOWN_HINTS: Record<PumpPriceLayerKey, string> = {
+  raw: "Prisen på selve dieselen før avgifter. Den påvirkes av internasjonale drivstoffpriser, valuta og markedet.",
+  distribution:
+    "Kostnaden for å få dieselen fram til stasjonen og selge den videre. Det dekker blant annet lager, transport og drift.",
+  veibruks:
+    "En statlig avgift på drivstoff til veibruk. Den skal bidra til å dekke kostnader veitrafikken påfører samfunnet.",
+  co2: "En miljøavgift på utslippene når diesel brukes. Den skal gjøre det dyrere å forurense.",
+  mva: "25 % merverdiavgift på hele beløpet. Den legges oppå både drivstoffet og de andre kostnadene.",
+}
 
 interface TaxBreakdownProps {
   rawPrice: number
 }
 
+function BreakdownHint({ label, description }: { label: string; description: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+          aria-label={`Forklaring: ${label}`}
+        >
+          <Info className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" align="start" sideOffset={6} className={breakdownTooltipClass}>
+        <p>{description}</p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
   const c = pumpPriceComponents(rawPrice)
   const components = PUMP_PRICE_STACK_LAYERS.map((layer) => ({
+    key: layer.key,
     name: layer.name,
     value: c[layer.key],
     color: layer.color,
+    description: BREAKDOWN_HINTS[layer.key],
   }))
 
   const totalPrice = c.total
@@ -42,8 +79,8 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
               dataKey="value"
               strokeWidth={0}
             >
-              {components.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+              {components.map((entry) => (
+                <Cell key={entry.key} fill={entry.color} />
               ))}
             </Pie>
           </PieChart>
@@ -57,14 +94,17 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
       </div>
 
       <div className="space-y-2.5">
-        {components.map((component, index) => (
-          <div key={index} className="flex items-center justify-between">
+        {components.map((component) => (
+          <div key={component.key} className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div
                 className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: component.color }}
               />
-              <span className="text-sm text-muted-foreground">{component.name}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm text-muted-foreground">{component.name}</span>
+                <BreakdownHint label={component.name} description={component.description} />
+              </div>
             </div>
             <span className="text-sm font-medium text-foreground tabular-nums">
               {component.value.toFixed(2)} kr

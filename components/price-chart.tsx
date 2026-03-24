@@ -42,7 +42,7 @@ function impliedUsdNok(priceUsdMt: number, nokPerLiter: number): number | null {
 
 function toStackedRows(data: HistoricalData[]): StackedRow[] {
   return data.map((row) => {
-    const parts = pumpPriceComponents(row.price_nok_liter)
+    const parts = pumpPriceComponents(row.price_nok_liter, row.date)
     return {
       ...row,
       raw: parts.raw,

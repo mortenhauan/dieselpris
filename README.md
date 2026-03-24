@@ -7,7 +7,7 @@ Data is served from the app’s own API (`/api/diesel-prices`) so the UI can sta
 ## Features
 
 - Current price context and change (USD/MT and NOK/litre where applicable)
-- Historical chart and futures curve–style views
+- Historical chart and futures curve-style views with date-aware public avgifter
 - Tax breakdown and plain-language explainers
 - Regional margin perspectives
 
@@ -62,7 +62,7 @@ Optional: if you later read **`NEXT_PUBLIC_CONVEX_SITE_URL`** in the app (HTTP a
 - `app/` — routes, layout, and API routes (e.g. `app/api/diesel-prices/`)
 - `components/` — UI and feature blocks (charts, tax explainers, etc.)
 - `convex/` — Convex schema, queries, mutations, actions ([readme](convex/README.md))
-- `lib/` — shared utilities
+- `lib/` — shared utilities ([readme](./lib/README.md))
 
 ## Data and responsibility
 

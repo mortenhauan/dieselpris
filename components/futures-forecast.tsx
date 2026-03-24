@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts"
+import { pumpPriceComponents } from "@/lib/pump-price-model"
 
 interface Contract {
   contract_code: string
@@ -86,34 +87,24 @@ function FuturesAreaTooltip({ active, payload, label, chartData }: FuturesToolti
   return null
 }
 
-// Norwegian diesel cost components (2026)
-const VEIBRUKSAVGIFT = 2.28
-const CO2_AVGIFT = 4.42
-const DISTRIBUSJON_MARGIN = 3.20 // Average distribution + margin
-
 export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProps) {
   const chartData = useMemo(() => {
     const litersPerTon = 1176
-    
+
     return contracts.map((contract) => {
       // Convert USD/MT to NOK/liter
       const rawPrice = (contract.last_price * exchangeRate) / litersPerTon
-      
-      // Calculate components (excluding MVA first)
-      const priceBeforeMva = rawPrice + VEIBRUKSAVGIFT + CO2_AVGIFT + DISTRIBUSJON_MARGIN
-      
-      // MVA is 25% of the total price before MVA
-      const mva = priceBeforeMva * 0.25
-      
+      const parts = pumpPriceComponents(rawPrice)
+
       return {
         month: contract.contract_month,
         code: contract.contract_code,
-        rawPrice: Math.round(rawPrice * 100) / 100,
-        veibruksavgift: VEIBRUKSAVGIFT,
-        co2Avgift: CO2_AVGIFT,
-        distribusjon: DISTRIBUSJON_MARGIN,
-        mva: Math.round(mva * 100) / 100,
-        total: Math.round((priceBeforeMva + mva) * 100) / 100,
+        rawPrice: parts.raw,
+        veibruksavgift: parts.veibruks,
+        co2Avgift: parts.co2,
+        distribusjon: parts.distribution,
+        mva: parts.mva,
+        total: parts.total,
         change: contract.change,
         changePercent: contract.change_percent,
       }
@@ -123,7 +114,7 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
   const firstPrice = chartData[0]?.total ?? 0
   const lastPrice = chartData[chartData.length - 1]?.total ?? 0
   const priceDiff = lastPrice - firstPrice
-  const priceDiffPercent = ((priceDiff / firstPrice) * 100).toFixed(1)
+  const priceDiffPercent = firstPrice > 0 ? ((priceDiff / firstPrice) * 100).toFixed(1) : "0.0"
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
