@@ -56,15 +56,19 @@ function barTimeToUtcDate(barTimeSeconds: number): string {
 
 export function tradingViewBarsToHistorical(
   bars: TvBar[],
-  usdToNok: number,
   litersPerTon: number,
+  usdNokForUtcYmd: (utcYmd: string) => number,
 ): { date: string; price: number; price_nok_liter: number }[] {
   const sorted = [...bars].sort((a, b) => a.time - b.time)
-  return sorted.map((b) => ({
-    date: barTimeToUtcDate(b.time),
-    price: b.close,
-    price_nok_liter: Math.round(((b.close * usdToNok) / litersPerTon) * 100) / 100,
-  }))
+  return sorted.map((b) => {
+    const date = barTimeToUtcDate(b.time)
+    const usdToNok = usdNokForUtcYmd(date)
+    return {
+      date,
+      price: b.close,
+      price_nok_liter: Math.round(((b.close * usdToNok) / litersPerTon) * 100) / 100,
+    }
+  })
 }
 
 export async function fetchIceGasoilUls1Daily(options?: {

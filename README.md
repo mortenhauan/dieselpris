@@ -2,7 +2,7 @@
 
 Web app that helps **Norwegian users** make sense of **diesel prices**: what drives the pump price, how taxes and margins fit in, and how wholesale or futures-related benchmarks move over time.
 
-Data is served from the app’s own API (`/api/diesel-prices`) so the UI can stay simple and fast. The goal is a clear explanation—not a trading or price-guarantee tool.
+Data is served from the app’s own API (`/api/diesel-prices`) so the UI can stay simple and fast. TradingView-backed prices are cached on the server with **`use cache`** and revalidated about every **15 minutes**. USD→NOK for NOK/litre uses **Norges Bank** open data (`data.norges-bank.no`) when available, with a fixed fallback if the request fails. The goal is a clear explanation—not a trading or price-guarantee tool.
 
 ## Features
 

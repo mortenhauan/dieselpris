@@ -52,13 +52,18 @@ function generateHistoricalData(days: number, currentPrice: number): FallbackHis
   return data
 }
 
-export function buildFallbackDieselPricesPayload() {
+export function buildFallbackDieselPricesPayload(
+  usdToNokSpot: number,
+  exchangeSource: string,
+  usdNokForUtcYmd?: (utcYmd: string) => number,
+) {
   const contracts = REAL_CONTRACTS
   const currentPrice = contracts[0].last_price
   const historical = generateHistoricalData(90, currentPrice)
-  const usdToNok = 11
   const litersPerTon = 1176
-  const rawPricePerLiter = (currentPrice * usdToNok) / litersPerTon
+  const resolve = usdNokForUtcYmd ?? (() => usdToNokSpot)
+  const todayYmd = new Date().toISOString().slice(0, 10)
+  const rawPricePerLiter = (currentPrice * resolve(todayYmd)) / litersPerTon
   const changePercent = (contracts[0].change / contracts[0].previous) * 100
 
   return {
@@ -83,11 +88,11 @@ export function buildFallbackDieselPricesPayload() {
     })),
     historical: historical.map((h) => ({
       ...h,
-      price_nok_liter: Math.round(((h.price * usdToNok) / litersPerTon) * 100) / 100,
+      price_nok_liter: Math.round(((h.price * resolve(h.date)) / litersPerTon) * 100) / 100,
     })),
     exchange_rate: {
-      usd_nok: usdToNok,
-      source: "Norges Bank (estimat)",
+      usd_nok: Math.round(usdToNokSpot * 10000) / 10000,
+      source: exchangeSource,
     },
     data_source: "Statisk eksempeldata (fallback)",
   }
