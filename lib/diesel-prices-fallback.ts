@@ -74,7 +74,7 @@ export function buildFallbackDieselPricesPayload(
       change: contracts[0].change,
       change_percent: Math.round(changePercent * 100) / 100,
     },
-    contracts: contracts.map((c) => ({
+    contracts: contracts.slice(0, 6).map((c) => ({
       contract_code: c.contract_code,
       contract_month: c.contract_month,
       last_price: c.last_price,

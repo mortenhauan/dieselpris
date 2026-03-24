@@ -6,6 +6,10 @@ import {
   usdNokOnOrBefore,
 } from "@/lib/norges-bank-usd-nok"
 import {
+  fetchNextSixIceUlsMonthlyContracts,
+  type IceUlsContractRow,
+} from "@/lib/ice-uls-forward-contracts"
+import {
   fetchIceGasoilUls1Daily,
   ICEEUR_ULS1_CONTINUOUS,
   tradingViewBarsToHistorical,
@@ -37,14 +41,18 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
     usdNokOnOrBefore(fxSeries, utcYmd, spotUsdNok)
 
   try {
-    const { bars: rawBars } = await fetchIceGasoilUls1Daily({
-      symbol: ICEEUR_ULS1_CONTINUOUS,
-      barCount: 110,
-      minBars: 80,
-      settleMs: 1500,
-      hardTimeoutMs: 22_000,
-    })
+    const [gasoil, forwardContracts] = await Promise.all([
+      fetchIceGasoilUls1Daily({
+        symbol: ICEEUR_ULS1_CONTINUOUS,
+        barCount: 110,
+        minBars: 80,
+        settleMs: 1500,
+        hardTimeoutMs: 22_000,
+      }),
+      fetchNextSixIceUlsMonthlyContracts().catch((): IceUlsContractRow[] => []),
+    ])
 
+    const { bars: rawBars } = gasoil
     const bars = sliceLastDailyBars(rawBars, HISTORY_DAYS)
     if (bars.length < 2) {
       return buildFallbackDieselPricesPayload(spotUsdNok, exchangeSource, resolveUsdNok)
@@ -59,6 +67,8 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
     const latestYmd = new Date(latest.time * 1000).toISOString().slice(0, 10)
     const spotForLatest = resolveUsdNok(latestYmd)
     const rawPricePerLiter = (currentPrice * spotForLatest) / LITERS_PER_TON
+    const contracts = forwardContracts.length >= 2 ? forwardContracts : []
+
     return {
       updated_at: new Date().toISOString(),
       current: {
@@ -67,13 +77,14 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
         change: Math.round(change * 100) / 100,
         change_percent: Math.round(changePercent * 100) / 100,
       },
-      contracts: [],
+      contracts,
       historical: tradingViewBarsToHistorical(bars, LITERS_PER_TON, resolveUsdNok),
       exchange_rate: {
         usd_nok: Math.round(spotUsdNok * 10000) / 10000,
         source: exchangeSource,
       },
-      data_source: "Lavsvovel gasoil (ICE Europa), daglig sammenhengende kontrakt",
+      data_source:
+        "Lavsvovel gasoil (ICE Europa): sammenhengende dagskurve + seks månedlige terminkontrakter",
     }
   } catch {
     return buildFallbackDieselPricesPayload(spotUsdNok, exchangeSource, resolveUsdNok)

@@ -10,7 +10,8 @@ import { TaxExplainer } from "@/components/tax-explainer"
 import { FuturesForecast } from "@/components/futures-forecast"
 import { RegionalMargins } from "@/components/regional-margins"
 import type { DieselPricesPayload } from "@/lib/get-diesel-prices"
-import { DEFAULT_REGION_ID, getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
+import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
+import { usePersistedRegionId } from "@/lib/use-persisted-region-id"
 
 const FIFTEEN_MIN_MS = 15 * 60 * 1000
 
@@ -122,7 +123,7 @@ type Props = {
 }
 
 export function DieselPrisPageClient({ initialData }: Props) {
-  const [selectedRegionId, setSelectedRegionId] = useState<RegionId>(DEFAULT_REGION_ID)
+  const [selectedRegionId, setSelectedRegionId] = usePersistedRegionId()
   const { data, error, isLoading } = useSWR<DieselPricesPayload>("/api/diesel-prices", fetcher, {
     fallbackData: initialData,
     refreshInterval: FIFTEEN_MIN_MS,

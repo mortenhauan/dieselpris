@@ -71,18 +71,16 @@ export function tradingViewBarsToHistorical(
   })
 }
 
-export async function fetchIceGasoilUls1Daily(options?: {
-  symbol?: string
-  barCount?: number
-  minBars?: number
-  settleMs?: number
-  hardTimeoutMs?: number
+export async function fetchIceDailyBarsFromTradingView(options: {
+  symbol: string
+  barCount: number
+  minBars: number
+  settleMs: number
+  hardTimeoutMs: number
+  timeoutMinBars?: number
 }): Promise<IceGasoilDailyFromTv> {
-  const symbol = options?.symbol ?? ICEEUR_ULS1_CONTINUOUS
-  const barCount = options?.barCount ?? 100
-  const minBars = options?.minBars ?? 85
-  const settleMs = options?.settleMs ?? 1200
-  const hardTimeoutMs = options?.hardTimeoutMs ?? 18_000
+  const { symbol, barCount, minBars, settleMs, hardTimeoutMs } = options
+  const timeoutMinBars = options.timeoutMinBars ?? minBars
 
   const client = new Client()
   const chart = new client.Session.Chart()
@@ -136,7 +134,7 @@ export async function fetchIceGasoilUls1Daily(options?: {
     })
 
     setTimeout(() => {
-      if (chart.periods.length >= 30) finishOk()
+      if (chart.periods.length >= timeoutMinBars) finishOk()
       else finishErr(new Error("TradingView timeout or insufficient bars"))
     }, hardTimeoutMs)
 
@@ -145,5 +143,22 @@ export async function fetchIceGasoilUls1Daily(options?: {
       range: barCount,
       backadjustment: true,
     })
+  })
+}
+
+export async function fetchIceGasoilUls1Daily(options?: {
+  symbol?: string
+  barCount?: number
+  minBars?: number
+  settleMs?: number
+  hardTimeoutMs?: number
+}): Promise<IceGasoilDailyFromTv> {
+  return fetchIceDailyBarsFromTradingView({
+    symbol: options?.symbol ?? ICEEUR_ULS1_CONTINUOUS,
+    barCount: options?.barCount ?? 100,
+    minBars: options?.minBars ?? 85,
+    settleMs: options?.settleMs ?? 1200,
+    hardTimeoutMs: options?.hardTimeoutMs ?? 18_000,
+    timeoutMinBars: 30,
   })
 }
