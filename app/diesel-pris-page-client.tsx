@@ -10,24 +10,26 @@ import { FuturesForecast } from "@/components/futures-forecast"
 import { RegionalMargins } from "@/components/regional-margins"
 import type { DieselPricesPayload } from "@/lib/get-diesel-prices"
 import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
-import { usePersistedRegionId } from "@/lib/use-persisted-region-id"
 
 type Props = {
   data: DieselPricesPayload
+  regionId: RegionId
 }
 
-export function DieselPrisPageClient({ data }: Props) {
-  const [selectedRegionId, setSelectedRegionId] = usePersistedRegionId()
+export function DieselPrisPageClient({ data, regionId: selectedRegionId }: Props) {
   const currentPrice = data.current
   const updatedAt = data.updated_at
   const contracts = data.contracts
   const historical = data.historical
   const exchangeRate = data.exchange_rate.usd_nok
-  const selectedRegion = useMemo(() => getRegionPriceProfile(selectedRegionId), [selectedRegionId])
+  const selectedRegion = useMemo(
+    () => getRegionPriceProfile(selectedRegionId),
+    [selectedRegionId],
+  )
 
   return (
     <div className="min-h-screen bg-background">
-      <Header selectedRegionId={selectedRegionId} onRegionChange={setSelectedRegionId} />
+      <Header selectedRegionId={selectedRegionId} />
 
       <main>
         <PriceHero

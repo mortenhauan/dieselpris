@@ -1,7 +1,7 @@
-import { getDieselPricesData } from "@/lib/get-diesel-prices"
-import { DieselPrisPageClient } from "./diesel-pris-page-client"
+import { redirect } from "next/navigation"
+import { DEFAULT_REGION_ID } from "@/lib/regional-price-model"
+import { regionPath } from "@/lib/region-route"
 
-export default async function Page() {
-  const dieselPrices = await getDieselPricesData()
-  return <DieselPrisPageClient data={dieselPrices} />
+export default function HomePage() {
+  redirect(regionPath(DEFAULT_REGION_ID))
 }

@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Droplet } from "lucide-react";
 import {
   REGION_PRICE_PROFILES,
   type RegionId,
 } from "@/lib/regional-price-model";
+import { regionPath } from "@/lib/region-route";
 import {
   Select,
   SelectContent,
@@ -16,10 +18,10 @@ import {
 
 type HeaderProps = {
   selectedRegionId: RegionId;
-  onRegionChange: (regionId: RegionId) => void;
 };
 
-export function Header({ selectedRegionId, onRegionChange }: HeaderProps) {
+export function Header({ selectedRegionId }: HeaderProps) {
+  const router = useRouter();
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="max-w-6xl mx-auto px-6 py-4">
@@ -42,7 +44,9 @@ export function Header({ selectedRegionId, onRegionChange }: HeaderProps) {
               </span>
               <Select
                 value={selectedRegionId}
-                onValueChange={(value) => onRegionChange(value as RegionId)}
+                onValueChange={(value) => {
+                  router.push(regionPath(value as RegionId));
+                }}
               >
                 <SelectTrigger
                   aria-labelledby="region-select-label"
