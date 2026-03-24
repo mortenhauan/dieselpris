@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Droplet } from "lucide-react";
+import { Fuel } from "lucide-react";
 import {
   REGION_PRICE_PROFILES,
   type RegionId,
@@ -28,7 +28,7 @@ export function Header({ selectedRegionId }: HeaderProps) {
         <div className="flex flex-row gap-3 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center transition-transform group-hover:scale-105">
-              <Droplet className="h-4 w-4 text-background" />
+              <Fuel className="h-4 w-4 text-background" />
             </div>
             <span className="text-base font-semibold tracking-tight text-foreground">
               dieselpris
