@@ -14,9 +14,16 @@ export function Footer() {
               </div>
               <span className="text-base font-semibold tracking-tight text-foreground">dieselpris</span>
             </div>
-            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
-              En uavhengig tjeneste som gir deg innsikt i norske dieselpriser og hvordan de settes.
-            </p>
+            <div className="max-w-md space-y-3 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige satser slik de er
+                oppgitt i kildene.
+              </p>
+              <p className="text-xs leading-relaxed">
+                Tall og forklaringer er veiledende og kan inneholde feil eller forenklinger. Ikke
+                finansrådgivning eller prisgaranti — verifiser mot kildene ved viktige beslutninger.
+              </p>
+            </div>
           </div>
 
           <div>
