@@ -34,7 +34,17 @@ pnpm dev          # terminal 2: Next.js
 
 Open [http://localhost:3000](http://localhost:3000).
 
-`.env.local` should set `CONVEX_DEPLOYMENT`, `NEXT_PUBLIC_CONVEX_URL`, and `NEXT_PUBLIC_CONVEX_SITE_URL` (from the deployment **Summary** in the Convex dashboard, or auto-written when `pnpm convex:dev` configures the project). See [`.env.example`](./.env.example). Use the same public URL variables in production hosting (e.g. Vercel).
+`.env.local` should set `CONVEX_DEPLOYMENT`, `NEXT_PUBLIC_CONVEX_URL`, and `NEXT_PUBLIC_CONVEX_SITE_URL` (from the deployment **Summary** in the Convex dashboard, or auto-written when `pnpm convex:dev` configures the project). See [`.env.example`](./.env.example).
+
+### Vercel + Convex production
+
+The repo includes [`vercel.json`](./vercel.json): the Vercel build runs **`npx convex deploy`** first, then **`pnpm run build`**. During that inner build, Convex sets **`NEXT_PUBLIC_CONVEX_URL`** for your production deployment, so you do not need to paste the cloud URL into Vercel for a normal deploy.
+
+1. In the [Convex dashboard](https://dashboard.convex.dev/), open your project → **Production** deployment → **Settings** → **General** → **Generate Production Deploy Key**.
+2. In Vercel → your project → **Settings** → **Environment Variables**: add **`CONVEX_DEPLOY_KEY`** with that key, scoped to **Production** only (see [Using Convex with Vercel](https://docs.convex.dev/production/hosting/vercel)).
+3. Deploy. The first successful build pushes Convex functions to your **Production** deployment and bakes the matching `NEXT_PUBLIC_CONVEX_URL` into Next.js.
+
+Optional: if you later read **`NEXT_PUBLIC_CONVEX_SITE_URL`** in the app (HTTP actions / callbacks), set it in Vercel to your deployment’s **HTTP Actions URL** (`https://<name>.convex.site`) from the deployment summary.
 
 ## Scripts
 
