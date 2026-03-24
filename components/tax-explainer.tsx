@@ -85,9 +85,9 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
             <h3 className="font-semibold text-foreground">Utvikling over tid</h3>
             <p className="text-sm text-muted-foreground">Faste avgifter per liter (ekskl. MVA)</p>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-visible md:overflow-x-auto">
             <table className="w-full">
-              <thead>
+              <thead className="hidden md:table-header-group">
                 <tr className="bg-secondary/50">
                   <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">År</th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Veibruksavgift</th>
@@ -95,23 +95,35 @@ export function TaxExplainer({ rawPrice }: TaxExplainerProps) {
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Sum avgifter</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="block md:table-row-group">
                 {historicalData.map((row, index) => (
-                  <tr 
-                    key={index} 
-                    className={`border-t border-border ${row.current ? 'bg-foreground text-background' : ''}`}
+                  <tr
+                    key={index}
+                    className={`block border-t border-border p-4 first:border-t-0 md:table-row md:p-0 ${row.current ? "bg-foreground text-background" : ""}`}
                   >
-                    <td className={`py-4 px-6 font-semibold ${row.current ? '' : 'text-foreground'}`}>
+                    <td className={`block pb-3 font-semibold md:table-cell md:px-6 md:py-4 ${row.current ? "" : "text-foreground"}`}>
+                      <span className={`block text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                        År
+                      </span>
                       {row.year}
                     </td>
-                    <td className={`py-4 px-6 text-right tabular-nums ${row.current ? '' : 'text-muted-foreground'}`}>
-                      {row.vei} kr
+                    <td className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}>
+                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                        Veibruksavgift
+                      </span>
+                      <span>{row.vei} kr</span>
                     </td>
-                    <td className={`py-4 px-6 text-right tabular-nums ${row.current ? '' : 'text-muted-foreground'}`}>
-                      {row.co2} kr
+                    <td className={`flex items-center justify-between gap-4 py-2 tabular-nums md:table-cell md:px-6 md:py-4 md:text-right ${row.current ? "" : "text-muted-foreground"}`}>
+                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                        CO2-avgift
+                      </span>
+                      <span>{row.co2} kr</span>
                     </td>
-                    <td className={`py-4 px-6 text-right font-bold tabular-nums`}>
-                      {row.total} kr
+                    <td className="flex items-center justify-between gap-4 py-2 font-bold tabular-nums md:table-cell md:px-6 md:py-4 md:text-right">
+                      <span className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}>
+                        Sum avgifter
+                      </span>
+                      <span>{row.total} kr</span>
                     </td>
                   </tr>
                 ))}

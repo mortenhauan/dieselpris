@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { Header } from "@/components/header"
 import { PriceHero } from "@/components/price-hero"
@@ -15,6 +15,107 @@ import { DEFAULT_REGION_ID, getRegionPriceProfile, type RegionId } from "@/lib/r
 const FIFTEEN_MIN_MS = 15 * 60 * 1000
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+function postDebugLog(
+  runId: string,
+  hypothesisId: string,
+  message: string,
+  data: Record<string, unknown>,
+) {
+  fetch("http://127.0.0.1:7354/ingest/f14bf51d-541e-48b1-8383-e26762d3f3f7", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "b93b04",
+    },
+    body: JSON.stringify({
+      sessionId: "b93b04",
+      runId,
+      hypothesisId,
+      location: "app/diesel-pris-page-client.tsx:overflow-scan",
+      message,
+      data,
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {})
+}
+
+function round(value: number) {
+  return Math.round(value * 10) / 10
+}
+
+function describeElement(element: HTMLElement) {
+  const className =
+    typeof element.className === "string"
+      ? element.className
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 3)
+          .join(".")
+      : ""
+
+  const id = element.id ? `#${element.id}` : ""
+  const classes = className ? `.${className}` : ""
+
+  return `${element.tagName.toLowerCase()}${id}${classes}`
+}
+
+function textSnippet(element: HTMLElement) {
+  return (element.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 80)
+}
+
+function collectOverflowCandidates(viewportWidth: number) {
+  return Array.from(document.querySelectorAll<HTMLElement>("body *"))
+    .map((element) => {
+      const rect = element.getBoundingClientRect()
+      const styles = window.getComputedStyle(element)
+      const rightOverflow = Math.max(0, rect.right - viewportWidth)
+      const leftOverflow = Math.max(0, 0 - rect.left)
+      const scrollOverflow = Math.max(0, element.scrollWidth - element.clientWidth)
+      const overflow = Math.max(rightOverflow, leftOverflow, scrollOverflow)
+
+      return {
+        element: describeElement(element),
+        snippet: textSnippet(element),
+        overflow: round(overflow),
+        rectLeft: round(rect.left),
+        rectRight: round(rect.right),
+        rectWidth: round(rect.width),
+        scrollWidth: element.scrollWidth,
+        clientWidth: element.clientWidth,
+        position: styles.position,
+        overflowX: styles.overflowX,
+        whiteSpace: styles.whiteSpace,
+      }
+    })
+    .filter((candidate) => candidate.overflow > 1)
+    .sort((a, b) => b.overflow - a.overflow)
+    .slice(0, 8)
+}
+
+function collectFixedCandidates(viewportWidth: number) {
+  return Array.from(
+    document.querySelectorAll<HTMLElement>("body *, [data-radix-popper-content-wrapper]"),
+  )
+    .map((element) => {
+      const rect = element.getBoundingClientRect()
+      const styles = window.getComputedStyle(element)
+      const overflow = Math.max(0, rect.right - viewportWidth, 0 - rect.left)
+
+      return {
+        element: describeElement(element),
+        snippet: textSnippet(element),
+        overflow: round(overflow),
+        rectLeft: round(rect.left),
+        rectRight: round(rect.right),
+        rectWidth: round(rect.width),
+        position: styles.position,
+      }
+    })
+    .filter((candidate) => candidate.position === "fixed" || candidate.overflow > 1)
+    .sort((a, b) => b.overflow - a.overflow)
+    .slice(0, 8)
+}
 
 type Props = {
   initialData: DieselPricesPayload
@@ -42,6 +143,72 @@ export function DieselPrisPageClient({ initialData }: Props) {
   const exchangeRate = data?.exchange_rate?.usd_nok ?? 11
   const showChartLoading = isLoading && historical.length === 0
   const selectedRegion = useMemo(() => getRegionPriceProfile(selectedRegionId), [selectedRegionId])
+
+  useEffect(() => {
+    const runId = `overflow-scan-${historical.length}-${contracts.length}-${selectedRegionId}`
+
+    const frame = window.requestAnimationFrame(() => {
+      const docEl = document.documentElement
+      const body = document.body
+      const viewportWidth = window.innerWidth
+      const topOverflowCandidates = collectOverflowCandidates(viewportWidth)
+      const fixedCandidates = collectFixedCandidates(viewportWidth)
+      const sectionWidths = Array.from(
+        document.querySelectorAll<HTMLElement>("header, main, main section, footer"),
+      )
+        .map((element) => {
+          const rect = element.getBoundingClientRect()
+          return {
+            element: describeElement(element),
+            rectLeft: round(rect.left),
+            rectRight: round(rect.right),
+            rectWidth: round(rect.width),
+            scrollWidth: element.scrollWidth,
+            clientWidth: element.clientWidth,
+          }
+        })
+        .filter((candidate) => candidate.rectRight > viewportWidth + 1 || candidate.scrollWidth > candidate.clientWidth)
+        .slice(0, 8)
+
+      // #region agent log
+      postDebugLog(runId, "H4", "Document width snapshot", {
+        viewportWidth,
+        docClientWidth: docEl.clientWidth,
+        docScrollWidth: docEl.scrollWidth,
+        bodyClientWidth: body.clientWidth,
+        bodyScrollWidth: body.scrollWidth,
+        docOverflowDelta: docEl.scrollWidth - docEl.clientWidth,
+        bodyOverflowDelta: body.scrollWidth - body.clientWidth,
+        historicalCount: historical.length,
+        contractsCount: contracts.length,
+        selectedRegionId,
+        hasError: Boolean(error),
+      })
+      // #endregion
+
+      // #region agent log
+      postDebugLog(runId, "H1", "Top overflowing elements in normal flow", {
+        candidates: topOverflowCandidates,
+      })
+      // #endregion
+
+      // #region agent log
+      postDebugLog(runId, "H2", "Section-level width candidates", {
+        sections: sectionWidths,
+      })
+      // #endregion
+
+      // #region agent log
+      postDebugLog(runId, "H3", "Fixed or portaled overflow candidates", {
+        candidates: fixedCandidates,
+      })
+      // #endregion
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+    }
+  }, [contracts.length, error, historical.length, selectedRegionId])
 
   return (
     <div className="min-h-screen bg-background">
