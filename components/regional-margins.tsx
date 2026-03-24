@@ -110,9 +110,13 @@ export function RegionalMargins({ selectedRegionId }: RegionalMarginsProps) {
           <Info className="h-5 w-5 text-accent shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-1">Om estimatene</p>
-            <p>
+            <p className="mb-3">
               Dette er en enkel modell for å forklare prisforskjeller, ikke en fasit for hver stasjon. Faktiske
               priser påvirkes av lokal konkurranse, kjede, kampanjer og tidspunkt på dagen og uka.
+            </p>
+            <p>
+              Ser du en annen pumpepris enn estimatet lenger opp, er det som oftest av samme grunn: modellen bruker
+              ett regionalt påslag, mens virkeligheten varierer fra sted til sted og dag til dag.
             </p>
           </div>
         </div>

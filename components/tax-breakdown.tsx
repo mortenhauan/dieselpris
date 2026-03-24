@@ -4,6 +4,7 @@ import { Info } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
 import {
   PUMP_PRICE_STACK_LAYERS,
   type PumpPriceLayerKey,
@@ -14,7 +15,7 @@ const breakdownTooltipClass =
   "max-w-[min(18rem,calc(100vw-2rem))] text-xs leading-relaxed px-3 py-2.5 font-normal tracking-normal"
 
 const BREAKDOWN_HINTS: Record<PumpPriceLayerKey, string> = {
-  raw: "Prisen på selve dieselen før avgifter. Den påvirkes av internasjonale drivstoffpriser, valuta og markedet.",
+  raw: `Prisen på selve dieselen før avgifter. Råvarekostnaden er omregnet fra USD per tonn med ca. ${DIESEL_LITERS_PER_METRIC_TON} liter per metrisk tonn (fast antagelse) og valutakurs — litt varierende i virkeligheten.`,
   distribution:
     "Kostnaden for å få dieselen fram til stasjonen og selge den videre. Det dekker blant annet lager, transport og drift.",
   veibruks:

@@ -4,6 +4,7 @@ import { TaxBreakdown } from "@/components/tax-breakdown"
 import { TaxExplainer } from "@/components/tax-explainer"
 import { FuturesForecast } from "@/components/futures-forecast"
 import { RegionalMargins } from "@/components/regional-margins"
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
 import { getDieselPricesData } from "@/lib/get-diesel-prices"
 import {
   getRegionPriceProfile,
@@ -84,6 +85,20 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
               )}
             </div>
           </div>
+
+          <div className="mt-8 max-w-2xl rounded-xl border border-border bg-secondary/40 p-5 text-sm text-muted-foreground">
+            <p className="font-medium text-foreground mb-2">Avvik fra stasjonspris?</p>
+            <p className="mb-3 leading-relaxed">
+              Estimatet bygger på børsens referansekurs (ICE), nasjonale avgifter og ett modellert påslag per region.
+              Pumpeprisen du ser kan ligge annerledes fordi blant annet:
+            </p>
+            <ul className="list-disc space-y-1.5 pl-5 leading-relaxed">
+              <li>stasjonen kjøper inn og setter pris ved et annet tidspunkt enn siste børskurs vi viser</li>
+              <li>kjede, kampanjer og lokal konkurranse trekker prisen opp eller ned</li>
+              <li>faktisk frakt, margin og stasjonstype varierer mer enn ett tall per region</li>
+              <li>produktvalg (f.eks. innmiks) og lokale forhold ikke er med i modellen</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -142,7 +157,8 @@ export async function DieselPricesStream({ regionId }: { regionId: RegionId }) {
                 USD per metrisk tonn (MT)
               </strong>
               . For å få literpris i Norge regnes det om fra tonn til liter (1 MT =
-              ca. 1176 liter diesel) og fra USD til NOK ut fra dagens valutakurs.
+              ca. {DIESEL_LITERS_PER_METRIC_TON} liter diesel som fast antagelse — faktisk tetthet kan
+              variere litt) og fra USD til NOK ut fra dagens valutakurs.
             </p>
             {hasLive ? (
               <p>

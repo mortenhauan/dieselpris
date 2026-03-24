@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from "next/cache"
 import {
   buildUnavailableDieselPricesPayload,
+  DIESEL_LITERS_PER_METRIC_TON,
   type DieselPricesPayload,
 } from "@/lib/diesel-prices-payload"
 import {
@@ -17,7 +18,6 @@ import {
 
 export type { DieselPricesPayload, DieselPricesCurrent, DieselPricesHistoricalRow } from "@/lib/diesel-prices-payload"
 
-const LITERS_PER_TON = 1176
 const HISTORY_DAYS = 90
 
 function sliceLastDailyBars<T extends { time: number }>(bars: T[], max: number): T[] {
@@ -63,7 +63,7 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
     const changePercent = prev.close !== 0 ? (change / prev.close) * 100 : 0
     const latestYmd = new Date(latest.time * 1000).toISOString().slice(0, 10)
     const spotForLatest = resolveUsdNok(latestYmd)
-    const rawPricePerLiter = (currentPrice * spotForLatest) / LITERS_PER_TON
+    const rawPricePerLiter = (currentPrice * spotForLatest) / DIESEL_LITERS_PER_METRIC_TON
     const contracts = forwardContracts.length >= 2 ? forwardContracts : []
 
     return {
@@ -75,7 +75,7 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
         change_percent: Math.round(changePercent * 100) / 100,
       },
       contracts,
-      historical: tradingViewBarsToHistorical(bars, LITERS_PER_TON, resolveUsdNok),
+      historical: tradingViewBarsToHistorical(bars, DIESEL_LITERS_PER_METRIC_TON, resolveUsdNok),
       exchange_rate: {
         usd_nok: Math.round(spotUsdNok * 10000) / 10000,
         source: exchangeSource,

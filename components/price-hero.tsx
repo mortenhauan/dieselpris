@@ -2,6 +2,7 @@
 
 import { RefreshCw, Clock, Info, HelpCircle } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
 import { cn } from "@/lib/utils"
 
 function formatUpdatedAt(iso: string) {
@@ -29,6 +30,8 @@ const INSTRUMENT_TOOLTIP_DETAIL =
   "Dette er den europeiske markedsprisen for dieselråvaren som brukes som referanse i markedet. Prisen vises i USD per tonn og sier noe om råvarekostnaden, ikke hva du betaler på stasjonen."
 
 const RAW_NOK_TOOLTIP_SUMMARY = "Omregnet råvarepris i kroner per liter"
+
+const RAW_NOK_TOOLTIP_WEIGHT = `Omregning tonn → liter bruker ${DIESEL_LITERS_PER_METRIC_TON} liter per metrisk tonn som fast vekt/tetthet. I praksis varierer liter per tonn litt med temperatur og produkt — tallet her er en forenklet modell.`
 
 const RAW_NOK_TOOLTIP_FORMULA =
   "Tallet er markedsprisen omregnet fra USD per tonn til kroner per liter. Det er bare råvarekostnad — ikke avgifter, distribusjon, margin eller MVA."
@@ -95,6 +98,7 @@ function RawNokHint({ exchangeSource }: { exchangeSource?: string }) {
           {RAW_NOK_TOOLTIP_SUMMARY}
         </p>
         <p className="mb-2">{RAW_NOK_TOOLTIP_FORMULA}</p>
+        <p className="mb-2">{RAW_NOK_TOOLTIP_WEIGHT}</p>
         <p>{rawNokTooltipSourceLine(exchangeSource)}</p>
       </TooltipContent>
     </Tooltip>

@@ -1,5 +1,7 @@
 import type { IceUlsContractRow } from "@/lib/ice-uls-forward-contracts"
 
+export const DIESEL_LITERS_PER_METRIC_TON = 1176 as const
+
 export type DieselPricesCurrent = {
   price_usd_mt: number
   price_nok_liter: number

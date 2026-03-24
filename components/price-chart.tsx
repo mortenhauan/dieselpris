@@ -15,6 +15,7 @@ import {
   type PumpPriceLayerKey,
   pumpPriceComponents,
 } from "@/lib/pump-price-model"
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
 import type { RegionId } from "@/lib/regional-price-model"
 
 /** Matches API `historical` rows: ICE close USD/MT + NOK/liter (råvare). */
@@ -34,11 +35,9 @@ interface PriceChartProps {
 
 const Y_STEP_KR = 5
 const MONTH_MARKER_STROKE = "oklch(0.88 0.012 250)"
-const LITERS_PER_MT = 1176
-
 function impliedUsdNok(priceUsdMt: number, nokPerLiter: number): number | null {
   if (!Number.isFinite(priceUsdMt) || priceUsdMt <= 0) return null
-  const v = (nokPerLiter * LITERS_PER_MT) / priceUsdMt
+  const v = (nokPerLiter * DIESEL_LITERS_PER_METRIC_TON) / priceUsdMt
   return Number.isFinite(v) ? v : null
 }
 

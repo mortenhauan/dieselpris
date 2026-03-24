@@ -16,6 +16,7 @@ import {
   type PumpPriceLayerKey,
   pumpPriceComponents,
 } from "@/lib/pump-price-model"
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload"
 import { getRegionPriceProfile, type RegionId } from "@/lib/regional-price-model"
 
 interface Contract {
@@ -107,8 +108,12 @@ const LAYER_LEGEND = PUMP_PRICE_STACK_LAYERS.map((l) => l.name).join(" → ")
 
 export function FuturesForecast({ contracts, exchangeRate, regionId }: FuturesForecastProps) {
   const region = getRegionPriceProfile(regionId)
-  const litersPerTon = 1176
-  const stackedData = toStackedFutures(contracts, exchangeRate, regionId, litersPerTon)
+  const stackedData = toStackedFutures(
+    contracts,
+    exchangeRate,
+    regionId,
+    DIESEL_LITERS_PER_METRIC_TON,
+  )
   const { yTicks, yDomain } = yScaleFromTotals(stackedData.map((d) => d.total))
   const xCategories = stackedData.map((r) => r.contract_code)
 
