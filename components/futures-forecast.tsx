@@ -246,8 +246,10 @@ export const FuturesForecast = function FuturesForecast({
             </Hint>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Tallene kommer fra månedlige ICE-kontrakter og er ment som oversikt
-            — ikke som eksakte kjøpspriser.
+            Tallene bygger på månedlige ICE-kontrakter og speiler grovt hva
+            markedet priser inn for diesellevering den måneden — nivået det
+            faktisk handles til. Ment som oversikt, ikke eksakte kjøpspriser på
+            stasjon.
           </p>
         </div>
         {firstRow && lastRow && stackedData.length >= 2 ? (
