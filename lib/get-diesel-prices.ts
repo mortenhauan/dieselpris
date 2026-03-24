@@ -19,7 +19,6 @@ export type { DieselPricesPayload, DieselPricesCurrent, DieselPricesHistoricalRo
 
 const LITERS_PER_TON = 1176
 const HISTORY_DAYS = 90
-const REVALIDATE_SECONDS = 30 * 60
 
 function sliceLastDailyBars<T extends { time: number }>(bars: T[], max: number): T[] {
   const sorted = [...bars].sort((a, b) => a.time - b.time)
@@ -29,7 +28,7 @@ function sliceLastDailyBars<T extends { time: number }>(bars: T[], max: number):
 export async function getDieselPricesData(): Promise<DieselPricesPayload> {
   "use cache"
   cacheTag("diesel-prices")
-  cacheLife({ revalidate: REVALIDATE_SECONDS })
+  cacheLife("dieselPrices")
 
   const fxSeries = await fetchNorgesBankUsdNokSeries(130)
   const spotUsdNok = fxSeries?.latestRate ?? USD_NOK_FALLBACK
