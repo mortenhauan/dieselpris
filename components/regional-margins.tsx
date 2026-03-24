@@ -10,11 +10,11 @@ interface RegionData {
 
 const regions: RegionData[] = [
   {
-    name: "Oslo / Ostlandet",
+    name: "Oslo / Østlandet",
     estimatedMargin: { min: 2.50, max: 3.50 },
     factors: [
       "Kort avstand til import-terminaler",
-      "Hoy konkurranse mellom stasjoner",
+      "Høy konkurranse mellom stasjoner",
       "Stort volum gir stordriftsfordeler"
     ]
   },
@@ -22,13 +22,13 @@ const regions: RegionData[] = [
     name: "Vestlandet",
     estimatedMargin: { min: 2.80, max: 3.80 },
     factors: [
-      "Naerhet til Mongstad-raffineriet",
-      "God infrastruktur og hoyt volum",
+      "Nærhet til Mongstad-raffineriet",
+      "God infrastruktur og høyt volum",
       "Moderat konkurranse"
     ]
   },
   {
-    name: "Trondelag",
+    name: "Trøndelag",
     estimatedMargin: { min: 3.00, max: 4.20 },
     factors: [
       "Lengre transport fra raffinerier",
@@ -41,7 +41,7 @@ const regions: RegionData[] = [
     estimatedMargin: { min: 3.50, max: 5.00 },
     factors: [
       "Lange transportavstander",
-      "Faerre stasjoner, lavere konkurranse",
+      "Færre stasjoner, lavere konkurranse",
       "Utfordrende logistikk"
     ]
   }
@@ -83,7 +83,7 @@ export function RegionalMargins() {
             Distribusjon og margin
           </h2>
           <p className="text-muted-foreground max-w-xl">
-            Mellom ravarepris og pumpepris ligger distribusjonskostnader og marginer som varierer geografisk.
+            Mellom råvarepris og pumpepris ligger distribusjonskostnader og marginer som varierer geografisk.
           </p>
         </div>
 
@@ -146,7 +146,7 @@ export function RegionalMargins() {
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-1">Om estimatene</p>
             <p>
-              Marginene er estimater basert pa bransjedata. Faktiske marginer varierer mellom kjeder og tidspunkt. 
+              Marginene er estimater basert på bransjedata. Faktiske marginer varierer mellom kjeder og tidspunkt.
               Lavpris-kjeder som Uno-X og Best har generelt lavere marginer enn fullservice-stasjoner.
             </p>
           </div>

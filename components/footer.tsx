@@ -1,6 +1,6 @@
-"use client"
-
 import { Droplet } from "lucide-react"
+
+const copyrightYear = 2026
 
 export function Footer() {
   return (
@@ -43,14 +43,14 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4 text-sm">Om prisene</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Prisene er basert pa ICE Gasoil futures og gir en indikasjon pa ravarepris. 
+              Prisene er basert på ICE Gasoil futures og gir en indikasjon på råvarepris.
               Faktiske pumpepriser varierer.
             </p>
           </div>
         </div>
 
         <div className="border-t border-border mt-12 pt-8 text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} dieselpris.no</p>
+          <p>&copy; {copyrightYear} dieselpris.no</p>
         </div>
       </div>
     </footer>

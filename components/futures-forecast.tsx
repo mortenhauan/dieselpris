@@ -132,20 +132,20 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
           Estimert pumpepris fremover
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-          Basert pa terminkontrakter fra ICE-borsen viser vi estimert pumpepris for kommende maneder. 
-          Diagrammet viser alle kostnadskomponenter stablet oppover: ravarepris, avgifter, distribusjon og MVA.
+          Basert på terminkontrakter fra ICE-børsen viser vi estimert pumpepris for kommende måneder.
+          Diagrammet viser alle kostnadskomponenter stablet oppover: råvarepris, avgifter, distribusjon og MVA.
         </p>
       </div>
 
       {/* Price trend summary */}
       <div className="flex flex-wrap gap-6 mb-8">
         <div className="bg-secondary/50 rounded-xl px-5 py-4">
-          <p className="text-xs text-muted-foreground mb-1">Narmeste kontrakt</p>
+          <p className="text-xs text-muted-foreground mb-1">Nærmeste kontrakt</p>
           <p className="text-2xl font-bold text-foreground tabular-nums">{firstPrice.toFixed(2)} kr/L</p>
           <p className="text-xs text-muted-foreground">{chartData[0]?.month}</p>
         </div>
         <div className="bg-secondary/50 rounded-xl px-5 py-4">
-          <p className="text-xs text-muted-foreground mb-1">Om 12 maneder</p>
+          <p className="text-xs text-muted-foreground mb-1">Om 12 måneder</p>
           <p className="text-2xl font-bold text-foreground tabular-nums">{lastPrice.toFixed(2)} kr/L</p>
           <p className="text-xs text-muted-foreground">{chartData[chartData.length - 1]?.month}</p>
         </div>
@@ -221,7 +221,7 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
             <Area
               type="monotone"
               dataKey="rawPrice"
-              name="Ravarepris"
+              name="Råvarepris"
               stackId="1"
               stroke="hsl(220, 70%, 50%)"
               fill="url(#colorRaw)"
@@ -269,7 +269,7 @@ export function FuturesForecast({ contracts, exchangeRate }: FuturesForecastProp
 
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
-          <span>Avgifter basert pa 2026-satser</span>
+          <span>Avgifter basert på 2026-satser</span>
           <span>Distribusjon: gjennomsnitt for Norge</span>
           <span>Kilde: ICE Futures Europe</span>
         </div>

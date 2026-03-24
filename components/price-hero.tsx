@@ -3,7 +3,10 @@
 import { TrendingUp, TrendingDown, RefreshCw, Clock } from "lucide-react"
 
 function formatUpdatedAt(iso: string) {
-  return new Date(iso).toLocaleString("no-NO", {
+  if (!iso) return "—"
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return "—"
+  return d.toLocaleString("no-NO", {
     day: "numeric",
     month: "short",
     hour: "2-digit",
@@ -34,7 +37,7 @@ export function PriceHero({ priceUsdMt, priceNokLiter, changePercent, updatedAt,
             Dagens dieselpris
           </h1>
           <p className="text-lg text-muted-foreground mb-12 max-w-xl text-pretty leading-relaxed">
-            Folg ravarepris pa diesel fra borsen. Se hvordan avgifter pavirker prisen ved pumpa.
+            Følg råvarepris på diesel fra børsen. Se hvordan avgifter påvirker prisen ved pumpen.
           </p>
         </div>
 
@@ -75,7 +78,7 @@ export function PriceHero({ priceUsdMt, priceNokLiter, changePercent, updatedAt,
           {/* Norwegian price */}
           <div className="bg-secondary rounded-2xl p-8 md:p-10 flex flex-col justify-between">
             <div>
-              <p className="text-muted-foreground text-sm mb-2">Ravarepris i NOK</p>
+              <p className="text-muted-foreground text-sm mb-2">Råvarepris i NOK</p>
               <div className="flex items-baseline gap-2">
                 <span className={`text-5xl md:text-6xl font-bold tracking-tight text-foreground ${isLoading ? 'animate-pulse' : ''}`}>
                   {priceNokLiter.toFixed(2)}
@@ -84,7 +87,7 @@ export function PriceHero({ priceUsdMt, priceNokLiter, changePercent, updatedAt,
               </div>
             </div>
             <p className="text-muted-foreground text-sm mt-6">
-              For avgifter og margin. Basert pa dagens valutakurs.
+              Før avgifter og margin. Basert på dagens valutakurs.
             </p>
           </div>
         </div>

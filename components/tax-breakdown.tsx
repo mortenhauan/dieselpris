@@ -19,7 +19,7 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
   const totalPrice = priceBeforeMva + mva
   
   const components = [
-    { name: "Ravarepris", value: rawPrice, color: "#1a1a2e" },
+    { name: "Råvarepris", value: rawPrice, color: "#1a1a2e" },
     { name: "Distribusjon", value: distributionMargin, color: "#4a5568" },
     { name: "Veibruksavgift", value: VEIBRUKSAVGIFT, color: "#22c55e" },
     { name: "CO2-avgift", value: CO2_AVGIFT, color: "#f59e0b" },
@@ -101,7 +101,7 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
           <span className="text-lg font-bold text-foreground">{taxPercent.toFixed(0)}%</span>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          {totalTaxes.toFixed(2)} kr av prisen gar til staten
+          {totalTaxes.toFixed(2)} kr av prisen går til staten
         </p>
       </div>
     </div>

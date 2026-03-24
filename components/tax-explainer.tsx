@@ -9,7 +9,7 @@ export function TaxExplainer() {
       title: "Veibruksavgift",
       rate: "2,28",
       unit: "kr/L",
-      description: "Dekker samfunnets kostnader ved bilbruk - veislitasje, ulykker og kodannelse.",
+      description: "Dekker samfunnets kostnader ved bilbruk – veislitasje, ulykker og kødannelse.",
       trend: "Ned fra 2,71 kr (2024)"
     },
     {
@@ -17,7 +17,7 @@ export function TaxExplainer() {
       title: "CO2-avgift",
       rate: "4,42",
       unit: "kr/L",
-      description: "Miljoavgift som skal gjore det dyrere a slippe ut klimagasser. Oker arlig.",
+      description: "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Øker årlig.",
       trend: "Opp fra 3,17 kr (2024)"
     },
     {
@@ -44,7 +44,7 @@ export function TaxExplainer() {
             Norske dieselavgifter
           </h2>
           <p className="text-muted-foreground max-w-xl">
-            Over 60% av pumpeprisen gar til staten i form av avgifter.
+            Over 60 % av pumpeprisen går til staten i form av avgifter.
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function TaxExplainer() {
             <table className="w-full">
               <thead>
                 <tr className="bg-secondary/50">
-                  <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">Ar</th>
+                  <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">År</th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Veibruksavgift</th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">CO2-avgift</th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">Sum avgifter</th>
@@ -110,7 +110,7 @@ export function TaxExplainer() {
           </div>
           <div className="p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
-              Veibruksavgiften har blitt redusert, men CO2-avgiften oker mer. Samlet har avgiftene okt med 22 ore fra 2025 til 2026.
+              Veibruksavgiften har blitt redusert, men CO2-avgiften øker mer. Samlet har avgiftene økt med 22 øre fra 2025 til 2026.
             </p>
           </div>
         </div>

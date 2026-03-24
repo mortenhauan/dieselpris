@@ -8,7 +8,6 @@ import { TaxBreakdown } from '@/components/tax-breakdown'
 import { TaxExplainer } from '@/components/tax-explainer'
 import { FuturesForecast } from '@/components/futures-forecast'
 import { RegionalMargins } from '@/components/regional-margins'
-import { Footer } from '@/components/footer'
 
 interface DieselData {
   updated_at: string
@@ -58,7 +57,7 @@ export default function DieselPrisPage() {
     change_percent: -0.45
   }
 
-  const updatedAt = data?.updated_at ?? new Date().toISOString()
+  const updatedAt = data?.updated_at ?? ""
   const contracts = data?.contracts ?? []
   const historical = data?.historical ?? []
   const exchangeRate = data?.exchange_rate?.usd_nok ?? 11
@@ -84,7 +83,7 @@ export default function DieselPrisPage() {
                 Prissammensetting
               </h2>
               <p className="text-muted-foreground max-w-xl">
-                Se hvordan pumpeprisen er bygget opp, fra ravarepris til endelig pris.
+                Se hvordan pumpeprisen er bygget opp, fra råvarepris til endelig pris.
               </p>
             </div>
 
@@ -93,7 +92,7 @@ export default function DieselPrisPage() {
                 <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold text-foreground mb-1">Prisutvikling (90 dager)</h3>
-                    <p className="text-sm text-muted-foreground">Ravarepris i NOK per liter</p>
+                    <p className="text-sm text-muted-foreground">Råvarepris i NOK per liter</p>
                   </div>
                   {historical.length > 0 ? (
                     <PriceChart data={historical} />
@@ -120,7 +119,7 @@ export default function DieselPrisPage() {
                 Prisprognose
               </h2>
               <p className="text-muted-foreground max-w-xl">
-                Estimert pumpepris basert pa terminkontrakter fra ICE-borsen med alle avgifter inkludert.
+                Estimert pumpepris basert på terminkontrakter fra ICE-børsen med alle avgifter inkludert.
               </p>
             </div>
             {contracts.length > 0 && (
@@ -147,30 +146,28 @@ export default function DieselPrisPage() {
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                Dieselprisen i Norge bestemmes av flere faktorer. Den viktigste er ravarepris 
-                pa diesel, som handles pa internasjonale borser som <strong className="text-foreground">ICE (Intercontinental Exchange)</strong>. 
-                Her handles sakalt &quot;Gasoil&quot;, som er den europeiske standarden for diesel og fyringsolje.
+                Dieselprisen i Norge bestemmes av flere faktorer. Den viktigste er råvarepris
+                på diesel, som handles på internasjonale børser som <strong className="text-foreground">ICE (Intercontinental Exchange)</strong>.
+                Her handles såkalt &quot;Gasoil&quot;, som er den europeiske standarden for diesel og fyringsolje.
               </p>
               <p>
-                Prisen pa ICE oppgis i <strong className="text-foreground">USD per metrisk tonn (MT)</strong>. For a beregne prisen per liter 
-                i Norge, ma vi regne om fra tonn til liter (1 MT = ca. 1176 liter diesel) og fra 
-                USD til NOK basert pa dagens valutakurs.
+                Prisen på ICE oppgis i <strong className="text-foreground">USD per metrisk tonn (MT)</strong>. For å beregne prisen per liter
+                i Norge, må vi regne om fra tonn til liter (1 MT = ca. 1176 liter diesel) og fra
+                USD til NOK basert på dagens valutakurs.
               </p>
               <p>
-                Dagens front-maaned kontrakt (LFJ26 April 2026) handles til <strong className="text-foreground">$1 282 per tonn</strong>, 
-                noe som tilsvarer ca. <strong className="text-foreground">11,98 kr per liter</strong> i ren ravarepris. Legg til 
-                distribusjon, margin og avgifter, og du ender pa en pumpepris rundt 21-23 kr per liter.
+                Dagens frontmånedskontrakt (LFJ26 april 2026) handles til <strong className="text-foreground">$1 282 per tonn</strong>,
+                noe som tilsvarer ca. <strong className="text-foreground">11,98 kr per liter</strong> i ren råvarepris. Legg til
+                distribusjon, margin og avgifter, og du ender på en pumpepris rundt 21–23 kr per liter.
               </p>
             </div>
           </div>
         </section>
       </main>
 
-      <Footer />
-
       {error && (
         <div className="fixed bottom-4 right-4 bg-destructive text-destructive-foreground px-4 py-3 rounded-xl shadow-lg text-sm font-medium">
-          Kunne ikke laste prisdata. Prov igjen senere.
+          Kunne ikke laste prisdata. Prøv igjen senere.
         </div>
       )}
     </div>
