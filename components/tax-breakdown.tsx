@@ -1,32 +1,25 @@
 "use client"
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
+import {
+  PUMP_PRICE_STACK_LAYERS,
+  pumpPriceComponents,
+} from "@/lib/pump-price-model"
 
 interface TaxBreakdownProps {
   rawPrice: number
 }
 
-const VEIBRUKSAVGIFT = 2.28
-const CO2_AVGIFT = 4.42
-const MVA_RATE = 0.25
-
 export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
-  const distributionMargin = 3.50
-  const priceBeforeTax = rawPrice + distributionMargin
-  const fixedTaxes = VEIBRUKSAVGIFT + CO2_AVGIFT
-  const priceBeforeMva = priceBeforeTax + fixedTaxes
-  const mva = priceBeforeMva * MVA_RATE
-  const totalPrice = priceBeforeMva + mva
-  
-  const components = [
-    { name: "Råvarepris", value: rawPrice, color: "#1a1a2e" },
-    { name: "Distribusjon", value: distributionMargin, color: "#4a5568" },
-    { name: "Veibruksavgift", value: VEIBRUKSAVGIFT, color: "#22c55e" },
-    { name: "CO2-avgift", value: CO2_AVGIFT, color: "#f59e0b" },
-    { name: "MVA (25%)", value: mva, color: "#ef4444" },
-  ]
+  const c = pumpPriceComponents(rawPrice)
+  const components = PUMP_PRICE_STACK_LAYERS.map((layer) => ({
+    name: layer.name,
+    value: c[layer.key],
+    color: layer.color,
+  }))
 
-  const totalTaxes = VEIBRUKSAVGIFT + CO2_AVGIFT + mva
+  const totalPrice = c.total
+  const totalTaxes = c.veibruks + c.co2 + c.mva
   const taxPercent = (totalTaxes / totalPrice) * 100
 
   return (
@@ -36,7 +29,6 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
         <p className="text-sm text-muted-foreground">Slik er pumpeprisen bygget opp</p>
       </div>
 
-      {/* Pie Chart with center text */}
       <div className="relative h-48 mb-6">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -58,43 +50,29 @@ export function TaxBreakdown({ rawPrice }: TaxBreakdownProps) {
         </ResponsiveContainer>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-3xl font-bold text-foreground">{totalPrice.toFixed(0)}</p>
+            <p className="text-3xl font-bold text-foreground tabular-nums">{totalPrice.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground">kr/liter</p>
           </div>
         </div>
       </div>
 
-      {/* Stacked bar */}
-      <div className="h-3 flex rounded-full overflow-hidden mb-6">
-        {components.map((component, index) => (
-          <div
-            key={index}
-            className="h-full first:rounded-l-full last:rounded-r-full"
-            style={{ 
-              width: `${(component.value / totalPrice) * 100}%`,
-              backgroundColor: component.color
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Legend */}
       <div className="space-y-2.5">
         {components.map((component, index) => (
           <div key={index} className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div 
-                className="w-2.5 h-2.5 rounded-full" 
+              <div
+                className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: component.color }}
               />
               <span className="text-sm text-muted-foreground">{component.name}</span>
             </div>
-            <span className="text-sm font-medium text-foreground tabular-nums">{component.value.toFixed(2)} kr</span>
+            <span className="text-sm font-medium text-foreground tabular-nums">
+              {component.value.toFixed(2)} kr
+            </span>
           </div>
         ))}
       </div>
 
-      {/* Tax summary */}
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Andel avgifter</span>

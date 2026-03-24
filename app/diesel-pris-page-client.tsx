@@ -64,12 +64,14 @@ export function DieselPrisPageClient({ initialData }: Props) {
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-5 gap-6">
-              <div className="lg:col-span-3">
-                <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
+            <div className="grid lg:grid-cols-5 gap-6 items-stretch">
+              <div className="lg:col-span-3 h-full">
+                <div className="bg-card rounded-2xl border border-border p-6 md:p-8 h-full flex flex-col">
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-1">Prisutvikling (90 dager)</h3>
-                    <p className="text-sm text-muted-foreground">Råvarepris i NOK per liter</p>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">Estimert pumpepris (90 dager)</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Estimert pumpepris (kr/l). Faktisk pumpepris varierer mellom stasjoner og regioner.
+                    </p>
                   </div>
                   {historical.length > 0 ? (
                     <PriceChart data={historical} />
@@ -81,7 +83,7 @@ export function DieselPrisPageClient({ initialData }: Props) {
                 </div>
               </div>
 
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 h-full">
                 <TaxBreakdown rawPrice={currentPrice.price_nok_liter} />
               </div>
             </div>
