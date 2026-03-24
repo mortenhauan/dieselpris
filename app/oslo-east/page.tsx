@@ -4,6 +4,6 @@ import { RegionDieselShell } from "../region-diesel-shell";
 
 export const metadata: Metadata = regionPageMetadata("oslo-east");
 
-export default async function Page() {
+export default function Page() {
   return <RegionDieselShell regionId="oslo-east" />;
 }
