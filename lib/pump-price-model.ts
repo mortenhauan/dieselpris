@@ -91,7 +91,7 @@ export const PUMP_PRICE_STACK_LAYERS: readonly {
   color: string;
 }[] = [
   { color: "#1a1a2e", key: "raw", name: "Råvarepris" },
-  { color: "#4a5568", key: "distribution", name: "Distribusjon" },
+  { color: "#4a5568", key: "distribution", name: "Modellert distribusjon" },
   { color: "#22c55e", key: "veibruks", name: "Veibruksavgift" },
   { color: "#f59e0b", key: "co2", name: "CO2-avgift" },
   { color: "#ef4444", key: "mva", name: "MVA (25%)" },

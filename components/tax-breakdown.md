@@ -11,7 +11,7 @@ The card now reflects the selected region for the modeled `distribution` part of
 The item labels stay short in the main list, while the info buttons provide short plain-language explanations for:
 
 - `Råvarepris`
-- `Distribusjon`
+- `Modellert distribusjon`
 - `Veibruksavgift`
 - `CO2-avgift`
 - `MVA`
