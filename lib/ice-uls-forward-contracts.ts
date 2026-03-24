@@ -2,6 +2,12 @@ import { fetchIceDailyBarsFromTradingView } from "@/lib/tradingview-ice-gasoil"
 
 const ICE_MONTH_LETTERS = ["F", "G", "H", "J", "K", "M", "N", "Q", "U", "V", "X", "Z"] as const
 const FORWARD_MONTHS = 6
+/** TradingView throttles parallel sockets; stay at one session at a time with a small gap. */
+const MS_BETWEEN_TV_REQUESTS = 450
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 export type IceUlsContractRow = {
   contract_code: string
@@ -65,29 +71,33 @@ export async function fetchNextSixIceUlsMonthlyContracts(
   const m0 = now.getUTCMonth()
   const slots = Array.from({ length: FORWARD_MONTHS }, (_, i) => addCalendarMonthsUTC(y0, m0, i))
 
-  const settled = await Promise.all(
-    slots.map(async ({ y, m }) => {
-      const symbol = ulsTvSymbol(y, m)
-      const closes = await lastCloseForSymbol(symbol)
-      if (!closes) return null
-      const { last, prev } = closes
-      const change = last - prev
-      const changePercent = prev !== 0 ? round2((change / prev) * 100) : 0
-      const code = symbol.replace(/^ICEEUR:/, "")
-      return {
-        contract_code: code,
-        contract_month: formatContractMonthNb(y, m),
-        last_price: round2(last),
-        change: round2(change),
-        change_percent: changePercent,
-        open: round2(last),
-        high: round2(last),
-        low: round2(last),
-        previous: round2(prev),
-        volume: 0,
-      } satisfies IceUlsContractRow
-    }),
-  )
+  const settled: Array<IceUlsContractRow | null> = []
+  for (let i = 0; i < slots.length; i++) {
+    if (i > 0) await delay(MS_BETWEEN_TV_REQUESTS)
+    const { y, m } = slots[i]!
+    const symbol = ulsTvSymbol(y, m)
+    const closes = await lastCloseForSymbol(symbol)
+    if (!closes) {
+      settled.push(null)
+      continue
+    }
+    const { last, prev } = closes
+    const change = last - prev
+    const changePercent = prev !== 0 ? round2((change / prev) * 100) : 0
+    const code = symbol.replace(/^ICEEUR:/, "")
+    settled.push({
+      contract_code: code,
+      contract_month: formatContractMonthNb(y, m),
+      last_price: round2(last),
+      change: round2(change),
+      change_percent: changePercent,
+      open: round2(last),
+      high: round2(last),
+      low: round2(last),
+      previous: round2(prev),
+      volume: 0,
+    })
+  }
 
   return settled.filter((r): r is IceUlsContractRow => r !== null)
 }

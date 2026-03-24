@@ -5,10 +5,7 @@ import {
   USD_NOK_FALLBACK,
   usdNokOnOrBefore,
 } from "@/lib/norges-bank-usd-nok"
-import {
-  fetchNextSixIceUlsMonthlyContracts,
-  type IceUlsContractRow,
-} from "@/lib/ice-uls-forward-contracts"
+import { fetchNextSixIceUlsMonthlyContracts } from "@/lib/ice-uls-forward-contracts"
 import {
   fetchIceGasoilUls1Daily,
   ICEEUR_ULS1_CONTINUOUS,
@@ -41,22 +38,20 @@ export async function getDieselPricesData(): Promise<DieselPricesPayload> {
     usdNokOnOrBefore(fxSeries, utcYmd, spotUsdNok)
 
   try {
-    const [gasoil, forwardContracts] = await Promise.all([
-      fetchIceGasoilUls1Daily({
-        symbol: ICEEUR_ULS1_CONTINUOUS,
-        barCount: 110,
-        minBars: 80,
-        settleMs: 1500,
-        hardTimeoutMs: 22_000,
-      }),
-      fetchNextSixIceUlsMonthlyContracts().catch((): IceUlsContractRow[] => []),
-    ])
+    const { bars: rawBars } = await fetchIceGasoilUls1Daily({
+      symbol: ICEEUR_ULS1_CONTINUOUS,
+      barCount: 110,
+      minBars: 80,
+      settleMs: 1500,
+      hardTimeoutMs: 22_000,
+    })
 
-    const { bars: rawBars } = gasoil
     const bars = sliceLastDailyBars(rawBars, HISTORY_DAYS)
     if (bars.length < 2) {
       return buildFallbackDieselPricesPayload(spotUsdNok, exchangeSource, resolveUsdNok)
     }
+
+    const forwardContracts = await fetchNextSixIceUlsMonthlyContracts()
 
     const sorted = [...bars].sort((a, b) => a.time - b.time)
     const latest = sorted[sorted.length - 1]
