@@ -12,12 +12,14 @@ import {
   usdNokOnOrBefore,
 } from "@/lib/norges-bank-usd-nok";
 import {
+  fetchIceBrentDaily,
   fetchIceGasoilUls1Daily,
   ICEEUR_ULS1_CONTINUOUS,
   tradingViewBarsToHistorical,
 } from "@/lib/tradingview-ice-gasoil";
 
 export type {
+  BrentHistoricalRow,
   DieselPricesPayload,
   DieselPricesCurrent,
   DieselPricesHistoricalRow,
@@ -61,7 +63,28 @@ export const getDieselPricesData =
         return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource);
       }
 
-      const forwardContracts = await fetchNextSixIceUlsMonthlyContracts();
+      const [forwardContracts, brentTv] = await Promise.all([
+        fetchNextSixIceUlsMonthlyContracts(),
+        fetchIceBrentDaily({
+          barCount: 110,
+          hardTimeoutMs: 22_000,
+          minBars: 50,
+          settleMs: 1500,
+        }).catch(() => null),
+      ]);
+
+      const brentBars = brentTv
+        ? sliceLastDailyBars(brentTv.bars, HISTORY_DAYS)
+        : [];
+      const brent_historical =
+        brentBars.length >= 2
+          ? [...brentBars]
+              .toSorted((a, b) => a.time - b.time)
+              .map((b) => ({
+                date: new Date(b.time * 1000).toISOString().slice(0, 10),
+                usd_per_barrel: Math.round(b.close * 100) / 100,
+              }))
+          : [];
 
       const sorted = [...bars].toSorted((a, b) => a.time - b.time);
       const latest = sorted.at(-1);
@@ -79,6 +102,7 @@ export const getDieselPricesData =
       const contracts = forwardContracts.length >= 2 ? forwardContracts : [];
 
       return {
+        brent_historical,
         contracts,
         current: {
           change: Math.round(change * 100) / 100,

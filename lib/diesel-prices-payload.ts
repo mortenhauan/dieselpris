@@ -15,11 +15,18 @@ export interface DieselPricesHistoricalRow {
   price_nok_liter: number;
 }
 
+/** ICE Brent, USD per barrel — European crude benchmark. */
+export interface BrentHistoricalRow {
+  date: string;
+  usd_per_barrel: number;
+}
+
 export interface DieselPricesPayload {
   updated_at: string;
   current: DieselPricesCurrent | null;
   contracts: IceUlsContractRow[];
   historical: DieselPricesHistoricalRow[];
+  brent_historical: BrentHistoricalRow[];
   exchange_rate: { usd_nok: number; source: string };
   data_source: string;
 }
@@ -30,6 +37,7 @@ export const buildUnavailableDieselPricesPayload =
     exchangeSource: string
   ): DieselPricesPayload {
     return {
+      brent_historical: [],
       contracts: [],
       current: null,
       data_source: "Ingen live data akkurat nå",

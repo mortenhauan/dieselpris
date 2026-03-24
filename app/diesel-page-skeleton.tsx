@@ -35,6 +35,7 @@ export const DieselPageSkeleton = function DieselPageSkeleton() {
             <PulseBlock className="lg:col-span-3 h-[420px]" />
             <PulseBlock className="lg:col-span-2 h-[420px]" />
           </div>
+          <PulseBlock className="h-[380px] w-full" />
         </div>
       </section>
 

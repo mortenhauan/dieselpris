@@ -4,7 +4,7 @@ Shared utilities and pricing models used across the app.
 
 ## Files
 
-- [`get-diesel-prices.ts`](./get-diesel-prices.ts): Cached ICE/Norges Bank loader (`"use cache"`, tag `diesel-prices`, `cacheLife("dieselPrices")` profile from [`next.config.mjs`](../next.config.mjs)); warmed by [`/api/revalidate-diesel`](../app/api/revalidate-diesel/route.ts) cron on Vercel.
+- [`get-diesel-prices.ts`](./get-diesel-prices.ts): Cached ICE/Norges Bank loader (`"use cache"`, tag `diesel-prices`, `cacheLife("dieselPrices")` profile from [`next.config.mjs`](../next.config.mjs)); warmed by [`/api/revalidate-diesel`](../app/api/revalidate-diesel/route.ts) cron on Vercel. Loads gasoil plus a parallel **ICE Brent** daily series (90 days) for the crude benchmark card; Brent failure only clears that series.
 - [`diesel-prices-payload.ts`](./diesel-prices-payload.ts): Shared `DieselPricesPayload` shape and the honest empty payload when live ICE/TradingView data is missing (no fabricated prices).
 - [`pump-price-model.ts`](./pump-price-model.ts): Shared pump price composition logic with date-based tax rates for historical views.
 - [`pump-price-model.md`](./pump-price-model.md): Intent, rate sources, and modeling limits for the pump price schedule.

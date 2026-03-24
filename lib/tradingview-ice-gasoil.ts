@@ -45,6 +45,9 @@ interface TradingViewChart {
 
 export const ICEEUR_ULS1_CONTINUOUS = "ICEEUR:ULS1!";
 
+/** ICE Brent — European crude; usual reference for supply into NW European refineries. */
+export const ICEEUR_BRN1_CONTINUOUS = "ICEEUR:BRN1!";
+
 export interface IceGasoilDailyFromTv {
   bars: TvBar[];
   infos: TvMarketInfos;
@@ -191,3 +194,19 @@ export const fetchIceGasoilUls1Daily =
       timeoutMinBars: 30,
     });
   };
+
+export const fetchIceBrentDaily = function fetchIceBrentDaily(options?: {
+  barCount?: number;
+  minBars?: number;
+  settleMs?: number;
+  hardTimeoutMs?: number;
+}): Promise<IceGasoilDailyFromTv> {
+  return fetchIceDailyBarsFromTradingView({
+    barCount: options?.barCount ?? 110,
+    hardTimeoutMs: options?.hardTimeoutMs ?? 22_000,
+    minBars: options?.minBars ?? 50,
+    settleMs: options?.settleMs ?? 1500,
+    symbol: ICEEUR_BRN1_CONTINUOUS,
+    timeoutMinBars: 25,
+  });
+};

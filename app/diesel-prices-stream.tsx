@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { DieselBrentLogChart } from "@/components/diesel-brent-log-chart";
 import { FuturesForecast } from "@/components/futures-forecast";
 import { PriceChart } from "@/components/price-chart";
 import { PriceHero, PriceHeroUnavailable } from "@/components/price-hero";
@@ -21,7 +22,7 @@ export const DieselPricesStream = async function DieselPricesStream({
   const region = getRegionPriceProfile(regionId);
   const currentPrice = data.current;
   const { contracts } = data;
-  const { historical } = data;
+  const { brent_historical, historical } = data;
   const exchangeRate = data.exchange_rate.usd_nok;
   const hasLive = currentPrice !== null;
   const dutyReferenceDate =
@@ -131,6 +132,46 @@ export const DieselPricesStream = async function DieselPricesStream({
             </div>
           </div>
 
+          <div className="mt-8">
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-foreground mb-1">
+                  Gasoil og Brent (90 dager, log)
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-3xl">
+                  Samme tidsrom som grafen over:{" "}
+                  <strong className="font-medium text-foreground">
+                    gasoil
+                  </strong>{" "}
+                  (dieselråvare, USD per tonn) mot{" "}
+                  <strong className="font-medium text-foreground">Brent</strong>{" "}
+                  (råolje, USD per fat). Hver serie har egen akse og{" "}
+                  <strong className="font-medium text-foreground">
+                    logaritmisk skala
+                  </strong>
+                  , så lik avstand på aksen betyr omtrent lik prosentvis endring
+                  — nyttig for å se om begge beveger seg i samme retning.
+                  Enhetene er fortsatt ulike; dette er ikke et prisforhold i
+                  kroner per liter.
+                </p>
+              </div>
+              {historical.length > 1 && brent_historical.length > 1 ? (
+                <DieselBrentLogChart
+                  brent={brent_historical}
+                  historical={historical}
+                />
+              ) : (
+                <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
+                  Sammenligningen krever både gasoil- og Brentdata akkurat nå.
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground mt-4">
+                Kilde: ICE (sammenhengende serier), samme kanal som øvrige
+                råvarekurser — indikativ og forsinket.
+              </p>
+            </div>
+          </div>
+
           <div className="mt-8 max-w-2xl rounded-xl border border-border bg-secondary/40 p-5 text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-2">
               Avvik fra stasjonspris?
@@ -201,7 +242,10 @@ export const DieselPricesStream = async function DieselPricesStream({
                 ICE (Intercontinental Exchange)
               </strong>
               . Her handles såkalt &quot;Gasoil&quot;, som er den europeiske
-              standarden for diesel og fyringsolje.
+              standarden for diesel og fyringsolje. Råolje (f.eks. Brent) er et
+              annet ledd i verdikjeden og påvirker ofte det øvrige oljemarkedet,
+              men literprisen på stasjon følger i hovedsak raffinerte produkter
+              og avgifter.
             </p>
             <p>
               Prisen på ICE oppgis i{" "}
