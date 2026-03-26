@@ -104,7 +104,13 @@ const round2 = function round2(n: number): number {
 
 const lastCloseForSymbol = async function lastCloseForSymbol(
   symbol: string
-): Promise<{ last: number; prev: number } | null> {
+): Promise<{
+  dayHigh: number;
+  dayLow: number;
+  last: number;
+  open: number;
+  prev: number;
+} | null> {
   try {
     const { bars } = await fetchIceDailyBarsFromTradingView({
       barCount: 8,
@@ -118,12 +124,22 @@ const lastCloseForSymbol = async function lastCloseForSymbol(
     if (sorted.length < 2) {
       return null;
     }
-    const last = sorted.at(-1);
-    const prev = sorted.at(-2);
-    if (last === undefined || prev === undefined) {
+    const lastBar = sorted.at(-1);
+    const prevBar = sorted.at(-2);
+    if (lastBar === undefined || prevBar === undefined) {
       return null;
     }
-    return { last: last.close, prev: prev.close };
+    const settle = lastBar.close;
+    const hi = Number.isFinite(lastBar.max) ? lastBar.max : settle;
+    const lo = Number.isFinite(lastBar.min) ? lastBar.min : settle;
+    const o = Number.isFinite(lastBar.open) ? lastBar.open : settle;
+    return {
+      dayHigh: round2(Math.max(hi, lo)),
+      dayLow: round2(Math.min(hi, lo)),
+      last: settle,
+      open: round2(o),
+      prev: prevBar.close,
+    };
   } catch {
     return null;
   }
@@ -157,7 +173,7 @@ export const fetchNextSixIceUlsMonthlyContracts =
         settled.push(null);
         continue;
       }
-      const { last, prev } = closes;
+      const { dayHigh, dayLow, last, open, prev } = closes;
       const change = last - prev;
       const changePercent = prev === 0 ? 0 : round2((change / prev) * 100);
       const code = symbol.replace(/^ICEEUR:/, "");
@@ -168,10 +184,10 @@ export const fetchNextSixIceUlsMonthlyContracts =
         contract_code: code,
         contract_month: formatContractMonthNb(y, m),
         duty_at_utc_ymd,
-        high: round2(last),
+        high: dayHigh,
         last_price: round2(last),
-        low: round2(last),
-        open: round2(last),
+        low: dayLow,
+        open,
         previous: round2(prev),
         volume: 0,
       });

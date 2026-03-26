@@ -31,6 +31,8 @@ interface Contract {
   duty_at_utc_ymd: string;
   contract_month: string;
   last_price: number;
+  high: number;
+  low: number;
   change: number;
   change_percent: number;
 }
@@ -45,11 +47,22 @@ const Y_STEP_KR = 5;
 const HINT_CLASS =
   "max-w-[min(22rem,calc(100vw-2rem))] text-xs leading-relaxed px-3 py-2.5 font-normal normal-case tracking-normal";
 
+const sessionDayRangeHintBody = (): ReactNode => (
+  <p>
+    Laveste og høyeste nivå for denne månedskontrakten i siste ICE-handelsdag vi
+    har kurser for (lav- og høyeste dagsnotering). Omregnet til pumpeanslag med
+    samme valutakurs og avgifter som «Estimert pumpepris» — ikke
+    minutt-for-minutt siste døgn.
+  </p>
+);
+
 type StackedFuturesRow = {
   contract_code: string;
   contract_month: string;
   price: number;
   price_nok_liter: number;
+  session_pump_low: number;
+  session_pump_high: number;
 } & Record<PumpPriceLayerKey, number> & { total: number };
 
 const toStackedFutures = function toStackedFutures(
@@ -66,6 +79,22 @@ const toStackedFutures = function toStackedFutures(
       regionId,
       c.duty_at_utc_ymd
     );
+    const rawLowNokLiter =
+      Math.round(((c.low * exchangeRate) / litersPerTon) * 100) / 100;
+    const rawHighNokLiter =
+      Math.round(((c.high * exchangeRate) / litersPerTon) * 100) / 100;
+    const partsLow = pumpPriceComponents(
+      rawLowNokLiter,
+      regionId,
+      c.duty_at_utc_ymd
+    );
+    const partsHigh = pumpPriceComponents(
+      rawHighNokLiter,
+      regionId,
+      c.duty_at_utc_ymd
+    );
+    const session_pump_low = Math.min(partsLow.total, partsHigh.total);
+    const session_pump_high = Math.max(partsLow.total, partsHigh.total);
     return {
       co2: parts.co2,
       contract_code: c.contract_code,
@@ -75,6 +104,8 @@ const toStackedFutures = function toStackedFutures(
       price: c.last_price,
       price_nok_liter,
       raw: parts.raw,
+      session_pump_high,
+      session_pump_low,
       total: parts.total,
       veibruks: parts.veibruks,
     };
@@ -328,6 +359,22 @@ export const FuturesForecast = function FuturesForecast({
               <th className="px-4 py-3 font-medium text-muted-foreground">
                 Måned
               </th>
+              <th className="hidden md:table-cell px-4 py-3 text-right font-medium text-muted-foreground">
+                <span className="inline-flex w-full items-center justify-end gap-1.5">
+                  Lav
+                  <Hint label="Lav — siste handelsdag">
+                    {sessionDayRangeHintBody()}
+                  </Hint>
+                </span>
+              </th>
+              <th className="hidden md:table-cell px-4 py-3 text-right font-medium text-muted-foreground">
+                <span className="inline-flex w-full items-center justify-end gap-1.5">
+                  Høy
+                  <Hint label="Høy — siste handelsdag">
+                    {sessionDayRangeHintBody()}
+                  </Hint>
+                </span>
+              </th>
               <th className="px-4 py-3 text-right font-medium text-muted-foreground">
                 Estimert pumpepris
               </th>
@@ -341,6 +388,12 @@ export const FuturesForecast = function FuturesForecast({
               >
                 <td className="px-4 py-3 text-foreground">
                   {row.contract_month}
+                </td>
+                <td className="hidden md:table-cell px-4 py-3 text-right tabular-nums text-foreground">
+                  {formatKrPerLiter(row.session_pump_low)}
+                </td>
+                <td className="hidden md:table-cell px-4 py-3 text-right tabular-nums text-foreground">
+                  {formatKrPerLiter(row.session_pump_high)}
                 </td>
                 <td className="px-4 py-3 text-right text-base font-semibold tabular-nums text-foreground">
                   {formatKrPerLiter(row.total)}
