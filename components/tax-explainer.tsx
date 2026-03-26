@@ -2,16 +2,28 @@
 
 import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react";
 
-import { pumpPriceComponents } from "@/lib/pump-price-model";
+import { getPumpPriceRates, pumpPriceComponents } from "@/lib/pump-price-model";
+
+const fmtKr = (n: number): string =>
+  n.toLocaleString("nb-NO", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: n % 1 === 0 ? 0 : 2,
+  });
 
 interface TaxExplainerProps {
+  dutyReferenceDate: string;
   rawPrice: number | null;
 }
 
 export const TaxExplainer = function TaxExplainer({
+  dutyReferenceDate,
   rawPrice,
 }: TaxExplainerProps) {
-  const components = rawPrice === null ? null : pumpPriceComponents(rawPrice);
+  const rates = getPumpPriceRates(dutyReferenceDate);
+  const components =
+    rawPrice === null
+      ? null
+      : pumpPriceComponents(rawPrice, undefined, dutyReferenceDate);
   const taxPercent =
     components && components.total > 0
       ? ((components.veibruks + components.co2 + components.mva) /
@@ -19,23 +31,51 @@ export const TaxExplainer = function TaxExplainer({
         100
       : null;
 
+  const inTemporaryCut2026 =
+    dutyReferenceDate >= "2026-05-01" && dutyReferenceDate < "2026-09-01";
+  const current2025 =
+    dutyReferenceDate >= "2025-01-01" && dutyReferenceDate < "2026-01-01";
+  const current2026Ordinary =
+    (dutyReferenceDate >= "2026-01-01" && dutyReferenceDate < "2026-05-01") ||
+    dutyReferenceDate >= "2026-09-01";
+
+  const veibruksTrend = (() => {
+    if (rates.veibruks === 0) {
+      return "Midlertidig bortfall 1. mai–31. aug. 2026 (Stortinget)";
+    }
+    if (rates.veibruks <= 2.69) {
+      return "Ned fra 2,71 kr (2024)";
+    }
+    return "";
+  })();
+
+  const co2Trend = (() => {
+    if (rates.co2 === 3.09) {
+      return "Midlertidig sats i samme periode som veibrukskuttet";
+    }
+    if (rates.co2 >= 4.4) {
+      return "Opp fra 3,17 kr (2024)";
+    }
+    return "Justeres i budsjettrunder";
+  })();
+
   const taxItems = [
     {
       description:
         "Dekker samfunnets kostnader ved bilbruk – veislitasje, ulykker og kødannelse.",
       icon: Truck,
-      rate: "2,28",
+      rate: fmtKr(rates.veibruks),
       title: "Veibruksavgift",
-      trend: "Ned fra 2,71 kr (2024)",
+      trend: veibruksTrend,
       unit: "kr/L",
     },
     {
       description:
         "Miljøavgift som skal gjøre det dyrere å slippe ut klimagasser. Justeres i budsjettrunder.",
       icon: Leaf,
-      rate: "4,42",
-      title: "CO2-avgift",
-      trend: "Opp fra 3,17 kr (2024)",
+      rate: fmtKr(rates.co2),
+      title: "CO₂-avgift",
+      trend: co2Trend,
       unit: "kr/L",
     },
     {
@@ -48,10 +88,35 @@ export const TaxExplainer = function TaxExplainer({
     },
   ];
 
-  const historicalData = [
-    { co2: "3,17", total: "5,88", vei: "2,71", year: "2024" },
-    { co2: "3,79", total: "6,48", vei: "2,69", year: "2025" },
-    { co2: "4,42", current: true, total: "6,70", vei: "2,28", year: "2026" },
+  const historicalRows = [
+    {
+      co2: "3,17",
+      current: false,
+      total: "5,88",
+      vei: "2,71",
+      year: "2024",
+    },
+    {
+      co2: "3,79",
+      current: current2025,
+      total: "6,48",
+      vei: "2,69",
+      year: "2025",
+    },
+    {
+      co2: "3,09",
+      current: inTemporaryCut2026,
+      total: "3,09",
+      vei: "0",
+      year: "2026 (1. mai–31. aug.)",
+    },
+    {
+      co2: "4,42",
+      current: current2026Ordinary,
+      total: "6,70",
+      vei: "2,28",
+      year: "2026 (øvrige datoer)",
+    },
   ];
 
   return (
@@ -70,14 +135,28 @@ export const TaxExplainer = function TaxExplainer({
             ) : (
               <>
                 Med dagens prisestimat går ca. {taxPercent.toFixed(0)} % av
-                pumpeprisen til staten i form av veibruksavgift, CO2-avgift og
+                pumpeprisen til staten i form av veibruksavgift, CO₂-avgift og
                 MVA.
               </>
             )}
           </p>
+          <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
+            Satser for veibruks og CO₂ følger referansedatoen for siste
+            kurspunkt ({dutyReferenceDate}). Sommerperioden 2026 er modellert
+            med veibruks 0 kr/l og CO₂ 3,09 kr/l etter Stortingets vedtak — se{" "}
+            <a
+              className="text-foreground underline underline-offset-2 hover:no-underline"
+              href="https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              sak 107811
+            </a>
+            . Når kuttet trer i kraft, bestemmer regjeringen; vedtaket åpner for
+            tidligst 1. april og senest 1. mai som start.
+          </p>
         </div>
 
-        {/* Tax cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-12">
           {taxItems.map((item) => (
             <div
@@ -99,15 +178,16 @@ export const TaxExplainer = function TaxExplainer({
               <p className="text-sm text-muted-foreground mb-4">
                 {item.description}
               </p>
-              <div className="flex items-center gap-2 text-sm">
-                <ArrowRight className="h-4 w-4 text-accent" />
-                <span className="text-accent font-medium">{item.trend}</span>
-              </div>
+              {item.trend ? (
+                <div className="flex items-center gap-2 text-sm">
+                  <ArrowRight className="h-4 w-4 text-accent" />
+                  <span className="text-accent font-medium">{item.trend}</span>
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
 
-        {/* Historical table */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="p-6 md:p-8 border-b border-border">
             <h3 className="font-semibold text-foreground">
@@ -115,6 +195,13 @@ export const TaxExplainer = function TaxExplainer({
             </h3>
             <p className="text-sm text-muted-foreground">
               Faste avgifter per liter (ekskl. MVA)
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground max-w-3xl">
+              Startdato for sommerkuttet i 2026 er ikke endelig: vi bruker{" "}
+              <strong className="font-medium text-foreground">1. mai</strong> i
+              modellen og grafene inntil regjeringen fastsetter ikrafttredelse
+              (vedtaket tillater fra 1. april eller et annet tidspunkt, men ikke
+              senere enn 1. mai).
             </p>
           </div>
           <div className="overflow-x-visible md:overflow-x-auto">
@@ -128,7 +215,7 @@ export const TaxExplainer = function TaxExplainer({
                     Veibruksavgift
                   </th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">
-                    CO2-avgift
+                    CO₂-avgift
                   </th>
                   <th className="text-right py-4 px-6 text-sm font-medium text-muted-foreground">
                     Sum avgifter
@@ -136,7 +223,7 @@ export const TaxExplainer = function TaxExplainer({
                 </tr>
               </thead>
               <tbody className="block md:table-row-group">
-                {historicalData.map((row) => (
+                {historicalRows.map((row) => (
                   <tr
                     key={row.year}
                     className={`block border-t border-border p-4 first:border-t-0 md:table-row md:p-0 ${row.current ? "bg-foreground text-background" : ""}`}
@@ -167,7 +254,7 @@ export const TaxExplainer = function TaxExplainer({
                       <span
                         className={`text-xs uppercase tracking-wide md:hidden ${row.current ? "text-background/70" : "text-muted-foreground"}`}
                       >
-                        CO2-avgift
+                        CO₂-avgift
                       </span>
                       <span>{row.co2} kr</span>
                     </td>
@@ -186,8 +273,11 @@ export const TaxExplainer = function TaxExplainer({
           </div>
           <div className="space-y-3 p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
-              Veibruksavgiften har blitt redusert, men CO2-avgiften øker mer.
-              Samlet har avgiftene økt med 22 øre fra 2025 til 2026.
+              I 2026 er det en ordinær økning i CO₂ sammenlignet med 2025, men
+              Stortinget har vedtatt lavere satser for en periode om sommeren —
+              se tabellen over. «1. mai–31. aug.» er en foreløpig merkelapp: vi
+              bruker 1. mai som start inntil regjeringen setter endelig
+              ikrafttredelse.
             </p>
             <p className="text-xs text-muted-foreground">
               Modellen inkluderer ikke alle mulige små satser og særregler.

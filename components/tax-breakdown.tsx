@@ -31,6 +31,7 @@ const BREAKDOWN_HINTS: Record<PumpPriceLayerKey, string> = {
 };
 
 interface TaxBreakdownProps {
+  dutyReferenceDate: string;
   rawPrice: number;
   regionId: RegionId;
 }
@@ -66,11 +67,12 @@ const BreakdownHint = function BreakdownHint({
 };
 
 export const TaxBreakdown = function TaxBreakdown({
+  dutyReferenceDate,
   rawPrice,
   regionId,
 }: TaxBreakdownProps) {
   const region = getRegionPriceProfile(regionId);
-  const c = pumpPriceComponents(rawPrice, regionId);
+  const c = pumpPriceComponents(rawPrice, regionId, dutyReferenceDate);
   const components = PUMP_PRICE_STACK_LAYERS.map((layer) => ({
     color: layer.color,
     description: BREAKDOWN_HINTS[layer.key],

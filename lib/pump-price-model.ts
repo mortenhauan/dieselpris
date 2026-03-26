@@ -17,6 +17,7 @@ type ScheduledPumpPriceRates = PumpPriceRates & {
  * Kilder:
  * - Regjeringen: Avgiftssatser 2026 (med 2025/2026-tabell)
  * - Skatteetaten: Veibruksavgift på drivstoff / Merverdiavgift
+ * - Stortinget, vedtak i sak p=107811 (midlertidig kutt 2026, modell: start 1. mai)
  *
  * Distribusjon er fortsatt en modellert margin og ikke en offentlig avgiftssats.
  */
@@ -32,6 +33,20 @@ export const PUMP_PRICE_RATE_SCHEDULE: readonly ScheduledPumpPriceRates[] = [
     co2: 4.42,
     defaultDistribution: 3.5,
     effectiveFrom: "2026-01-01",
+    mvaRate: 0.25,
+    veibruks: 2.28,
+  },
+  {
+    co2: 3.09,
+    defaultDistribution: 3.5,
+    effectiveFrom: "2026-05-01",
+    mvaRate: 0.25,
+    veibruks: 0,
+  },
+  {
+    co2: 4.42,
+    defaultDistribution: 3.5,
+    effectiveFrom: "2026-09-01",
     mvaRate: 0.25,
     veibruks: 2.28,
   },

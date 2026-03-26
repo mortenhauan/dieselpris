@@ -28,6 +28,7 @@ import type { RegionId } from "@/lib/regional-price-model";
 
 interface Contract {
   contract_code: string;
+  duty_at_utc_ymd: string;
   contract_month: string;
   last_price: number;
   change: number;
@@ -60,7 +61,11 @@ const toStackedFutures = function toStackedFutures(
   return contracts.map((c) => {
     const price_nok_liter =
       Math.round(((c.last_price * exchangeRate) / litersPerTon) * 100) / 100;
-    const parts = pumpPriceComponents(price_nok_liter, regionId);
+    const parts = pumpPriceComponents(
+      price_nok_liter,
+      regionId,
+      c.duty_at_utc_ymd
+    );
     return {
       co2: parts.co2,
       contract_code: c.contract_code,
@@ -240,7 +245,8 @@ export const FuturesForecast = function FuturesForecast({
                 legger til grunn for diesellevering den måneden. Det er ikke det
                 du betaler på en bestemt dag på stasjonen, og det er ikke en
                 spådom om fremtidig pumpepris. Beregningen bruker dagens
-                valutakurs og avgifter, og en modellert andel for distribusjon i{" "}
+                valutakurs, nasjonale avgifter per leveringsmåned (forenklet: 1.
+                i måneden), og en modellert andel for distribusjon i{" "}
                 {region.label.toLowerCase()}.
               </p>
             </Hint>
@@ -346,7 +352,7 @@ export const FuturesForecast = function FuturesForecast({
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        Avgifter som i dag gjennom hele perioden · Valuta{" "}
+        Avgifter etter leveringsmåned (dato 1. i måneden) · Valuta{" "}
         {exchangeRate.toFixed(4)} USD/NOK · ICE lavsvovel gasoil
       </p>
     </div>

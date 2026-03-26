@@ -120,6 +120,7 @@ export const DieselPricesStream = async function DieselPricesStream({
             <div className="lg:col-span-2 h-full">
               {hasLive ? (
                 <TaxBreakdown
+                  dutyReferenceDate={dutyReferenceDate}
                   rawPrice={currentPrice.price_nok_liter}
                   regionId={regionId}
                 />
@@ -225,6 +226,7 @@ export const DieselPricesStream = async function DieselPricesStream({
 
       <section id="avgifter">
         <TaxExplainer
+          dutyReferenceDate={dutyReferenceDate}
           rawPrice={hasLive ? currentPrice.price_nok_liter : null}
         />
       </section>

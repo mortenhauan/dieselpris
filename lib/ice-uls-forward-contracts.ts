@@ -28,6 +28,8 @@ const delay = async function delay(ms: number): Promise<void> {
 
 export interface IceUlsContractRow {
   contract_code: string;
+  /** UTC `YYYY-MM-DD` (1. i leveringsmåneden) — til dato-styrt avgift i pumpeprismodellen. */
+  duty_at_utc_ymd: string;
   contract_month: string;
   last_price: number;
   change: number;
@@ -159,11 +161,13 @@ export const fetchNextSixIceUlsMonthlyContracts =
       const change = last - prev;
       const changePercent = prev === 0 ? 0 : round2((change / prev) * 100);
       const code = symbol.replace(/^ICEEUR:/, "");
+      const duty_at_utc_ymd = `${y}-${String(m + 1).padStart(2, "0")}-01`;
       settled.push({
         change: round2(change),
         change_percent: changePercent,
         contract_code: code,
         contract_month: formatContractMonthNb(y, m),
+        duty_at_utc_ymd,
         high: round2(last),
         last_price: round2(last),
         low: round2(last),
