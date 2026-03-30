@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { DieselBrentLogChart } from "@/components/diesel-brent-log-chart";
 import { FuturesForecast } from "@/components/futures-forecast";
+import { HomeNewsHighlight } from "@/components/home-news-highlight";
 import { PriceChart } from "@/components/price-chart";
 import { PriceHero, PriceHeroUnavailable } from "@/components/price-hero";
 import { RegionalMargins } from "@/components/regional-margins";
@@ -72,6 +73,8 @@ export const DieselPricesStream = async function DieselPricesStream({
       ) : (
         <PriceHeroUnavailable updatedAt={data.updated_at} />
       )}
+
+      <HomeNewsHighlight />
 
       <section id="priser" className="py-16 md:py-24 border-t border-border">
         <div className="max-w-6xl mx-auto px-6">

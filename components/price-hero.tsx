@@ -241,12 +241,6 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
             Ingen oppdatert råvarepris akkurat nå. Kom tilbake om litt — da skal
             tallene ligge her som vanlig.
           </p>
-          <Link
-            href="/nyheter"
-            className="mb-10 inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent/35 hover:bg-accent/15"
-          >
-            Les nyheter og enkle forklaringer om avgifter og vedtak
-          </Link>
         </div>
         <div className="rounded-2xl border border-border bg-card px-8 py-6 text-sm text-muted-foreground">
           Sist forsøkt oppdatert: {formattedTime}
@@ -284,12 +278,6 @@ export const PriceHero = function PriceHero({
             CO₂-avgift og MVA. Modellert distribusjon og stasjonens påslag er
             ikke med i det siste tallet.
           </p>
-          <Link
-            href="/nyheter"
-            className="mb-10 inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent/35 hover:bg-accent/15"
-          >
-            Nytt nå: les nyheter og enkle forklaringer om avgifter og vedtak
-          </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

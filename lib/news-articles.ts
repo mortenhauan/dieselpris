@@ -145,3 +145,10 @@ export const NEWS_INDEX: NewsIndexEntry[] = [...entries].toSorted(
 export const getAllNewsSlugs = function getAllNewsSlugs(): string[] {
   return NEWS_INDEX.map((e) => e.slug);
 };
+
+export const getRecentNewsEntries = function getRecentNewsEntries(
+  count: number
+): NewsIndexEntry[] {
+  const n = Math.max(0, Math.floor(count));
+  return NEWS_INDEX.slice(0, n);
+};
