@@ -1,15 +1,14 @@
 # `news-articles.ts`
 
-Typed content source for the `/nyheter` page.
+Lightweight index of all news articles for the `/nyheter` listing and sitemap.
 
 ## Intent
 
-- Keep editorial copy out of the page component so updates are easy.
-- Store short summaries and practical takeaways in one place.
-- Make it easy to add more news items later without changing layout code.
+- Keep the article registry slim: just slug, title, intro, category, date.
+- Actual article content lives in each route's own `page.tsx`.
+- Sorted newest-first for the news feed.
 
-## Copy principles
+## Adding a new article
 
-- Write for ordinary people who want to understand pump prices.
-- Prefer short explanations over political or legal wording.
-- Link back to Stortinget and regjeringen for every article.
+Add an entry to the `entries` array and create a matching route folder under
+`app/nyheter/`. The sitemap and index page pick it up automatically.

@@ -13,15 +13,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { regionPath } from "@/lib/region-route";
-import { REGION_PRICE_PROFILES } from "@/lib/regional-price-model";
+import {
+  DEFAULT_REGION_ID,
+  REGION_PRICE_PROFILES,
+} from "@/lib/regional-price-model";
 import type { RegionId } from "@/lib/regional-price-model";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
-  selectedRegionId: RegionId;
+  activeNav?: "news" | "prices";
+  selectedRegionId?: RegionId;
+  variant?: "content" | "region";
 }
 
-export const Header = function Header({ selectedRegionId }: HeaderProps) {
+const navLinkClass = function navLinkClass(isActive: boolean) {
+  return cn(
+    "font-medium transition-colors",
+    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+  );
+};
+
+export const Header = function Header({
+  activeNav = "prices",
+  selectedRegionId = DEFAULT_REGION_ID,
+  variant = "region",
+}: HeaderProps) {
   const router = useRouter();
+  const sectionBasePath = regionPath(selectedRegionId);
+  const showRegionSelect = variant === "region";
+
   const onRegionChange = useCallback(
     (value: string) => {
       router.push(regionPath(value as RegionId));
@@ -41,56 +61,66 @@ export const Header = function Header({ selectedRegionId }: HeaderProps) {
             </span>
           </Link>
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
-            <div className="flex items-center gap-2">
-              <span
-                id="region-select-label"
-                className="text-sm font-medium text-muted-foreground hidden md:block"
-              >
-                Region
-              </span>
-              <Select value={selectedRegionId} onValueChange={onRegionChange}>
-                <SelectTrigger
-                  aria-labelledby="region-select-label"
-                  size="sm"
-                  className="bg-background"
+            {showRegionSelect ? (
+              <div className="flex items-center gap-2">
+                <span
+                  id="region-select-label"
+                  className="text-sm font-medium text-muted-foreground hidden md:block"
                 >
-                  <SelectValue placeholder="Velg region" />
-                </SelectTrigger>
-                <SelectContent>
-                  {REGION_PRICE_PROFILES.map((region) => (
-                    <SelectItem key={region.id} value={region.id}>
-                      {region.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                  Region
+                </span>
+                <Select value={selectedRegionId} onValueChange={onRegionChange}>
+                  <SelectTrigger
+                    aria-labelledby="region-select-label"
+                    size="sm"
+                    className="bg-background"
+                  >
+                    <SelectValue placeholder="Velg region" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {REGION_PRICE_PROFILES.map((region) => (
+                      <SelectItem key={region.id} value={region.id}>
+                        {region.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
 
             <nav className="hidden items-center gap-6 text-sm md:flex">
               <Link
                 href="/nyheter"
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
+                className={navLinkClass(activeNav === "news")}
               >
                 Nyheter
               </Link>
-              <a
-                href="#priser"
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                Priser
-              </a>
-              <a
-                href="#distribusjon"
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                Distribusjon
-              </a>
-              <a
-                href="#avgifter"
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                Avgifter
-              </a>
+              {showRegionSelect ? (
+                <>
+                  <a
+                    href={`${sectionBasePath}#priser`}
+                    className={navLinkClass(activeNav === "prices")}
+                  >
+                    Priser
+                  </a>
+                  <a
+                    href={`${sectionBasePath}#distribusjon`}
+                    className={navLinkClass(false)}
+                  >
+                    Distribusjon
+                  </a>
+                  <a
+                    href={`${sectionBasePath}#avgifter`}
+                    className={navLinkClass(false)}
+                  >
+                    Avgifter
+                  </a>
+                </>
+              ) : (
+                <Link href="/" className={navLinkClass(activeNav === "prices")}>
+                  Priser
+                </Link>
+              )}
             </nav>
           </div>
         </div>

@@ -1,12 +1,9 @@
 # `page.tsx`
 
-Static route for `/nyheter`.
+News index route for `/nyheter`.
 
 ## Intent
 
-- Give the site a simple news section that feels closer to a blog than a data
-  dashboard.
-- Explain public decisions in plain Norwegian before sending readers to the
-  original sources.
-- Offer a lightweight way to publish multiple short articles without building a
-  full CMS.
+- List all articles newest-first as clickable cards.
+- Each card links to a self-contained article route.
+- Written for practical people, not policy specialists.
