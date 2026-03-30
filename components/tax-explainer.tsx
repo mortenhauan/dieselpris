@@ -189,6 +189,22 @@ export const TaxExplainer = function TaxExplainer({
           </p>
         </div>
 
+        <div className="mb-12 rounded-2xl border border-border bg-card p-5">
+          <p className="text-sm font-semibold text-foreground">
+            Hvorfor kan anleggsdiesel koste mindre enn diesel på pumpa?
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Siden her viser veidiesel, altså autodiesel. I Stortingets vedtak er
+            CO₂-avgiften fra 1. mai satt lavere for anleggsdiesel enn for
+            autodiesel: 1,92 kr/l mot 3,09 kr/l. Det kan gjøre anleggsdiesel
+            billigere enn vanlig diesel på stasjon.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Kort sagt: forskjellen handler først og fremst om avgifter, ikke at
+            siden regner feil. Tallene våre gjelder fortsatt autodiesel.
+          </p>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-4 mb-12">
           {taxItems.map((item) => (
             <div

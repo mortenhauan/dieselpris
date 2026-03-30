@@ -24,3 +24,4 @@ The section should:
 - `veibruksavgift` is shown as `0 kr/l` from `1. april` to `1. september` because that is the implemented road-diesel change.
 - `CO₂-avgift 3,09 kr/l` is included from `1. mai` in the estimates because the user wants to follow the vedtak in the product.
 - The section must warn clearly that the `CO₂` part still awaits clarification from the government and may change.
+- The section may also explain why `anleggsdiesel` can be cheaper than `autodiesel`, using short plain wording and concrete numbers (`1,92 kr/l` vs `3,09 kr/l`) without turning the page into a policy explainer.

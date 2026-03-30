@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/tooltip";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
+  estimateAnleggsdieselPriceNokPerLiter,
+  getAnleggsdieselRates,
   PUMP_PRICE_STACK_LAYERS,
   pumpPriceComponents,
 } from "@/lib/pump-price-model";
@@ -73,6 +75,12 @@ export const TaxBreakdown = function TaxBreakdown({
 }: TaxBreakdownProps) {
   const region = getRegionPriceProfile(regionId);
   const c = pumpPriceComponents(rawPrice, regionId, dutyReferenceDate);
+  const anleggsdieselRates = getAnleggsdieselRates(dutyReferenceDate);
+  const anleggsdieselPrice = estimateAnleggsdieselPriceNokPerLiter(
+    rawPrice,
+    regionId,
+    dutyReferenceDate
+  );
   const components = PUMP_PRICE_STACK_LAYERS.map((layer) => ({
     color: layer.color,
     description: BREAKDOWN_HINTS[layer.key],
@@ -172,6 +180,16 @@ export const TaxBreakdown = function TaxBreakdown({
           Enkelte andre satser er ikke med. Svovelavgift gjelder i
           utgangspunktet bare mineralolje med over 0,05 % svovel — ikke typisk
           veidiesel.
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">
+          Til sammenligning: Med samme råvarepris og modellert distribusjon
+          ville anleggsdiesel ligget rundt{" "}
+          <span className="font-medium text-foreground tabular-nums">
+            {anleggsdieselPrice.toFixed(2)} kr/l
+          </span>
+          . Dette følger satsene for samme dato som kortet over, med
+          veibruksavgift {anleggsdieselRates.veibruks.toFixed(2)} kr/l og CO2{" "}
+          {anleggsdieselRates.co2.toFixed(2)} kr/l.
         </p>
       </div>
     </div>

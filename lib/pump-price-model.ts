@@ -8,7 +8,17 @@ export interface PumpPriceRates {
   defaultDistribution: number;
 }
 
+export interface ComparisonDieselRates {
+  co2: number;
+  mvaRate: number;
+  veibruks: number;
+}
+
 type ScheduledPumpPriceRates = PumpPriceRates & {
+  effectiveFrom: string;
+};
+
+type ScheduledComparisonDieselRates = ComparisonDieselRates & {
   effectiveFrom: string;
 };
 
@@ -62,7 +72,36 @@ export const PUMP_PRICE_RATE_SCHEDULE: readonly ScheduledPumpPriceRates[] = [
   },
 ] as const;
 
+export const ANLEGGSDIESEL_RATE_SCHEDULE: readonly ScheduledComparisonDieselRates[] =
+  [
+    {
+      co2: 3.79,
+      effectiveFrom: "2025-01-01",
+      mvaRate: 0.25,
+      veibruks: 0,
+    },
+    {
+      co2: 4.42,
+      effectiveFrom: "2026-01-01",
+      mvaRate: 0.25,
+      veibruks: 0,
+    },
+    {
+      co2: 1.92,
+      effectiveFrom: "2026-05-01",
+      mvaRate: 0.25,
+      veibruks: 0,
+    },
+    {
+      co2: 4.42,
+      effectiveFrom: "2026-09-01",
+      mvaRate: 0.25,
+      veibruks: 0,
+    },
+  ] as const;
+
 const [FIRST_PUMP_PRICE_RATES] = PUMP_PRICE_RATE_SCHEDULE;
+const [FIRST_ANLEGGSDIESEL_RATES] = ANLEGGSDIESEL_RATE_SCHEDULE;
 
 const normalizeRateDate = function normalizeRateDate(
   atDate?: string | Date
@@ -86,6 +125,23 @@ export const getPumpPriceRates = function getPumpPriceRates(
 
   let match = FIRST_PUMP_PRICE_RATES;
   for (const period of PUMP_PRICE_RATE_SCHEDULE) {
+    if (period.effectiveFrom <= targetDate) {
+      match = period;
+    }
+  }
+  return match;
+};
+
+export const getAnleggsdieselRates = function getAnleggsdieselRates(
+  atDate?: string | Date
+): ComparisonDieselRates {
+  const targetDate = normalizeRateDate(atDate);
+  if (!targetDate) {
+    return ANLEGGSDIESEL_RATE_SCHEDULE.at(-1) ?? FIRST_ANLEGGSDIESEL_RATES;
+  }
+
+  let match = FIRST_ANLEGGSDIESEL_RATES;
+  for (const period of ANLEGGSDIESEL_RATE_SCHEDULE) {
     if (period.effectiveFrom <= targetDate) {
       match = period;
     }
@@ -154,5 +210,25 @@ export const rawPlusPublicDutiesNokPerLiter =
     const rates = getPumpPriceRates(atDate);
     const beforeMva = rawNokPerLiter + rates.veibruks + rates.co2;
     const mva = beforeMva * rates.mvaRate;
+    return beforeMva + mva;
+  };
+
+export const estimateAnleggsdieselPriceNokPerLiter =
+  function estimateAnleggsdieselPriceNokPerLiter(
+    rawNokPerLiter: number,
+    regionId?: RegionId,
+    atDate?: string | Date
+  ): number {
+    const pumpRates = getPumpPriceRates(atDate);
+    const comparisonRates = getAnleggsdieselRates(atDate);
+    const distribution = regionId
+      ? getRegionPriceProfile(regionId).distributionNokPerLiter
+      : pumpRates.defaultDistribution;
+    const beforeMva =
+      rawNokPerLiter +
+      distribution +
+      comparisonRates.veibruks +
+      comparisonRates.co2;
+    const mva = beforeMva * comparisonRates.mvaRate;
     return beforeMva + mva;
   };
