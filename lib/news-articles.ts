@@ -26,10 +26,50 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "CO₂-avgiften på diesel øker 25 prosent fra nyttår. Samlet betaler du 43 øre mer per liter i faste avgifter fra 1. januar 2024.",
+    publishedAtIso: "2023-12-19T17:00:00+01:00",
+    slug: "dieselavgiftene-for-2024-co2-avgiften-stiger-videre",
+    title: "Dieselavgiftene for 2024: CO2-avgiften stiger videre",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "CO₂-avgiften på diesel øker 20 prosent fra nyttår. Samlet betaler du 60 øre mer per liter i faste avgifter fra 1. januar 2025.",
+    publishedAtIso: "2024-12-13T17:00:00+01:00",
+    slug: "dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift",
+    title: "Dieselavgiftene for 2025: nok et år med økt CO2-avgift",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Fra 1. april fjernes veibruksavgiften midlertidig. For vanlig diesel kan det bety rundt 2,85 kroner billigere per liter på pumpa.",
     publishedAtIso: "2026-03-30T13:00:00+02:00",
     slug: "drivstoffavgiftene-kuttes-fra-1-april",
     title: "Drivstoffavgiftene kuttes fra 1. april – dette er det som skjer",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "CO₂-avgiften på diesel øker med over 60 øre per liter fra nyttår. For et vogntog betyr det over 23 000 kroner mer i året.",
+    publishedAtIso: "2025-12-22T18:00:00+01:00",
+    slug: "dieselavgiftene-for-2026-er-vedtatt",
+    title: "Dieselavgiftene for 2026 er vedtatt",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "Et bredt flertall stemte ned Senterpartiets forslag om å stanse ETS2. Den nye EU-kvoteprisen på drivstoff kommer til Norge, trolig fra 2028.",
+    publishedAtIso: "2026-02-03T13:00:00+01:00",
+    slug: "stortinget-sa-ja-til-ets2",
+    title: "Stortinget sa ja til ETS2 – forslaget om å stoppe ble nedstemt",
+  },
+  {
+    category: "Forklart",
+    intro:
+      "Stortinget debatterer om Norge skal stoppe ETS2 – et nytt EU-system som kan legge en ekstra kvotepris oppå dieselavgiftene du allerede betaler.",
+    publishedAtIso: "2026-01-29T14:00:00+01:00",
+    slug: "kan-eu-kreve-ny-avgift-pa-diesel-i-norge",
+    title: "Kan EU kreve ny avgift på diesel i Norge?",
   },
   {
     category: "Forklart",
@@ -46,6 +86,14 @@ const entries: NewsIndexEntry[] = [
     publishedAtIso: "2026-03-30T09:00:00+02:00",
     slug: "co2-kutt-som-ikke-er-klare-enda",
     title: "Flere CO2-kutt er vedtatt, men ennå ikke satt i verk",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "KrF foreslår å fjerne veibruksavgiften i tre måneder. For diesel betyr det rundt 2,85 kr billigere per liter – hvis forslaget får flertall.",
+    publishedAtIso: "2026-03-19T16:00:00+01:00",
+    slug: "krf-foreslo-avgiftskutt-for-hastevedtaket",
+    title: "KrF vil fjerne veibruksavgiften midlertidig",
   },
   {
     category: "Bakgrunn",
