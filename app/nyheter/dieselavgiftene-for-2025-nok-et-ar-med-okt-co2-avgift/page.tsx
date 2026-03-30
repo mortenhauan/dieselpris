@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
 import type { NewsSource } from "@/lib/news-articles";
 import { SITE_URL } from "@/lib/site-url";
 
-const TITLE = "Dieselavgiftene for 2025: nok et år med økt CO2-avgift";
+const TITLE = "Dieselavgiftene for 2025: nok et år med økt CO₂-avgift";
 const DESCRIPTION =
-  "CO2-avgiften på diesel øker med 20 prosent fra nyttår. Slik slår de nye satsene ut for sjåfører og transportnæringen.";
+  "CO₂-avgiften på diesel øker med 20 prosent fra nyttår. Slik slår de nye satsene ut for sjåfører og transportnæringen.";
 const SLUG = "dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift";
 const CANONICAL = `${SITE_URL}/nyheter/${SLUG}`;
 
@@ -283,6 +284,30 @@ const Page = function Page() {
                 kuttet.
               </li>
               <li>Alle satser gjelder fra 1. januar 2025.</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/dieselavgiftene-for-2024-co2-avgiften-stiger-videre"
+                >
+                  Dieselavgiftene for 2024: CO₂-avgiften stiger videre
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/dieselavgiftene-for-2026-er-vedtatt"
+                >
+                  Dieselavgiftene for 2026 er vedtatt
+                </Link>
+              </li>
             </ul>
           </div>
         </NewsArticleLayout>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
@@ -7,7 +8,7 @@ import { SITE_URL } from "@/lib/site-url";
 
 const TITLE = "Dieselavgiftene for 2026 er vedtatt";
 const DESCRIPTION =
-  "Stortinget har vedtatt neste års avgifter. CO2-avgiften på diesel øker med over 60 øre per liter. Slik slår det ut for deg.";
+  "Stortinget har vedtatt neste års avgifter. CO₂-avgiften på diesel øker med over 60 øre per liter. Slik slår det ut for deg.";
 const SLUG = "dieselavgiftene-for-2026-er-vedtatt";
 const CANONICAL = `${SITE_URL}/nyheter/${SLUG}`;
 
@@ -200,6 +201,30 @@ const Page = function Page() {
                 Ny CO₂-struktur gir ulike satser for vei, anlegg og sjøfart.
               </li>
               <li>Alle satser gjelder fra 1. januar 2026.</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift"
+                >
+                  Dieselavgiftene for 2025: nok et år med økt CO₂-avgift
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/slik-settes-dieselprisen-fra-oljefat-til-pumpe"
+                >
+                  Slik settes dieselprisen: fra oljefat til pumpe
+                </Link>
+              </li>
             </ul>
           </div>
         </NewsArticleLayout>

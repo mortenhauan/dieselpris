@@ -266,6 +266,30 @@ const Page = function Page() {
               </li>
             </ul>
           </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/kronekursen-og-dieselprisen-en-sammenheng-fa-tenker-pa"
+                >
+                  Kronekursen og dieselprisen – en sammenheng få tenker på
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/hva-er-opec-og-hva-har-de-med-dieselprisen-a-gjore"
+                >
+                  Hva er OPEC+ og hva har de med dieselprisen å gjøre?
+                </Link>
+              </li>
+            </ul>
+          </div>
         </NewsArticleLayout>
       </main>
     </div>

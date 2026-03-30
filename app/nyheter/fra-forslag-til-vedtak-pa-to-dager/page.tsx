@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
@@ -265,6 +266,31 @@ const Page = function Page() {
             stortingssalen – hadde norsk drivstoffpolitikk gjennomgått den
             raskeste og mest dramatiske endringen på en generasjon.
           </p>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/drivstoffavgiftene-kuttes-fra-1-april"
+                >
+                  Drivstoffavgiftene kuttes fra 1. april – dette er det som
+                  skjer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/krig-i-midtosten-sender-dieselprisen-over-30-kroner"
+                >
+                  Krig i Midtøsten sender dieselprisen over 30 kroner
+                </Link>
+              </li>
+            </ul>
+          </div>
         </NewsArticleLayout>
       </main>
     </div>

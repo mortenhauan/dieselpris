@@ -37,7 +37,7 @@ const entries: NewsIndexEntry[] = [
       "CO₂-avgiften på diesel øker 25 prosent fra nyttår. Samlet betaler du 43 øre mer per liter i faste avgifter fra 1. januar 2024.",
     publishedAtIso: "2023-12-19T17:00:00+01:00",
     slug: "dieselavgiftene-for-2024-co2-avgiften-stiger-videre",
-    title: "Dieselavgiftene for 2024: CO2-avgiften stiger videre",
+    title: "Dieselavgiftene for 2024: CO₂-avgiften stiger videre",
   },
   {
     category: "Bakgrunn",
@@ -53,7 +53,7 @@ const entries: NewsIndexEntry[] = [
       "CO₂-avgiften på diesel øker 20 prosent fra nyttår. Samlet betaler du 60 øre mer per liter i faste avgifter fra 1. januar 2025.",
     publishedAtIso: "2024-12-13T17:00:00+01:00",
     slug: "dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift",
-    title: "Dieselavgiftene for 2025: nok et år med økt CO2-avgift",
+    title: "Dieselavgiftene for 2025: nok et år med økt CO₂-avgift",
   },
   {
     category: "Forklart",
@@ -114,10 +114,10 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Forklart",
     intro:
-      "Stortinget vedtok nye CO2-satser for flere drivstofftyper, men regjeringen sier at ikke alt kan settes i verk med en gang.",
+      "Stortinget vedtok nye CO₂-satser for flere drivstofftyper, men regjeringen sier at ikke alt kan settes i verk med en gang.",
     publishedAtIso: "2026-03-30T09:00:00+02:00",
     slug: "co2-kutt-som-ikke-er-klare-enda",
-    title: "Flere CO2-kutt er vedtatt, men ennå ikke satt i verk",
+    title: "Flere CO₂-kutt er vedtatt, men ennå ikke satt i verk",
   },
   {
     category: "Nyhet",

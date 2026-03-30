@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
@@ -82,8 +83,9 @@ const Page = function Page() {
                 inkl. mva.
               </li>
               <li>
-                <strong>Fiske:</strong> CO₂-avgiften fjernes helt – 0 kr/l i
-                nære og fjerne farvann.
+                <strong>Fiske:</strong> CO₂-avgiften settes til 0 kr/l for fiske
+                i fjerne farvann og fiske i nære og fjerne farvann. For fiske
+                kun i nære farvann er endringen ennå ikke iverksatt.
               </li>
               <li>
                 <strong>Gjelder fra:</strong> 1. april 2026
@@ -129,7 +131,9 @@ const Page = function Page() {
               bensin, bioetanol, biodiesel, LPG, naturgass)
             </li>
             <li>
-              CO₂-avgiften for fiske i nære og fjerne farvann settes til 0 kr/l
+              CO₂-avgiften for fiske i fjerne farvann og for fiske i nære og
+              fjerne farvann settes til 0 kr/l (ikke for fiske kun i nære
+              farvann)
             </li>
           </ul>
 
@@ -179,6 +183,38 @@ const Page = function Page() {
               <li>CO₂-avgiften for fiske fjernes helt i samme periode</li>
               <li>Andre CO₂-kutt er vedtatt, men venter på avklaring</li>
               <li>Koster staten ca. 6,3 milliarder kroner</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart"
+                >
+                  Slik påvirkes prisen for autodiesel, anleggsdiesel og sjøfart
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/co2-kutt-som-ikke-er-klare-enda"
+                >
+                  Flere CO₂-kutt er vedtatt, men ennå ikke satt i verk
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/fra-forslag-til-vedtak-pa-to-dager"
+                >
+                  Fra forslag til vedtak på to dager
+                </Link>
+              </li>
             </ul>
           </div>
         </NewsArticleLayout>

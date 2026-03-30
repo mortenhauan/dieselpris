@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
 import type { NewsSource } from "@/lib/news-articles";
 import { SITE_URL } from "@/lib/site-url";
 
-const TITLE = "Dieselavgiftene for 2024: CO2-avgiften stiger videre";
+const TITLE = "Dieselavgiftene for 2024: CO₂-avgiften stiger videre";
 const DESCRIPTION =
   "CO₂-avgiften på diesel øker 25 prosent fra nyttår. Veibruksavgiften senkes noe, men samlet betaler du 43 øre mer per liter i faste avgifter.";
 const SLUG = "dieselavgiftene-for-2024-co2-avgiften-stiger-videre";
@@ -239,6 +240,22 @@ const Page = function Page() {
               <li>Samlet avgiftsøkning: 43 øre/liter før MVA.</li>
               <li>CO₂-avgiften har steget 55 % på to år (2022–2024).</li>
               <li>Alle satser gjelder fra 1. januar 2024.</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift"
+                >
+                  Dieselavgiftene for 2025: nok et år med økt CO₂-avgift
+                </Link>
+              </li>
             </ul>
           </div>
         </NewsArticleLayout>

@@ -1,31 +1,46 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
+import type { NewsSource } from "@/lib/news-articles";
 import { SITE_URL } from "@/lib/site-url";
 
-const canonical = `${SITE_URL}/nyheter/slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart`;
-const title =
-  "Slik påvirkes prisen for autodiesel, anleggsdiesel og sjøfart | Dieselpris.no";
-const description =
+const TITLE = "Slik påvirkes prisen for autodiesel, anleggsdiesel og sjøfart";
+const DESCRIPTION =
   "Ikke all diesel er lik. Se hva avgiftsendringene betyr for autodiesel på pumpa, farget anleggsdiesel og drivstoff til fiske og sjøfart.";
+const SLUG = "slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart";
+const CANONICAL = `${SITE_URL}/nyheter/${SLUG}`;
 
 export const metadata: Metadata = {
-  alternates: { canonical },
-  description,
+  alternates: { canonical: CANONICAL },
+  description: DESCRIPTION,
   openGraph: {
-    description,
-    siteName: "Dieselpris.no",
-    title,
-    url: canonical,
+    description: DESCRIPTION,
+    locale: "nb_NO",
+    siteName: "dieselpris.no",
+    title: TITLE,
+    type: "article",
+    url: CANONICAL,
   },
-  title,
+  title: TITLE,
   twitter: {
     card: "summary_large_image",
-    description,
-    title,
+    description: DESCRIPTION,
+    title: TITLE,
   },
 };
+
+const SOURCES: NewsSource[] = [
+  {
+    href: "https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811",
+    label: "Stortinget: alle vedtakene med satser",
+  },
+  {
+    href: "https://www.regjeringen.no/no/aktuelt/oppfolging-av-stortingets-vedtak-om-reduksjon-i-avgifter-pa-drivstoff/id3155277/",
+    label: "Regjeringen: hva som er iverksatt",
+  },
+];
 
 const Badge = function Badge({ ok }: { ok: boolean }) {
   return ok ? (
@@ -62,17 +77,8 @@ const Page = function Page() {
         <NewsArticleLayout
           category="Forklart"
           publishedAtIso="2026-03-30T11:00:00+02:00"
-          sources={[
-            {
-              href: "https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811",
-              label: "Stortinget: alle vedtakene med satser",
-            },
-            {
-              href: "https://www.regjeringen.no/no/aktuelt/oppfolging-av-stortingets-vedtak-om-reduksjon-i-avgifter-pa-drivstoff/id3155277/",
-              label: "Regjeringen: hva som er iverksatt",
-            },
-          ]}
-          title="Slik påvirkes prisen for autodiesel, anleggsdiesel og sjøfart"
+          sources={SOURCES}
+          title={TITLE}
         >
           <p className="text-lg font-medium">
             Ikke all diesel er lik i denne saken. Avgiftsendringene som
@@ -216,6 +222,31 @@ const Page = function Page() {
               <li>
                 <strong>Innenriks sjøfart:</strong> Vedtatt lavere satser, men
                 venter.
+              </li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/drivstoffavgiftene-kuttes-fra-1-april"
+                >
+                  Drivstoffavgiftene kuttes fra 1. april – dette er det som
+                  skjer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/co2-kutt-som-ikke-er-klare-enda"
+                >
+                  Flere CO₂-kutt er vedtatt, men ennå ikke satt i verk
+                </Link>
               </li>
             </ul>
           </div>

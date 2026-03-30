@@ -102,9 +102,7 @@ const Page = function Page() {
                 Kostnaden for kvotene veltes videre til pumpeprisen – altså til
                 deg som tanker.
               </li>
-              <li>
-                Systemet er planlagt å starte i 2027, med full effekt fra 2028.
-              </li>
+              <li>Systemet er utsatt til tidligst 2028.</li>
             </ul>
           </div>
 

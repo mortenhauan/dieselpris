@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
 import type { NewsSource } from "@/lib/news-articles";
 import { SITE_URL } from "@/lib/site-url";
 
-const TITLE = "Flere CO2-kutt er vedtatt, men ennå ikke satt i verk";
+const TITLE = "Flere CO₂-kutt er vedtatt, men ennå ikke satt i verk";
 const DESCRIPTION =
   "Stortinget vedtok lavere CO₂-avgift for anleggsdiesel, sjøfart og autodiesel. Men regjeringen kan ikke gjennomføre alt ennå – fordi det kan bryte med EØS-reglene.";
 const SLUG = "co2-kutt-som-ikke-er-klare-enda";
@@ -75,8 +76,8 @@ const Page = function Page() {
                 (diesel, bensin, biodiesel, bioetanol, LPG, naturgass)
               </li>
               <li>
-                <strong>CO₂-avgift for fiske = 0 kr/l</strong> i både nære og
-                fjerne farvann
+                <strong>CO₂-avgift for fiske = 0 kr/l</strong> i fjerne farvann,
+                og for fiske som dekker nære og fjerne farvann
               </li>
             </ul>
           </div>
@@ -189,6 +190,31 @@ const Page = function Page() {
                 besparelsen
               </li>
               <li>Regjeringen jobber med avklaring, men har ingen dato</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/drivstoffavgiftene-kuttes-fra-1-april"
+                >
+                  Drivstoffavgiftene kuttes fra 1. april – dette er det som
+                  skjer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart"
+                >
+                  Slik påvirkes prisen for autodiesel, anleggsdiesel og sjøfart
+                </Link>
+              </li>
             </ul>
           </div>
         </NewsArticleLayout>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
@@ -242,6 +243,30 @@ const Page = function Page() {
             verdensmarkedet. Men avgiftene er der uansett, og kronekursen kan
             svinge begge veier.
           </p>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/slik-settes-dieselprisen-fra-oljefat-til-pumpe"
+                >
+                  Slik settes dieselprisen: fra oljefat til pumpe
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/kronekursen-og-dieselprisen-en-sammenheng-fa-tenker-pa"
+                >
+                  Kronekursen og dieselprisen – en sammenheng få tenker på
+                </Link>
+              </li>
+            </ul>
+          </div>
         </NewsArticleLayout>
       </main>
     </div>

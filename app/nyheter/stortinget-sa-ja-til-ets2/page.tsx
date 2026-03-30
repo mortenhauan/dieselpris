@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Header } from "@/components/header";
 import { NewsArticleLayout } from "@/components/news-article-layout";
@@ -241,6 +242,22 @@ const Page = function Page() {
             planene. Det eneste spørsmålet som gjenstår er hvor mye av
             kostnadene som dempes gjennom kutt i andre avgifter.
           </p>
+
+          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Les også
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  className="font-medium underline underline-offset-4"
+                  href="/nyheter/kan-eu-kreve-ny-avgift-pa-diesel-i-norge"
+                >
+                  Kan EU kreve ny avgift på diesel i Norge?
+                </Link>
+              </li>
+            </ul>
+          </div>
         </NewsArticleLayout>
       </main>
     </div>
