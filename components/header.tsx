@@ -1,10 +1,11 @@
 "use client";
 
-import { Fuel } from "lucide-react";
+import { Fuel, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,6 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { regionPath } from "@/lib/region-route";
 import {
   DEFAULT_REGION_ID,
@@ -33,14 +41,30 @@ const navLinkClass = function navLinkClass(isActive: boolean) {
   );
 };
 
+const mobileNavLinkClass = function mobileNavLinkClass(isActive: boolean) {
+  return cn(
+    "rounded-lg px-3 py-3 text-base font-medium transition-colors",
+    isActive
+      ? "bg-accent text-foreground"
+      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+  );
+};
+
 export const Header = function Header({
   activeNav = "prices",
   selectedRegionId = DEFAULT_REGION_ID,
   variant = "region",
 }: HeaderProps) {
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const sectionBasePath = regionPath(selectedRegionId);
   const showRegionSelect = variant === "region";
+  const showSectionAnchors =
+    showRegionSelect && selectedRegionId !== DEFAULT_REGION_ID;
+
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
 
   const onRegionChange = useCallback(
     (value: string) => {
@@ -48,32 +72,38 @@ export const Header = function Header({
     },
     [router]
   );
+
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex flex-row gap-3 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center transition-transform group-hover:scale-105">
+    <header className="sticky top-0 z-50 border-border/50 border-b bg-background/80 backdrop-blur-lg">
+      <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6 md:py-4">
+        <div className="flex items-center gap-3">
+          <Link
+            className="group flex shrink-0 items-center gap-2.5"
+            href="/"
+            onClick={closeMobile}
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground transition-transform group-hover:scale-105">
               <Fuel className="h-4 w-4 text-background" />
             </div>
-            <span className="text-base font-semibold tracking-tight text-foreground">
+            <span className="font-semibold text-base text-foreground tracking-tight">
               dieselpris
             </span>
           </Link>
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+
+          <div className="flex min-w-0 flex-1 items-center justify-end gap-2 md:gap-6">
             {showRegionSelect ? (
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 max-w-[min(100%,12rem)] items-center gap-2 sm:max-w-[14rem] md:max-w-none">
                 <span
+                  className="hidden font-medium text-muted-foreground text-sm lg:inline"
                   id="region-select-label"
-                  className="text-sm font-medium text-muted-foreground hidden md:block"
                 >
                   Region
                 </span>
-                <Select value={selectedRegionId} onValueChange={onRegionChange}>
+                <Select onValueChange={onRegionChange} value={selectedRegionId}>
                   <SelectTrigger
                     aria-labelledby="region-select-label"
+                    className="min-w-0 flex-1 bg-background"
                     size="sm"
-                    className="bg-background"
                   >
                     <SelectValue placeholder="Velg region" />
                   </SelectTrigger>
@@ -88,36 +118,112 @@ export const Header = function Header({
               </div>
             ) : null}
 
-            <nav className="hidden items-center gap-6 text-sm md:flex">
+            <Sheet onOpenChange={setMobileOpen} open={mobileOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  aria-expanded={mobileOpen}
+                  aria-label="Åpne meny"
+                  className="md:hidden"
+                  size="icon"
+                  type="button"
+                  variant="outline"
+                >
+                  <Menu className="size-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-[min(100%,20rem)]" side="right">
+                <SheetHeader>
+                  <SheetTitle>Meny</SheetTitle>
+                </SheetHeader>
+                <nav
+                  aria-label="Hovedmeny"
+                  className="flex flex-col gap-1 px-2 pb-6 pt-2"
+                >
+                  <Link
+                    className={mobileNavLinkClass(activeNav === "news")}
+                    href="/nyheter"
+                    onClick={closeMobile}
+                  >
+                    Nyheter
+                  </Link>
+                  {showRegionSelect ? (
+                    <>
+                      <a
+                        className={mobileNavLinkClass(activeNav === "prices")}
+                        href={`${sectionBasePath}#priser`}
+                        onClick={closeMobile}
+                      >
+                        Priser
+                      </a>
+                      {showSectionAnchors ? (
+                        <>
+                          <a
+                            className={mobileNavLinkClass(false)}
+                            href={`${sectionBasePath}#distribusjon`}
+                            onClick={closeMobile}
+                          >
+                            Distribusjon
+                          </a>
+                          <a
+                            className={mobileNavLinkClass(false)}
+                            href={`${sectionBasePath}#avgifter`}
+                            onClick={closeMobile}
+                          >
+                            Avgifter
+                          </a>
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    <Link
+                      className={mobileNavLinkClass(activeNav === "prices")}
+                      href="/"
+                      onClick={closeMobile}
+                    >
+                      Priser
+                    </Link>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
+
+            <nav
+              aria-label="Hovedmeny"
+              className="hidden items-center gap-5 text-sm md:flex lg:gap-6"
+            >
               <Link
-                href="/nyheter"
                 className={navLinkClass(activeNav === "news")}
+                href="/nyheter"
               >
                 Nyheter
               </Link>
               {showRegionSelect ? (
                 <>
                   <a
-                    href={`${sectionBasePath}#priser`}
                     className={navLinkClass(activeNav === "prices")}
+                    href={`${sectionBasePath}#priser`}
                   >
                     Priser
                   </a>
-                  <a
-                    href={`${sectionBasePath}#distribusjon`}
-                    className={navLinkClass(false)}
-                  >
-                    Distribusjon
-                  </a>
-                  <a
-                    href={`${sectionBasePath}#avgifter`}
-                    className={navLinkClass(false)}
-                  >
-                    Avgifter
-                  </a>
+                  {showSectionAnchors ? (
+                    <>
+                      <a
+                        className={navLinkClass(false)}
+                        href={`${sectionBasePath}#distribusjon`}
+                      >
+                        Distribusjon
+                      </a>
+                      <a
+                        className={navLinkClass(false)}
+                        href={`${sectionBasePath}#avgifter`}
+                      >
+                        Avgifter
+                      </a>
+                    </>
+                  ) : null}
                 </>
               ) : (
-                <Link href="/" className={navLinkClass(activeNav === "prices")}>
+                <Link className={navLinkClass(activeNav === "prices")} href="/">
                   Priser
                 </Link>
               )}
