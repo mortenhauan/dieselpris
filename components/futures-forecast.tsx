@@ -181,6 +181,9 @@ const FuturesChartTooltip = function FuturesChartTooltip({
     return null;
   }
   const row = payload[0]?.payload as StackedFuturesRow;
+  const totalTaxes = row.veibruks + row.co2 + row.mva;
+  const taxSharePercent = row.total > 0 ? (totalTaxes / row.total) * 100 : null;
+  const showFooter = taxSharePercent !== null || row.price > 0;
   return (
     <div className="min-w-[200px] rounded-lg border border-border bg-card p-3 shadow-lg">
       <p className="mb-2 text-sm font-medium text-foreground">
@@ -203,14 +206,26 @@ const FuturesChartTooltip = function FuturesChartTooltip({
           </div>
         ))}
       </div>
-      {row.price > 0 ? (
-        <p className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground tabular-nums">
-          Råvare på børs:{" "}
-          {row.price.toLocaleString("nb-NO", {
-            maximumFractionDigits: 0,
-          })}{" "}
-          USD/MT
-        </p>
+      {showFooter ? (
+        <div className="mt-2 space-y-1.5 border-t border-border pt-2">
+          {taxSharePercent === null ? null : (
+            <div className="flex justify-between gap-4 text-xs text-muted-foreground">
+              <span>Andel avgifter inkl. MVA</span>
+              <span className="font-semibold tabular-nums text-foreground">
+                {taxSharePercent.toFixed(0)}%
+              </span>
+            </div>
+          )}
+          {row.price > 0 ? (
+            <p className="text-xs text-muted-foreground tabular-nums">
+              Råvare på børs:{" "}
+              {row.price.toLocaleString("nb-NO", {
+                maximumFractionDigits: 0,
+              })}{" "}
+              USD/MT
+            </p>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );
