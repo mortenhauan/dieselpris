@@ -1,85 +1,237 @@
 {
   "version": 1,
   "transcripts": {
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/0357c941-9466-40c7-af9f-2c57a1c11391/0357c941-9466-40c7-af9f-2c57a1c11391.jsonl": {
-      "mtimeMs": 1774331891156.6216,
-      "lastProcessedAt": "2026-03-24T08:41:51.474Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/bc21b97e-fd2b-422e-aa40-65c3bb3b7b79/bc21b97e-fd2b-422e-aa40-65c3bb3b7b79.jsonl": {
+      "mtimeMs": 1774348481042.0452,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/044268e6-70df-4796-90d1-64e051b47365/044268e6-70df-4796-90d1-64e051b47365.jsonl": {
-      "mtimeMs": 1774333580994.1924,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/f970af3f-cbe4-4ad7-9e54-84ccad750dda/f970af3f-cbe4-4ad7-9e54-84ccad750dda.jsonl": {
+      "mtimeMs": 1774347856174.0586,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/3b9d9936-437c-4791-bd72-41e2ef56a7c6/3b9d9936-437c-4791-bd72-41e2ef56a7c6.jsonl": {
-      "mtimeMs": 1774341554048.9968,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/8c66ca07-b8ba-4715-9904-3e9767b097c6/8c66ca07-b8ba-4715-9904-3e9767b097c6.jsonl": {
+      "mtimeMs": 1774562786381.3835,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/4b9ededc-1e17-42ce-acee-e8b60bfce31b/4b9ededc-1e17-42ce-acee-e8b60bfce31b.jsonl": {
-      "mtimeMs": 1774339328579.1704,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/5cf0ca86-0670-449c-be0f-f8f9b584b73a/5cf0ca86-0670-449c-be0f-f8f9b584b73a.jsonl": {
-      "mtimeMs": 1774335054844.9373,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/61702224-e4ec-4dc8-89bf-d494b25e0e09/61702224-e4ec-4dc8-89bf-d494b25e0e09.jsonl": {
-      "mtimeMs": 1774340135902.8267,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/64b44ae7-de79-4979-a532-2a1c19da4846/64b44ae7-de79-4979-a532-2a1c19da4846.jsonl": {
-      "mtimeMs": 1774337499004.1619,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/65430b9a-254f-4660-8766-7fe389994927/65430b9a-254f-4660-8766-7fe389994927.jsonl": {
-      "mtimeMs": 1774332157471.1846,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6a112b81-bd4b-4724-ac21-f1d07850c948/6a112b81-bd4b-4724-ac21-f1d07850c948.jsonl": {
-      "mtimeMs": 1774333685053.813,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
-    },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6af43823-ff3d-4b00-98e1-7ec56f47d014/6af43823-ff3d-4b00-98e1-7ec56f47d014.jsonl": {
-      "mtimeMs": 1774338807573.45,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/b24f98b2-534a-4379-9086-77b5aa73ce12/b24f98b2-534a-4379-9086-77b5aa73ce12.jsonl": {
+      "mtimeMs": 1774350351325.4185,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
     "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/7d6fed0f-32f2-4be2-9c6c-b9a634cf0096/7d6fed0f-32f2-4be2-9c6c-b9a634cf0096.jsonl": {
       "mtimeMs": 1774333133993.2605,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/996d3929-0946-4fdb-82c2-c2ce23429c15/996d3929-0946-4fdb-82c2-c2ce23429c15.jsonl": {
-      "mtimeMs": 1774334129422.2483,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/d398dfe4-2369-4cbd-9878-6beac3be872b/d398dfe4-2369-4cbd-9878-6beac3be872b.jsonl": {
+      "mtimeMs": 1774344497441.1167,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/a5ab1ff7-b4a9-497f-8a7c-719b7b6e2f7f/a5ab1ff7-b4a9-497f-8a7c-719b7b6e2f7f.jsonl": {
-      "mtimeMs": 1774338262980.8162,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/61702224-e4ec-4dc8-89bf-d494b25e0e09/61702224-e4ec-4dc8-89bf-d494b25e0e09.jsonl": {
+      "mtimeMs": 1774340135902.827,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/a92bad9b-4632-4041-9af9-0983ffa03972/a92bad9b-4632-4041-9af9-0983ffa03972.jsonl": {
-      "mtimeMs": 1774341635843.5315,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/56dd16bf-8449-4e46-a0c2-81bc35cc1bc1/56dd16bf-8449-4e46-a0c2-81bc35cc1bc1.jsonl": {
+      "mtimeMs": 1774853797729.2432,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/b93b0405-1300-4b24-a013-94366af4c6bb/b93b0405-1300-4b24-a013-94366af4c6bb.jsonl": {
-      "mtimeMs": 1774341058094.7812,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/9237be78-445a-4e51-b15e-2ea0f2598e41/9237be78-445a-4e51-b15e-2ea0f2598e41.jsonl": {
+      "mtimeMs": 1774351437404.0786,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/3ca19f9f-d194-4c9c-87ac-ea52259143c0/3ca19f9f-d194-4c9c-87ac-ea52259143c0.jsonl": {
+      "mtimeMs": 1774343358200.206,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/f57e9ae7-0832-43b9-8577-d3fd830ff00b/f57e9ae7-0832-43b9-8577-d3fd830ff00b.jsonl": {
+      "mtimeMs": 1774341831177.0557,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/461a7bca-6ca5-4898-82bf-96e3631edd02/461a7bca-6ca5-4898-82bf-96e3631edd02.jsonl": {
+      "mtimeMs": 1774369948386.8118,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/f742cf4d-7db0-4f45-a3e6-eb5709e17e09/f742cf4d-7db0-4f45-a3e6-eb5709e17e09.jsonl": {
+      "mtimeMs": 1774342301950.3818,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6d175623-78de-46d6-9a40-f40bb48dfd99/6d175623-78de-46d6-9a40-f40bb48dfd99.jsonl": {
+      "mtimeMs": 1774351183932.906,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/90ce0b34-7293-4ffa-a6e2-5896b49fddc7/90ce0b34-7293-4ffa-a6e2-5896b49fddc7.jsonl": {
+      "mtimeMs": 1774562442707.0974,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/b5809689-78ff-4894-a9e6-e8fb8cb2b61e/b5809689-78ff-4894-a9e6-e8fb8cb2b61e.jsonl": {
+      "mtimeMs": 1774354184528.6064,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/1fb0afc2-b86e-454b-8ecf-5bc9b50a1daa/1fb0afc2-b86e-454b-8ecf-5bc9b50a1daa.jsonl": {
+      "mtimeMs": 1774563931127.245,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/be73eff1-bef4-481e-bb4e-294e77c83d58/be73eff1-bef4-481e-bb4e-294e77c83d58.jsonl": {
+      "mtimeMs": 1774346354097.6611,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/ea037fe3-fa30-4c1d-a35f-bb9880db4b02/ea037fe3-fa30-4c1d-a35f-bb9880db4b02.jsonl": {
+      "mtimeMs": 1774369208540.919,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6b7631ed-c30d-4304-b517-41147aef60a4/6b7631ed-c30d-4304-b517-41147aef60a4.jsonl": {
+      "mtimeMs": 1774342760693.5952,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
     "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/c5bd0ccb-fe6f-43ae-a625-3916598e1028/c5bd0ccb-fe6f-43ae-a625-3916598e1028.jsonl": {
       "mtimeMs": 1774339274092.1926,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/3ba13ffb-9cf2-44a1-bf32-911a3c5352cc/3ba13ffb-9cf2-44a1-bf32-911a3c5352cc.jsonl": {
+      "mtimeMs": 1774350809772.2717,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
     "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/de59ee04-d18e-4a80-a83c-14ec55d1ebdb/de59ee04-d18e-4a80-a83c-14ec55d1ebdb.jsonl": {
-      "mtimeMs": 1774334457791.9075,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+      "mtimeMs": 1774334457791.9072,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/e76ac8d8-502c-408b-96e3-64a6ddc2530c/e76ac8d8-502c-408b-96e3-64a6ddc2530c.jsonl": {
-      "mtimeMs": 1774334266299.7517,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/895bf791-5cc7-4367-9c20-9b25aa7437cf/895bf791-5cc7-4367-9c20-9b25aa7437cf.jsonl": {
+      "mtimeMs": 1774350630565.295,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
-    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/ecbedfb0-9d74-4571-86a3-ac48d3122229/ecbedfb0-9d74-4571-86a3-ac48d3122229.jsonl": {
-      "mtimeMs": 1774332918279.258,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/3b9d9936-437c-4791-bd72-41e2ef56a7c6/3b9d9936-437c-4791-bd72-41e2ef56a7c6.jsonl": {
+      "mtimeMs": 1774342186611.1272,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/65430b9a-254f-4660-8766-7fe389994927/65430b9a-254f-4660-8766-7fe389994927.jsonl": {
+      "mtimeMs": 1774332157471.1846,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/9310c2a4-4d58-41dc-8aa1-3369cfe76f18/9310c2a4-4d58-41dc-8aa1-3369cfe76f18.jsonl": {
+      "mtimeMs": 1774347974820.983,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/0a474c3e-104d-4752-819c-71083072edfb/0a474c3e-104d-4752-819c-71083072edfb.jsonl": {
+      "mtimeMs": 1774345193597.6406,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6af43823-ff3d-4b00-98e1-7ec56f47d014/6af43823-ff3d-4b00-98e1-7ec56f47d014.jsonl": {
+      "mtimeMs": 1774338807573.45,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/47d1853e-74f5-434f-a383-230ca72890d7/47d1853e-74f5-434f-a383-230ca72890d7.jsonl": {
+      "mtimeMs": 1774853867240.57,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/b93b0405-1300-4b24-a013-94366af4c6bb/b93b0405-1300-4b24-a013-94366af4c6bb.jsonl": {
+      "mtimeMs": 1774341058094.7815,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/528d9331-6512-49a8-8881-8fc5e341ad82/528d9331-6512-49a8-8881-8fc5e341ad82.jsonl": {
+      "mtimeMs": 1774351755561.5754,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/ab9e9926-0f2f-46ad-83b5-e836a940efdf/ab9e9926-0f2f-46ad-83b5-e836a940efdf.jsonl": {
+      "mtimeMs": 1774346556423.3354,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     },
     "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/f99aa8b0-d190-4837-a99e-9c027e5a70d0/f99aa8b0-d190-4837-a99e-9c027e5a70d0.jsonl": {
       "mtimeMs": 1774339801824.0798,
-      "lastProcessedAt": "2026-03-24T08:41:51.475Z"
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/a5ab1ff7-b4a9-497f-8a7c-719b7b6e2f7f/a5ab1ff7-b4a9-497f-8a7c-719b7b6e2f7f.jsonl": {
+      "mtimeMs": 1774338262980.8162,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/492b0729-31ce-4b72-80c7-94bfb33c7a52/492b0729-31ce-4b72-80c7-94bfb33c7a52.jsonl": {
+      "mtimeMs": 1774439273722.4097,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/5786817f-c179-4b02-8a35-29f03d228e1a/5786817f-c179-4b02-8a35-29f03d228e1a.jsonl": {
+      "mtimeMs": 1774562724235.389,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/d9b620d0-4dcc-4bee-a1d4-d980a0fb3c16/d9b620d0-4dcc-4bee-a1d4-d980a0fb3c16.jsonl": {
+      "mtimeMs": 1774350199417.2,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/044268e6-70df-4796-90d1-64e051b47365/044268e6-70df-4796-90d1-64e051b47365.jsonl": {
+      "mtimeMs": 1774333580994.1924,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/d1192872-20de-4b32-b7e8-8ccb569bc3f5/d1192872-20de-4b32-b7e8-8ccb569bc3f5.jsonl": {
+      "mtimeMs": 1774345880193.3188,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/6a112b81-bd4b-4724-ac21-f1d07850c948/6a112b81-bd4b-4724-ac21-f1d07850c948.jsonl": {
+      "mtimeMs": 1774333685053.813,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/14f272c6-d4e2-44fb-9e85-3572ca220596/14f272c6-d4e2-44fb-9e85-3572ca220596.jsonl": {
+      "mtimeMs": 1774441153345.3918,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/996d3929-0946-4fdb-82c2-c2ce23429c15/996d3929-0946-4fdb-82c2-c2ce23429c15.jsonl": {
+      "mtimeMs": 1774334129422.248,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/3e213dc5-e87d-40bb-a375-c830eb1ff13e/3e213dc5-e87d-40bb-a375-c830eb1ff13e.jsonl": {
+      "mtimeMs": 1774350599179.7664,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/5cf0ca86-0670-449c-be0f-f8f9b584b73a/5cf0ca86-0670-449c-be0f-f8f9b584b73a.jsonl": {
+      "mtimeMs": 1774335054844.9373,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/161b9544-367d-4766-9cf3-85c6bbe4f419/161b9544-367d-4766-9cf3-85c6bbe4f419.jsonl": {
+      "mtimeMs": 1774351358428.2803,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/95a2fcb3-bb5a-4e95-a2fc-088dca962a2a/95a2fcb3-bb5a-4e95-a2fc-088dca962a2a.jsonl": {
+      "mtimeMs": 1774346351639.425,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/35a54d6b-8080-4be7-aed7-812086e17a33/35a54d6b-8080-4be7-aed7-812086e17a33.jsonl": {
+      "mtimeMs": 1774352287965.5286,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/0357c941-9466-40c7-af9f-2c57a1c11391/0357c941-9466-40c7-af9f-2c57a1c11391.jsonl": {
+      "mtimeMs": 1774331891156.6216,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/a92bad9b-4632-4041-9af9-0983ffa03972/a92bad9b-4632-4041-9af9-0983ffa03972.jsonl": {
+      "mtimeMs": 1774341787720.233,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/ecbedfb0-9d74-4571-86a3-ac48d3122229/ecbedfb0-9d74-4571-86a3-ac48d3122229.jsonl": {
+      "mtimeMs": 1774332918279.2583,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/dfb72e86-81fa-445f-a18a-a509c8558dfe/dfb72e86-81fa-445f-a18a-a509c8558dfe.jsonl": {
+      "mtimeMs": 1774350855380.6616,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/64b44ae7-de79-4979-a532-2a1c19da4846/64b44ae7-de79-4979-a532-2a1c19da4846.jsonl": {
+      "mtimeMs": 1774337499004.1619,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/8ffa73a4-9aad-4a6d-891d-70b9f1a57c0c/8ffa73a4-9aad-4a6d-891d-70b9f1a57c0c.jsonl": {
+      "mtimeMs": 1774343544743.688,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/d5c03220-4121-4f08-a03e-ce619692f319/d5c03220-4121-4f08-a03e-ce619692f319.jsonl": {
+      "mtimeMs": 1774562107935.6423,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/baa128dc-fb8d-4a7c-a32c-c978a19dc91d/baa128dc-fb8d-4a7c-a32c-c978a19dc91d.jsonl": {
+      "mtimeMs": 1774440198245.5776,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/4b9ededc-1e17-42ce-acee-e8b60bfce31b/4b9ededc-1e17-42ce-acee-e8b60bfce31b.jsonl": {
+      "mtimeMs": 1774339328579.1704,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
+    },
+    "/Users/mortenhauan/.cursor/projects/Users-mortenhauan-Developer-morten-dieselpris/agent-transcripts/e76ac8d8-502c-408b-96e3-64a6ddc2530c/e76ac8d8-502c-408b-96e3-64a6ddc2530c.jsonl": {
+      "mtimeMs": 1774334266299.7517,
+      "lastProcessedAt": "2026-03-30T06:59:18.417583Z"
     }
   }
 }

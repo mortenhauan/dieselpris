@@ -5,10 +5,19 @@ import { REGION_PRICE_PROFILES } from "@/lib/regional-price-model";
 import { SITE_URL } from "@/lib/site-url";
 
 const sitemap = function sitemap(): MetadataRoute.Sitemap {
-  return REGION_PRICE_PROFILES.map((p) => ({
+  const regionEntries = REGION_PRICE_PROFILES.map((p) => ({
     changeFrequency: "daily" as const,
     priority: p.id === "national" ? 1 : 0.8,
     url: new URL(regionPath(p.id), SITE_URL).href,
   }));
+
+  return [
+    ...regionEntries,
+    {
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+      url: new URL("/nyheter", SITE_URL).href,
+    },
+  ];
 };
 export default sitemap;

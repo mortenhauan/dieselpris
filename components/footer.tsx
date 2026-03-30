@@ -1,4 +1,5 @@
 import { Droplet } from "lucide-react";
+import Link from "next/link";
 
 const copyrightYear = 2026;
 
@@ -20,6 +21,16 @@ export const Footer = function Footer() {
               <p>
                 Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige
                 satser slik de er oppgitt i kildene.
+              </p>
+              <p>
+                Les også{" "}
+                <Link
+                  href="/nyheter"
+                  className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+                >
+                  nyheter og forklaringer
+                </Link>{" "}
+                om vedtak og avgifter som kan påvirke prisen på pumpa.
               </p>
               <p className="text-xs leading-relaxed">
                 Tall og forklaringer er veiledende og kan inneholde feil eller

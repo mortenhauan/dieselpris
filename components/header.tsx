@@ -67,6 +67,12 @@ export const Header = function Header({ selectedRegionId }: HeaderProps) {
             </div>
 
             <nav className="hidden items-center gap-6 text-sm md:flex">
+              <Link
+                href="/nyheter"
+                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                Nyheter
+              </Link>
               <a
                 href="#priser"
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium"

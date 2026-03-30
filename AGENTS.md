@@ -2,6 +2,9 @@
 
 - When Norwegian UI copy is wrong, fix å, ø, and æ (and related wording) across all user-facing text, not just a single screen; review all visible copy when fixing orthography.
 - User-facing Norwegian copy should read for drivers and fleet owners: short, plain language, minimal repetition, no developer-meta phrasing (avoid wording that talks about “when we have data” or similar instead of what the user needs to know).
+- For market and price UI, prefer labels and timestamps that reflect the **exchange or quoted market reference** (what the price refers to) rather than only when data was ingested; explain futures and “change” in plain language, not trader jargon.
+- Do not show fabricated, placeholder, or demo values as if they were live market data; use clear unavailable or empty states instead.
+- In global metadata and share copy, avoid implying a lookup of the user’s local station price or overstating freshness; keep futures- and model-based, indicative framing consistent with the README.
 - Attach repo skills (e.g. Next cache components) when you want a specific workflow or stack doc followed end-to-end.
 - For git actions you care about (e.g. push), ask the agent to run them rather than only listing commands.
 - Prefer Tailwind and CSS for responsive layout and simple visual fixes; avoid React hooks or JS layout measurement when the same result is achievable cleanly with styling alone; before adding `useEffect` or other client effects, check whether server data, derived state, or CSS already solves it (see react-useeffect skill when relevant).
@@ -15,6 +18,7 @@
 - Linting and formatting use **Ultracite** with **Oxlint** + **Oxfmt** (see `.oxlintrc.json`, `.oxfmtrc.jsonc`).
 - `*.zip` in the repo is gitignored (e.g. v0 exports); integrate zips by extracting and merging, not committing the archive.
 - Vercel project config for this app is `vercel.ts` (not `vercel.json`).
+- Region routes live under ASCII segments (`/sor`, `/ost`, `/vest`, `/nord`, `/midt`); avoid unicode folder names in `app/` for regions; the national view is `/`, not a separate `/nasjonal` route.
 - Primary audience is drivers and fleet owners learning what moves diesel prices; keep explanations short, plain Norwegian, and fact-checked when stating duties, shares, or regulatory claims; treat numbers as indicative and not financial advice (project README stance).
 
 # Ultracite Code Standards
