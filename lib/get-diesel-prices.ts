@@ -123,7 +123,11 @@ export const getDieselPricesData =
         ),
         updated_at: new Date().toISOString(),
       };
-    } catch {
+    } catch (error) {
+      console.error(
+        "[diesel-prices] Failed to load live ICE gasoil data",
+        error
+      );
       return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource);
     }
   };

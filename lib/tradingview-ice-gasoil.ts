@@ -139,6 +139,11 @@ export const fetchIceDailyBarsFromTradingView =
 
     chart.onError((...args: unknown[]) => {
       const msg = args.map(String).join(" ");
+      console.error("[TradingView] WebSocket/chart error", {
+        args,
+        message: msg || "TradingView chart error",
+        symbol,
+      });
       finishErr(new Error(msg || "TradingView chart error"));
     });
 
