@@ -238,9 +238,20 @@ const Page = function Page() {
           </p>
 
           <p>
+            Selv om regjeringen kutter CO₂-avgiften for å kompensere, endrer det
+            hvor pengene havner. I dag går CO₂-avgiften – 3,79 kroner per liter
+            – rett i den norske statskassen. Under ETS2 betaler
+            drivstoffleverandørene for utslippskvoter på det europeiske
+            markedet. Pengene går ikke lenger til Norge, men til EUs
+            kvotesystem. Hvor mye som eventuelt flyter tilbake til EØS-land
+            gjennom EUs omfordelingsmekanismer, er ikke avklart.
+          </p>
+
+          <p>
             For deg som kjører på diesel betyr vedtaket at ETS2 ligger fast i
-            planene. Det eneste spørsmålet som gjenstår er hvor mye av
-            kostnadene som dempes gjennom kutt i andre avgifter.
+            planene. Spørsmålene som gjenstår er hvor mye av kostnadene som
+            dempes gjennom kutt i andre avgifter – og hvem som til syvende og
+            sist får inntektene.
           </p>
 
           <div className="rounded-2xl border border-border bg-secondary/40 p-5">
