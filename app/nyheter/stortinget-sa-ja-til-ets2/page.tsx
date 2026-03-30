@@ -6,9 +6,9 @@ import { NewsArticleLayout } from "@/components/news-article-layout";
 import type { NewsSource } from "@/lib/news-articles";
 import { SITE_URL } from "@/lib/site-url";
 
-const TITLE = "Stortinget sa ja til ETS2 – forslaget om å stoppe ble nedstemt";
+const TITLE = "Stortinget lot ETS2 stå – forslagene om å stoppe ble nedstemt";
 const DESCRIPTION =
-  "Et bredt flertall stemte ned forslaget om å stanse ETS2. Den nye EU-kvoteprisen på drivstoff kommer til Norge, trolig fra 2028.";
+  "Et bredt flertall avviste forslagene om å stanse Norges gjennomføring av ETS2. EU-kvoteprisen på drivstoff ligger fast i planene, med prisvirkning trolig fra 2028.";
 const SLUG = "stortinget-sa-ja-til-ets2";
 const CANONICAL = `${SITE_URL}/nyheter/${SLUG}`;
 
@@ -60,10 +60,20 @@ const Page = function Page() {
           title={TITLE}
         >
           <p className="text-lg font-medium">
-            Stortinget stemte i dag over Senterpartiets forslag om å stanse ETS2
-            – EUs nye kvotesystem for drivstoff. Et bredt flertall sa nei. Bare
-            Sp og FrP stemte for å stoppe. Den nye EU-kvoteprisen på diesel
-            kommer til Norge, trolig fra 2028.
+            Stortinget stemte 3. februar over Senterpartiets forslag om å stanse
+            ETS2 – EUs nye kvotesystem for drivstoff. Et bredt flertall avviste
+            forslagene. Bare Sp og FrP stemte for å stoppe. Dermed ligger
+            EU-kvoteprisen på diesel fast i planene, med prisvirkning trolig fra
+            2028.
+          </p>
+
+          <p>
+            ETS2 er ikke nytt i norsk sammenheng. EØS-komiteen innlemmet
+            direktivet i desember 2023, og Stortinget samtykket. Gjennomføringen
+            i norsk lov ble vedtatt i juni 2025, og det regulatoriske arbeidet
+            ble sluttført i oktober 2025. Avstemningen 3. februar handlet altså
+            om å reversere noe som allerede var vedtatt og langt på vei
+            gjennomført.
           </p>
 
           <h2 className="text-xl font-bold">
@@ -102,7 +112,7 @@ const Page = function Page() {
           <p>
             Stortingsdebatten 29. januar handlet i stor grad om ett spørsmål:
             skal norske bilister betale både CO₂-avgift og ETS2-kvotepris
-            samtidig? I dag betaler du 3,79 kroner per liter diesel i
+            samtidig? I 2026 betaler du 4,42 kroner per liter diesel i
             CO₂-avgift. Hvis ETS2 legger seg oppå, kan totalbelastningen bli
             betydelig.
           </p>
@@ -133,9 +143,9 @@ const Page = function Page() {
 
           <p>
             Arbeiderpartiet understreket at Norge kan søke om midlertidig unntak
-            og kompensere gjennom andre avgifter dersom det blir nødvendig. EU
-            har utsatt oppstarten til 2028, noe Ap mener gir bedre tid til å
-            forberede seg.
+            og kompensere gjennom andre avgifter dersom det blir nødvendig.
+            Kvoteplikt med prisvirkning er utsatt til tidligst 2028, noe Ap
+            mener gir bedre tid til å forberede seg.
           </p>
 
           <p>
@@ -232,28 +242,34 @@ const Page = function Page() {
           <h2 className="text-xl font-bold">Hva skjer videre?</h2>
 
           <p>
-            EU har utsatt ETS2-oppstarten med ett år, til tidligst 1. januar
-            2028. Det gir regjeringen tid til å avklare om CO₂-avgiften skal
-            reduseres for å unngå dobbel virkemiddelbruk – slik den allerede har
-            gjort for luftfarten. Regjeringen har signalisert at de vil vurdere
-            kompenserende tiltak, men ingenting er vedtatt.
+            ETS2 innføres trinnvis. Overvåking og rapportering av utslipp
+            begynte allerede i 2025. Auksjonering av kvoter skal starte i 2027.
+            Selve kvotepliktfasen – der drivstoffleverandørene må levere kvoter
+            og kostnaden kan slå ut i pumpeprisen – er utsatt med ett år til
+            tidligst 1. januar 2028. Det gir regjeringen tid til å avklare om
+            CO₂-avgiften skal reduseres for å unngå dobbel virkemiddelbruk –
+            slik den allerede har gjort for luftfarten. Regjeringen har
+            signalisert at de vil vurdere kompenserende tiltak, men ingenting er
+            vedtatt.
           </p>
 
           <p>
             Selv om regjeringen kutter CO₂-avgiften for å kompensere, endrer det
-            hvor pengene havner. I dag går CO₂-avgiften – 3,79 kroner per liter
-            – rett i den norske statskassen. Under ETS2 betaler
-            drivstoffleverandørene for utslippskvoter på det europeiske
-            markedet. Pengene går ikke lenger til Norge, men til EUs
-            kvotesystem. Hvor mye som eventuelt flyter tilbake til EØS-land
-            gjennom EUs omfordelingsmekanismer, er ikke avklart.
+            hvor pengene havner. I dag går CO₂-avgiften – 4,42 kroner per liter
+            i 2026 – rett i den norske statskassen. Under ETS2 betaler
+            drivstoffleverandørene for kvoter som auksjoneres på det europeiske
+            markedet. Deltakerlandene, inkludert Norge gjennom EØS-avtalen,
+            mottar auksjonsinntektene og er forpliktet til å bruke dem på klima-
+            og sosialtiltak. Nøyaktig hvordan Norges andel fordeles, og hvor mye
+            som eventuelt øremerkes EUs sosiale klimafond, er ikke endelig
+            avklart.
           </p>
 
           <p>
             For deg som kjører på diesel betyr vedtaket at ETS2 ligger fast i
             planene. Spørsmålene som gjenstår er hvor mye av kostnadene som
-            dempes gjennom kutt i andre avgifter – og hvem som til syvende og
-            sist får inntektene.
+            dempes gjennom kutt i andre avgifter – og hvordan auksjonsinntektene
+            fordeles mellom Norge og EU.
           </p>
 
           <div className="rounded-2xl border border-border bg-secondary/40 p-5">

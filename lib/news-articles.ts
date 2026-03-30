@@ -90,15 +90,15 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
-      "Et bredt flertall stemte ned Senterpartiets forslag om å stanse ETS2. Den nye EU-kvoteprisen på drivstoff kommer til Norge, trolig fra 2028.",
+      "Et bredt flertall avviste forslagene om å stanse Norges gjennomføring av ETS2. EU-kvoteprisen på drivstoff ligger fast i planene, med prisvirkning trolig fra 2028.",
     publishedAtIso: "2026-02-03T13:00:00+01:00",
     slug: "stortinget-sa-ja-til-ets2",
-    title: "Stortinget sa ja til ETS2 – forslaget om å stoppe ble nedstemt",
+    title: "Stortinget lot ETS2 stå – forslagene om å stoppe ble nedstemt",
   },
   {
     category: "Forklart",
     intro:
-      "Stortinget debatterer om Norge skal stoppe ETS2 – et nytt EU-system som kan legge en ekstra kvotepris oppå dieselavgiftene du allerede betaler.",
+      "ETS2 er EUs nye kvotehandelssystem som kan legge en ekstra kostnad oppå dieselavgiftene du allerede betaler. Norge hadde allerede godtatt systemet gjennom EØS – debatten handlet om å snu.",
     publishedAtIso: "2026-01-29T14:00:00+01:00",
     slug: "kan-eu-kreve-ny-avgift-pa-diesel-i-norge",
     title: "Kan EU kreve ny avgift på diesel i Norge?",
