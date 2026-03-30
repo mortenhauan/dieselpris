@@ -24,6 +24,14 @@ export const formatNewsDate = function formatNewsDate(iso: string): string {
 
 const entries: NewsIndexEntry[] = [
   {
+    category: "Forklart",
+    intro:
+      "Olje handles i dollar. Når kronen er svak, betaler du mer for diesel – selv om oljeprisen er stabil. Slik fungerer det.",
+    publishedAtIso: "2025-06-15T10:00:00+02:00",
+    slug: "kronekursen-og-dieselprisen-en-sammenheng-fa-tenker-pa",
+    title: "Kronekursen og dieselprisen – en sammenheng få tenker på",
+  },
+  {
     category: "Nyhet",
     intro:
       "CO₂-avgiften på diesel øker 25 prosent fra nyttår. Samlet betaler du 43 øre mer per liter i faste avgifter fra 1. januar 2024.",
@@ -32,12 +40,36 @@ const entries: NewsIndexEntry[] = [
     title: "Dieselavgiftene for 2024: CO2-avgiften stiger videre",
   },
   {
+    category: "Bakgrunn",
+    intro:
+      "Brent-oljen falt 19 prosent i 2025. Likevel endte norske dieselpriser høyere enn året før. Her er forklaringen.",
+    publishedAtIso: "2026-01-10T12:00:00+01:00",
+    slug: "oljearet-2025-prisen-falt-men-dieselen-ble-dyrere",
+    title: "Oljeåret 2025: prisen falt, men dieselen ble dyrere",
+  },
+  {
     category: "Nyhet",
     intro:
       "CO₂-avgiften på diesel øker 20 prosent fra nyttår. Samlet betaler du 60 øre mer per liter i faste avgifter fra 1. januar 2025.",
     publishedAtIso: "2024-12-13T17:00:00+01:00",
     slug: "dieselavgiftene-for-2025-nok-et-ar-med-okt-co2-avgift",
     title: "Dieselavgiftene for 2025: nok et år med økt CO2-avgift",
+  },
+  {
+    category: "Forklart",
+    intro:
+      "Råolje, raffineringsmargin, distribusjon og avgifter – slik blir prisen du betaler ved pumpa.",
+    publishedAtIso: "2025-02-15T10:00:00+01:00",
+    slug: "slik-settes-dieselprisen-fra-oljefat-til-pumpe",
+    title: "Slik settes dieselprisen: fra oljefat til pumpe",
+  },
+  {
+    category: "Forklart",
+    intro:
+      "23 land bestemmer hvor mye olje verden får. I 2025 har de åpnet kranene – og det merkes på pumpa.",
+    publishedAtIso: "2025-09-15T11:00:00+02:00",
+    slug: "hva-er-opec-og-hva-har-de-med-dieselprisen-a-gjore",
+    title: "Hva er OPEC+ og hva har de med dieselprisen å gjøre?",
   },
   {
     category: "Nyhet",
@@ -90,10 +122,10 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
-      "KrF foreslår å fjerne veibruksavgiften i tre måneder. For diesel betyr det rundt 2,85 kr billigere per liter – hvis forslaget får flertall.",
-    publishedAtIso: "2026-03-19T16:00:00+01:00",
-    slug: "krf-foreslo-avgiftskutt-for-hastevedtaket",
-    title: "KrF vil fjerne veibruksavgiften midlertidig",
+      "Angrepet på Iran og stenging av Hormuz-stredet har sendt oljeprisen til 119 dollar fatet. Dieselen har passert 30 kroner literen.",
+    publishedAtIso: "2026-03-20T14:00:00+01:00",
+    slug: "krig-i-midtosten-sender-dieselprisen-over-30-kroner",
+    title: "Krig i Midtøsten sender dieselprisen over 30 kroner",
   },
   {
     category: "Bakgrunn",
