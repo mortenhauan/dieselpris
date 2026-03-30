@@ -1,27 +1,41 @@
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
+import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import type { NewsSource } from "@/lib/news-articles";
 import { formatNewsDate } from "@/lib/news-articles";
+import { articleJsonLd } from "@/lib/site-structured-data";
 
 interface NewsArticleLayoutProps {
+  canonicalUrl: string;
   category: string;
   children: React.ReactNode;
+  description?: string;
   publishedAtIso: string;
   sources: NewsSource[];
   title: string;
 }
 
 export const NewsArticleLayout = function NewsArticleLayout({
+  canonicalUrl,
   category,
   children,
+  description,
   publishedAtIso,
   sources,
   title,
 }: NewsArticleLayoutProps) {
   return (
     <article className="bg-background py-12 md:py-20">
+      <JsonLd
+        data={articleJsonLd({
+          canonicalUrl,
+          datePublished: publishedAtIso,
+          description,
+          headline: title,
+        })}
+      />
       <div className="mx-auto max-w-3xl px-6">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

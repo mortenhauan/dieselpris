@@ -1,8 +1,11 @@
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { Footer } from "@/components/footer";
+import { JsonLd } from "@/components/json-ld";
+import { websiteJsonLd } from "@/lib/site-structured-data";
 import { SITE_URL } from "@/lib/site-url";
 
 import "./globals.css";
@@ -57,9 +60,11 @@ const RootLayout = function RootLayout({
   return (
     <html lang="no">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <JsonLd data={websiteJsonLd()} />
         {children}
         <Footer />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -52,8 +52,10 @@ const Page = function Page() {
       <Header activeNav="news" variant="content" />
       <main>
         <NewsArticleLayout
+          canonicalUrl={CANONICAL}
           category="Nyhet"
           publishedAtIso="2026-03-30T13:00:00+02:00"
+          description={DESCRIPTION}
           sources={SOURCES}
           title={TITLE}
         >
