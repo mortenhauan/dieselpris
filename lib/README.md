@@ -4,6 +4,7 @@ Shared utilities and pricing models used across the app.
 
 ## Files
 
+- [`chart-time-axis.ts`](./chart-time-axis.ts): UTC noon timestamps from `YYYY-MM-DD` and calendar month tick positions for Recharts time-based X-axes (proportional spacing across weekends).
 - [`get-diesel-prices.ts`](./get-diesel-prices.ts): Cached ICE/Norges Bank loader (`"use cache"`, tag `diesel-prices`, `cacheLife("dieselPrices")` profile from [`next.config.mjs`](../next.config.mjs)); warmed by [`/api/revalidate-diesel`](../app/api/revalidate-diesel/route.ts) cron on Vercel. Loads gasoil plus a parallel **ICE Brent** daily series (90 days) for the crude benchmark card; Brent failure only clears that series.
 - [`diesel-prices-payload.ts`](./diesel-prices-payload.ts): Shared `DieselPricesPayload` shape and the honest empty payload when live ICE/TradingView data is missing (no fabricated prices).
 - [`news-articles.ts`](./news-articles.ts): Typed article content, sorting helpers, and slug lookup for the public `/nyheter` overview and `/nyheter/[slug]` pages.

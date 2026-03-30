@@ -156,13 +156,23 @@ export const DieselPricesStream = async function DieselPricesStream({
                   , så lik avstand på aksen betyr omtrent lik prosentvis endring
                   — nyttig for å se om begge beveger seg i samme retning.
                   Enhetene er fortsatt ulike; dette er ikke et prisforhold i
-                  kroner per liter.
+                  kroner per liter. Er kalenderdagen nyere enn siste felles
+                  handelsdag, strekkes linjen til visningsdato med samme nivåer
+                  som i råvarekortet øverst.
                 </p>
               </div>
               {historical.length > 1 && brent_historical.length > 1 ? (
                 <DieselBrentLogChart
                   brent={brent_historical}
                   historical={historical}
+                  {...(hasLive && currentPrice
+                    ? {
+                        spotAsOfDate: data.updated_at.slice(0, 10),
+                        spotBrentUsdBbl:
+                          brent_historical.at(-1)?.usd_per_barrel,
+                        spotGasoilUsdMt: currentPrice.price_usd_mt,
+                      }
+                    : {})}
                 />
               ) : (
                 <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">

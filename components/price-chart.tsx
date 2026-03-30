@@ -11,6 +11,11 @@ import {
   YAxis,
 } from "recharts";
 
+import {
+  dateFromChartTooltipLabel,
+  isoDateToUtcNoonMs,
+  monthStartTimestampsUtc,
+} from "@/lib/chart-time-axis";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
   PUMP_PRICE_STACK_LAYERS,
@@ -27,7 +32,7 @@ interface HistoricalData {
 }
 
 type StackedRow = HistoricalData &
-  Record<PumpPriceLayerKey, number> & { total: number };
+  Record<PumpPriceLayerKey, number> & { timeMs: number; total: number };
 
 interface PriceChartProps {
   data: HistoricalData[];
@@ -59,25 +64,11 @@ const toStackedRows = function toStackedRows(
       distribution: parts.distribution,
       mva: parts.mva,
       raw: parts.raw,
+      timeMs: isoDateToUtcNoonMs(row.date),
       total: parts.total,
       veibruks: parts.veibruks,
     };
   });
-};
-
-const monthBoundaryCategories = function monthBoundaryCategories(
-  sorted: StackedRow[]
-): string[] {
-  const out: string[] = [];
-  let prevYm = "";
-  for (const row of sorted) {
-    const ym = row.date.slice(0, 7);
-    if (ym !== prevYm) {
-      out.push(row.date);
-      prevYm = ym;
-    }
-  }
-  return out;
 };
 
 const yScaleFromTotals = function yScaleFromTotals(totals: number[]): {
@@ -98,11 +89,8 @@ const yScaleFromTotals = function yScaleFromTotals(totals: number[]): {
   return { yDomain: [0, last], yTicks };
 };
 
-const formatChartTooltipDate = function formatChartTooltipDate(
-  dateStr: string
-) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("nb-NO", { day: "numeric", month: "short" });
+const formatChartTooltipDate = function formatChartTooltipDate(d: Date) {
+  return d.toLocaleDateString("nb-NO", { day: "numeric", month: "short" });
 };
 
 const formatChartKr = function formatChartKr(value: number): string {
@@ -113,12 +101,11 @@ const formatChartYAxisKr = function formatChartYAxisKr(value: number): string {
   return `${value} kr`;
 };
 
-const createMonthTickFormatter = function createMonthTickFormatter(
+const createMonthTickFormatterMs = function createMonthTickFormatterMs(
   spanYears: boolean
 ) {
-  return function formatMonthTick(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(
+  return function formatMonthTick(ms: number): string {
+    return new Date(ms).toLocaleDateString(
       "nb-NO",
       spanYears ? { month: "short", year: "2-digit" } : { month: "short" }
     );
@@ -127,7 +114,7 @@ const createMonthTickFormatter = function createMonthTickFormatter(
 
 interface PriceChartTooltipProps {
   active?: boolean;
-  label?: string | number;
+  label?: unknown;
   payload?: readonly { payload?: unknown }[];
 }
 
@@ -141,11 +128,14 @@ const PriceChartTooltip = function PriceChartTooltip({
   }
   const row = payload[0]?.payload as StackedRow;
   const fx = impliedUsdNok(row.price, row.price_nok_liter);
+  const labelDate = dateFromChartTooltipLabel(label);
+  const dateHeading =
+    labelDate === null
+      ? formatChartTooltipDate(new Date(row.date))
+      : formatChartTooltipDate(labelDate);
   return (
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
-      <p className="text-sm text-muted-foreground mb-2">
-        {formatChartTooltipDate(String(label))}
-      </p>
+      <p className="text-sm text-muted-foreground mb-2">{dateHeading}</p>
       <div className="space-y-1.5">
         {PUMP_PRICE_STACK_LAYERS.map((layer) => (
           <div
@@ -193,7 +183,7 @@ const PriceChartTooltip = function PriceChartTooltip({
 const axisTicksFromStacked = function axisTicksFromStacked(data: StackedRow[]) {
   if (data.length === 0) {
     return {
-      monthCategories: [] as string[],
+      monthTicks: [] as number[],
       spanYears: false,
       yDomain: [0, 30] as [number, number],
       yTicks: [0, 5, 10, 15, 20, 25, 30],
@@ -201,14 +191,19 @@ const axisTicksFromStacked = function axisTicksFromStacked(data: StackedRow[]) {
   }
 
   const sorted = [...data].toSorted((a, b) => a.date.localeCompare(b.date));
-  const monthCategories = monthBoundaryCategories(sorted);
+  const [first] = sorted;
+  const last = sorted.at(-1);
+  const monthTicks =
+    first !== undefined && last !== undefined
+      ? monthStartTimestampsUtc(first.timeMs, last.timeMs)
+      : [];
   const totals = sorted.map((d) => d.total);
   const { yTicks, yDomain } = yScaleFromTotals(totals);
   const y0 = sorted[0]?.date.slice(0, 4) ?? "";
   const y1 = sorted.at(-1)?.date.slice(0, 4) ?? "";
 
   return {
-    monthCategories,
+    monthTicks,
     spanYears: y0 !== y1,
     yDomain,
     yTicks,
@@ -219,17 +214,17 @@ export const PriceChart = function PriceChart({
   data,
   regionId,
 }: PriceChartProps) {
-  const stackedData = useMemo(
-    () => toStackedRows(data, regionId),
-    [data, regionId]
-  );
-  const { monthCategories, yTicks, yDomain, spanYears } = useMemo(
+  const stackedData = useMemo(() => {
+    const sorted = [...data].toSorted((a, b) => a.date.localeCompare(b.date));
+    return toStackedRows(sorted, regionId);
+  }, [data, regionId]);
+  const { monthTicks, yTicks, yDomain, spanYears } = useMemo(
     () => axisTicksFromStacked(stackedData),
     [stackedData]
   );
 
   const formatMonthTick = useMemo(
-    () => createMonthTickFormatter(spanYears),
+    () => createMonthTickFormatterMs(spanYears),
     [spanYears]
   );
 
@@ -246,14 +241,15 @@ export const PriceChart = function PriceChart({
             margin={{ bottom: 0, left: 0, right: 10, top: 10 }}
           >
             <XAxis
-              dataKey="date"
-              type="category"
-              ticks={monthCategories}
-              tickFormatter={formatMonthTick}
+              dataKey="timeMs"
+              domain={["dataMin", "dataMax"]}
+              scale="time"
               tick={{ fill: "oklch(0.50 0.02 250)", fontSize: 12 }}
-              axisLine={{ stroke: "oklch(0.90 0.01 250)" }}
+              tickFormatter={formatMonthTick}
               tickLine={false}
-              interval={0}
+              ticks={monthTicks}
+              type="number"
+              axisLine={{ stroke: "oklch(0.90 0.01 250)" }}
             />
             <YAxis
               tickFormatter={formatChartYAxisKr}
@@ -268,7 +264,7 @@ export const PriceChart = function PriceChart({
             {PUMP_PRICE_STACK_LAYERS.map((layer) => (
               <Area
                 key={layer.key}
-                type="monotone"
+                type="linear"
                 dataKey={layer.key}
                 name={layer.name}
                 stackId="pump"
@@ -279,13 +275,13 @@ export const PriceChart = function PriceChart({
                 isAnimationActive={false}
               />
             ))}
-            {monthCategories.map((d) => (
+            {monthTicks.map((t) => (
               <ReferenceLine
-                key={d}
-                x={d}
+                key={t}
                 stroke={MONTH_MARKER_STROKE}
-                strokeWidth={1}
                 strokeDasharray="4 5"
+                strokeWidth={1}
+                x={t}
               />
             ))}
           </AreaChart>

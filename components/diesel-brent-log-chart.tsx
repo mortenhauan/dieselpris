@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import type { ReactElement } from "react";
 import {
   ComposedChart,
   Line,
@@ -11,6 +12,11 @@ import {
   YAxis,
 } from "recharts";
 
+import {
+  dateFromChartTooltipLabel,
+  isoDateToUtcNoonMs,
+  monthStartTimestampsUtc,
+} from "@/lib/chart-time-axis";
 import type {
   BrentHistoricalRow,
   DieselPricesHistoricalRow,
@@ -26,6 +32,10 @@ interface MergedRow {
   date: string;
   gasoil_usd_mt: number;
   brent_usd_bbl: number;
+}
+
+interface TimeSeriesRow extends MergedRow {
+  timeMs: number;
 }
 
 const mergeGasoilBrentByDate = function mergeGasoilBrentByDate(
@@ -60,27 +70,11 @@ const mergeGasoilBrentByDate = function mergeGasoilBrentByDate(
   }));
 };
 
-const monthBoundaryCategories = function monthBoundaryCategories(
-  rows: MergedRow[]
-): string[] {
-  const out: string[] = [];
-  let prevYm = "";
-  for (const row of rows) {
-    const ym = row.date.slice(0, 7);
-    if (ym !== prevYm) {
-      out.push(row.date);
-      prevYm = ym;
-    }
-  }
-  return out;
-};
-
-const createMonthTickFormatter = function createMonthTickFormatter(
+const createMonthTickFormatterMs = function createMonthTickFormatterMs(
   spanYears: boolean
 ) {
-  return function formatMonthTick(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(
+  return function formatMonthTick(ms: number): string {
+    return new Date(ms).toLocaleDateString(
       "nb-NO",
       spanYears ? { month: "short", year: "2-digit" } : { month: "short" }
     );
@@ -135,6 +129,28 @@ interface LogTooltipProps {
   }[];
 }
 
+const lastPointDot = function lastPointDot(
+  stroke: string,
+  lastIndex: number
+): (props: unknown) => ReactElement | null {
+  return function renderDot(props: unknown) {
+    const p = props as { cx?: number; cy?: number; index?: number };
+    if (p.index !== lastIndex || p.cx === undefined || p.cy === undefined) {
+      return null;
+    }
+    return (
+      <circle
+        cx={p.cx}
+        cy={p.cy}
+        fill={stroke}
+        r={4}
+        stroke="oklch(0.99 0.005 250)"
+        strokeWidth={1}
+      />
+    );
+  };
+};
+
 const LogDualTooltip = function LogDualTooltip({
   active,
   label,
@@ -143,16 +159,13 @@ const LogDualTooltip = function LogDualTooltip({
   if (!(active && payload?.length)) {
     return null;
   }
-  const labelStr =
-    typeof label === "string" || typeof label === "number" ? String(label) : "";
-  const labelDate = labelStr ? new Date(labelStr) : null;
-  const dateLabel =
-    labelDate && !Number.isNaN(labelDate.getTime())
-      ? labelDate.toLocaleDateString("nb-NO", {
-          day: "numeric",
-          month: "short",
-        })
-      : null;
+  const labelDate = dateFromChartTooltipLabel(label);
+  const dateLabel = labelDate
+    ? labelDate.toLocaleDateString("nb-NO", {
+        day: "numeric",
+        month: "short",
+      })
+    : null;
 
   return (
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
@@ -201,43 +214,112 @@ const LogDualTooltip = function LogDualTooltip({
 export const DieselBrentLogChart = function DieselBrentLogChart({
   brent,
   historical,
+  spotAsOfDate,
+  spotBrentUsdBbl,
+  spotGasoilUsdMt,
 }: {
   brent: BrentHistoricalRow[];
   historical: DieselPricesHistoricalRow[];
+  spotAsOfDate?: string;
+  spotBrentUsdBbl?: number;
+  spotGasoilUsdMt?: number;
 }) {
   const merged = useMemo(
     () => mergeGasoilBrentByDate(historical, brent),
     [brent, historical]
   );
-  const monthCategories = useMemo(
-    () => monthBoundaryCategories(merged),
-    [merged]
+
+  const showSpotTail = useMemo(() => {
+    const last = merged.at(-1);
+    if (last === undefined) {
+      return false;
+    }
+    if (
+      spotAsOfDate === undefined ||
+      spotGasoilUsdMt === undefined ||
+      spotBrentUsdBbl === undefined
+    ) {
+      return false;
+    }
+    if (
+      !(
+        spotGasoilUsdMt > 0 &&
+        spotBrentUsdBbl > 0 &&
+        Number.isFinite(spotGasoilUsdMt) &&
+        Number.isFinite(spotBrentUsdBbl)
+      )
+    ) {
+      return false;
+    }
+    return spotAsOfDate.localeCompare(last.date) > 0;
+  }, [merged, spotAsOfDate, spotBrentUsdBbl, spotGasoilUsdMt]);
+
+  const chartData = useMemo((): MergedRow[] => {
+    if (
+      !showSpotTail ||
+      spotAsOfDate === undefined ||
+      spotGasoilUsdMt === undefined ||
+      spotBrentUsdBbl === undefined
+    ) {
+      return merged;
+    }
+    return [
+      ...merged,
+      {
+        brent_usd_bbl: spotBrentUsdBbl,
+        date: spotAsOfDate,
+        gasoil_usd_mt: spotGasoilUsdMt,
+      },
+    ];
+  }, [merged, showSpotTail, spotAsOfDate, spotBrentUsdBbl, spotGasoilUsdMt]);
+
+  const timeSeriesData = useMemo(
+    (): TimeSeriesRow[] =>
+      chartData
+        .map((r) => {
+          const timeMs = isoDateToUtcNoonMs(r.date);
+          return Number.isFinite(timeMs) ? { ...r, timeMs } : null;
+        })
+        .filter((r): r is TimeSeriesRow => r !== null),
+    [chartData]
   );
+
   const spanYears = useMemo(() => {
-    const y0 = merged[0]?.date.slice(0, 4) ?? "";
-    const y1 = merged.at(-1)?.date.slice(0, 4) ?? "";
+    const y0 = timeSeriesData[0]?.date.slice(0, 4) ?? "";
+    const y1 = timeSeriesData.at(-1)?.date.slice(0, 4) ?? "";
     return y0 !== y1;
-  }, [merged]);
+  }, [timeSeriesData]);
   const formatMonthTick = useMemo(
-    () => createMonthTickFormatter(spanYears),
+    () => createMonthTickFormatterMs(spanYears),
     [spanYears]
   );
 
+  const monthTicks = useMemo(() => {
+    const [first] = timeSeriesData;
+    const last = timeSeriesData.at(-1);
+    if (first === undefined || last === undefined) {
+      return [];
+    }
+    return monthStartTimestampsUtc(first.timeMs, last.timeMs);
+  }, [timeSeriesData]);
+
+  const lastChartIndex = Math.max(0, timeSeriesData.length - 1);
+
   const gasoilDomain = useMemo((): [number, number] | undefined => {
-    if (merged.length === 0) {
+    if (timeSeriesData.length === 0) {
       return undefined;
     }
-    const vals = merged.map((r) => r.gasoil_usd_mt);
+    const vals = timeSeriesData.map((r) => r.gasoil_usd_mt);
     return logDomainPad(Math.min(...vals), Math.max(...vals));
-  }, [merged]);
+  }, [timeSeriesData]);
 
   const brentDomain = useMemo((): [number, number] | undefined => {
-    if (merged.length === 0) {
+    if (timeSeriesData.length === 0) {
       return undefined;
     }
-    const vals = merged.map((r) => r.brent_usd_bbl);
+    const vals = timeSeriesData.map((r) => r.brent_usd_bbl);
     return logDomainPad(Math.min(...vals), Math.max(...vals));
-  }, [merged]);
+  }, [timeSeriesData]);
 
   const gasoilTicks = useMemo(() => {
     if (gasoilDomain === undefined) {
@@ -270,18 +352,19 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
           initialDimension={{ height: 320, width: 800 }}
         >
           <ComposedChart
-            data={merged}
+            data={timeSeriesData}
             margin={{ bottom: 0, left: 2, right: 4, top: 10 }}
           >
             <XAxis
-              dataKey="date"
-              type="category"
-              ticks={monthCategories}
-              tickFormatter={formatMonthTick}
+              dataKey="timeMs"
+              domain={["dataMin", "dataMax"]}
+              scale="time"
               tick={{ fill: "oklch(0.50 0.02 250)", fontSize: 12 }}
-              axisLine={{ stroke: "oklch(0.90 0.01 250)" }}
+              tickFormatter={formatMonthTick}
               tickLine={false}
-              interval={0}
+              ticks={monthTicks}
+              type="number"
+              axisLine={{ stroke: "oklch(0.90 0.01 250)" }}
             />
             <YAxis
               allowDecimals
@@ -316,31 +399,31 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
             <Tooltip content={LogDualTooltip} />
             <Line
               dataKey="gasoil_usd_mt"
-              dot={false}
+              dot={lastPointDot(GASOIL_STROKE, lastChartIndex)}
               isAnimationActive={false}
               name="Gasoil"
               stroke={GASOIL_STROKE}
               strokeWidth={2}
-              type="monotone"
+              type="linear"
               yAxisId="gasoil"
             />
             <Line
               dataKey="brent_usd_bbl"
-              dot={false}
+              dot={lastPointDot(BRENT_STROKE, lastChartIndex)}
               isAnimationActive={false}
               name="Brent"
               stroke={BRENT_STROKE}
               strokeWidth={2}
-              type="monotone"
+              type="linear"
               yAxisId="brent"
             />
-            {monthCategories.map((d) => (
+            {monthTicks.map((t) => (
               <ReferenceLine
-                key={d}
+                key={t}
                 stroke={MONTH_MARKER_STROKE}
                 strokeDasharray="4 5"
                 strokeWidth={1}
-                x={d}
+                x={t}
               />
             ))}
           </ComposedChart>
@@ -361,6 +444,12 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
           />
           Høyre akse: Brent råolje, USD/fat — log
         </span>
+        {showSpotTail ? (
+          <span className="w-full basis-full text-center max-w-xl mx-auto text-muted-foreground">
+            Siste punkt følger visningsdato og bruker samme nivåer som
+            råvarekortet når siste felles handelsdag i kilden er eldre.
+          </span>
+        ) : null}
       </div>
     </div>
   );
