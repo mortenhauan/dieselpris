@@ -53,10 +53,19 @@ export interface IceGasoilDailyFromTv {
   infos: TvMarketInfos;
 }
 
-const barTimeToUtcDate = function barTimeToUtcDate(
+/**
+ * TradingView daily bar `time` can land a few hours before midnight UTC of
+ * the real session date (DST shift in the exchange or library timezone).
+ * Adding a 4 h buffer rounds safely into the correct calendar day.
+ */
+const TV_BAR_BUFFER_SEC = 4 * 3600;
+
+export const barTimeToExchangeDate = function barTimeToExchangeDate(
   barTimeSeconds: number
 ): string {
-  return new Date(barTimeSeconds * 1000).toISOString().slice(0, 10);
+  return new Date((barTimeSeconds + TV_BAR_BUFFER_SEC) * 1000)
+    .toISOString()
+    .slice(0, 10);
 };
 
 export const tradingViewBarsToHistorical = function tradingViewBarsToHistorical(
@@ -66,7 +75,7 @@ export const tradingViewBarsToHistorical = function tradingViewBarsToHistorical(
 ): { date: string; price: number; price_nok_liter: number }[] {
   const sorted = [...bars].toSorted((a, b) => a.time - b.time);
   return sorted.map((b) => {
-    const date = barTimeToUtcDate(b.time);
+    const date = barTimeToExchangeDate(b.time);
     const usdToNok = usdNokForUtcYmd(date);
     return {
       date,

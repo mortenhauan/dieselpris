@@ -12,6 +12,7 @@ import {
   usdNokOnOrBefore,
 } from "@/lib/norges-bank-usd-nok";
 import {
+  barTimeToExchangeDate,
   fetchIceBrentDaily,
   fetchIceGasoilUls1Daily,
   ICEEUR_ULS1_CONTINUOUS,
@@ -81,7 +82,7 @@ export const getDieselPricesData =
           ? [...brentBars]
               .toSorted((a, b) => a.time - b.time)
               .map((b) => ({
-                date: new Date(b.time * 1000).toISOString().slice(0, 10),
+                date: barTimeToExchangeDate(b.time),
                 usd_per_barrel: Math.round(b.close * 100) / 100,
               }))
           : [];
@@ -95,7 +96,7 @@ export const getDieselPricesData =
       const currentPrice = latest.close;
       const change = currentPrice - prev.close;
       const changePercent = prev.close === 0 ? 0 : (change / prev.close) * 100;
-      const latestYmd = new Date(latest.time * 1000).toISOString().slice(0, 10);
+      const latestYmd = barTimeToExchangeDate(latest.time);
       const spotForLatest = resolveUsdNok(latestYmd);
       const rawPricePerLiter =
         (currentPrice * spotForLatest) / DIESEL_LITERS_PER_METRIC_TON;
