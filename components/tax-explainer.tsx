@@ -31,17 +31,19 @@ export const TaxExplainer = function TaxExplainer({
         100
       : null;
 
-  const inTemporaryCut2026 =
+  const current2026April =
+    dutyReferenceDate >= "2026-04-01" && dutyReferenceDate < "2026-05-01";
+  const current2026MayToAugust =
     dutyReferenceDate >= "2026-05-01" && dutyReferenceDate < "2026-09-01";
   const current2025 =
     dutyReferenceDate >= "2025-01-01" && dutyReferenceDate < "2026-01-01";
   const current2026Ordinary =
-    (dutyReferenceDate >= "2026-01-01" && dutyReferenceDate < "2026-05-01") ||
+    (dutyReferenceDate >= "2026-01-01" && dutyReferenceDate < "2026-04-01") ||
     dutyReferenceDate >= "2026-09-01";
 
   const veibruksTrend = (() => {
     if (rates.veibruks === 0) {
-      return "Midlertidig bortfall 1. mai–31. aug. 2026 (Stortinget)";
+      return "0 kr/L i perioden 1. april–31. august 2026";
     }
     if (rates.veibruks <= 2.69) {
       return "Ned fra 2,71 kr (2024)";
@@ -51,7 +53,7 @@ export const TaxExplainer = function TaxExplainer({
 
   const co2Trend = (() => {
     if (rates.co2 === 3.09) {
-      return "Midlertidig sats i samme periode som veibrukskuttet";
+      return "Vedtatt fra 1. mai–31. august 2026";
     }
     if (rates.co2 >= 4.4) {
       return "Opp fra 3,17 kr (2024)";
@@ -104,8 +106,15 @@ export const TaxExplainer = function TaxExplainer({
       year: "2025",
     },
     {
+      co2: "4,42",
+      current: current2026April,
+      total: "4,42",
+      vei: "0",
+      year: "2026 (1. april–30. april)",
+    },
+    {
       co2: "3,09",
-      current: inTemporaryCut2026,
+      current: current2026MayToAugust,
       total: "3,09",
       vei: "0",
       year: "2026 (1. mai–31. aug.)",
@@ -115,7 +124,7 @@ export const TaxExplainer = function TaxExplainer({
       current: current2026Ordinary,
       total: "6,70",
       vei: "2,28",
-      year: "2026 (øvrige datoer)",
+      year: "2026 (1. jan.–31. mars og fra 1. sep.)",
     },
   ];
 
@@ -141,19 +150,42 @@ export const TaxExplainer = function TaxExplainer({
             )}
           </p>
           <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-            Satser for veibruks og CO₂ følger referansedatoen for siste
-            kurspunkt ({dutyReferenceDate}). Sommerperioden 2026 er modellert
-            med veibruks 0 kr/l og CO₂ 3,09 kr/l etter Stortingets vedtak — se{" "}
+            Prisestimatene følger satsene som gjelder på referansedatoen for
+            siste kurspunkt ({dutyReferenceDate}). I perioden 1. april–31.
+            august 2026 er veibruksavgiften satt til 0 kr/l for veidiesel.
+          </p>
+        </div>
+
+        <div className="mb-12 rounded-2xl border border-amber-500/25 bg-amber-500/8 p-5">
+          <p className="text-sm font-semibold text-foreground">
+            CO₂-kuttet fra 1. mai er regnet inn i prisestimatene
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Stortinget har vedtatt å redusere CO₂-avgiften for autodiesel til
+            3,09 kr/l fra 1. mai. Vi har lagt dette inn i prisestimatene på
+            siden, men regjeringen skriver samtidig at oppfølgingen fortsatt
+            avventer avklaringer. Satsene kan derfor bli endret senere.
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Les mer hos{" "}
+            <a
+              className="text-foreground underline underline-offset-2 hover:no-underline"
+              href="https://www.regjeringen.no/no/aktuelt/oppfolging-av-stortingets-vedtak-om-reduksjon-i-avgifter-pa-drivstoff/id3155277/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Regjeringen
+            </a>{" "}
+            og{" "}
             <a
               className="text-foreground underline underline-offset-2 hover:no-underline"
               href="https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811"
               rel="noopener noreferrer"
               target="_blank"
             >
-              sak 107811
+              Stortinget
             </a>
-            . Når kuttet trer i kraft, bestemmer regjeringen; vedtaket åpner for
-            tidligst 1. april og senest 1. mai som start.
+            .
           </p>
         </div>
 
@@ -197,11 +229,8 @@ export const TaxExplainer = function TaxExplainer({
               Faste avgifter per liter (ekskl. MVA)
             </p>
             <p className="mt-2 text-sm text-muted-foreground max-w-3xl">
-              Startdato for sommerkuttet i 2026 er ikke endelig: vi bruker{" "}
-              <strong className="font-medium text-foreground">1. mai</strong> i
-              modellen og grafene inntil regjeringen fastsetter ikrafttredelse
-              (vedtaket tillater fra 1. april eller et annet tidspunkt, men ikke
-              senere enn 1. mai).
+              Tabellen under viser satsene som er lagt inn i prisestimatene,
+              inkludert CO₂-kuttet fra 1. mai slik det står i vedtaket.
             </p>
           </div>
           <div className="overflow-x-visible md:overflow-x-auto">
@@ -273,11 +302,10 @@ export const TaxExplainer = function TaxExplainer({
           </div>
           <div className="space-y-3 p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
-              I 2026 er det en ordinær økning i CO₂ sammenlignet med 2025, men
-              Stortinget har vedtatt lavere satser for en periode om sommeren —
-              se tabellen over. «1. mai–31. aug.» er en foreløpig merkelapp: vi
-              bruker 1. mai som start inntil regjeringen setter endelig
-              ikrafttredelse.
+              I 2026 er veibruksavgiften fjernet fra 1. april til 31. august. I
+              tillegg er CO₂-kuttet fra 1. mai lagt inn i modellen etter
+              Stortingets vedtak, men dette er fortsatt ikke endelig avklart og
+              kan bli justert senere.
             </p>
             <p className="text-xs text-muted-foreground">
               Modellen inkluderer ikke alle mulige små satser og særregler.

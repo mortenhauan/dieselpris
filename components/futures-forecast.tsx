@@ -408,6 +408,11 @@ export const FuturesForecast = function FuturesForecast({
         Avgifter etter leveringsmåned (dato 1. i måneden) · Valuta{" "}
         {exchangeRate.toFixed(4)} USD/NOK · ICE lavsvovel gasoil
       </p>
+      <p className="mt-2 text-xs text-muted-foreground">
+        Fra mai 2026 er CO₂-kuttet for autodiesel lagt inn etter Stortingets
+        vedtak. Regjeringen skriver samtidig at denne delen fortsatt avventer
+        avklaringer, så anslagene kan bli endret senere.
+      </p>
     </div>
   );
 };

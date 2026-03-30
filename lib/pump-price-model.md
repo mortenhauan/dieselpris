@@ -22,21 +22,23 @@ The tax schedule is date-aware. This matters because the 90-day chart can span a
 
 - `2025-01-01`: `veibruksavgift 2.69`, `CO2-avgift 3.79`, `MVA 25%`
 - `2026-01-01`: `veibruksavgift 2.28`, `CO2-avgift 4.42`, `MVA 25%` (ordinære 2026-satser)
-- `2026-05-01`: midlertidig `veibruksavgift 0`, `CO2-avgift 3.09` (autodiesel vei) — modellert startdato; Stortinget tillater også ikrafttredelse fra 1. april; da flyttes denne raden til `2026-04-01` i koden
+- `2026-04-01`: midlertidig `veibruksavgift 0`, `CO2-avgift 4.42`, `MVA 25%` (innført for veidiesel etter regjeringens oppfølging 30.03.2026)
+- `2026-05-01`: midlertidig `veibruksavgift 0`, `CO2-avgift 3.09`, `MVA 25%` (lagt inn i appen etter Stortingets vedtak for autodiesel)
 - `2026-09-01`: tilbake til ordinære 2026-satser (`2.28` / `4.42`)
 
-Vedtakene som ligger bak kuttperioden er [Stortinget, sak p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811) (vedtak 595 og 599 m.fl.).
+Vedtakene som ligger bak kuttperioden er [Stortinget, sak p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811) (vedtak 595 og 599 m.fl.). Regjeringens oppfølging 30.03.2026 sier at veibruksavgiften settes til null fra 1. april til 1. september, mens de øvrige vedtakene om CO2-avgift fortsatt reiser praktiske og statsstøtterettslige spørsmål som må avklares før de eventuelt iverksettes. Appen legger likevel inn autodiesel-satsen fra vedtak 595 fra 1. mai, og merker dette i UI som vedtatt men ikke endelig avklart.
 
 If the chart later expands further back in time, this schedule should be extended with older official rates instead of reusing the newest year for all points.
 
 ## Sources
 
 - Regjeringen, `Avgiftssatser 2026`: includes side-by-side 2025 and 2026 rates for diesel-related særavgifter
+- Regjeringen, `Oppfølging av Stortingets vedtak om reduksjon i avgifter på drivstoff` (30.03.2026): confirms `veibruksavgift 0` for road diesel from `1. april` to `1. september`, and that road-diesel `CO2` changes are not yet implemented
 - Skatteetaten, `Veibruksavgift på drivstoff`: confirms current `2026` diesel veibruksavgift
 - Skatteetaten, `Merverdiavgift`: confirms general `25 %` sats
 - Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026`
 - Lovdata, `Stortingsvedtak om veibruksavgift på drivstoff for 2025`
-- Stortinget, vedtak i sak [p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811): midlertidig veibruks 0 og CO₂ 3,09 kr/l for autodiesel (appens modell bruker 1. mai–31. aug. 2026)
+- Stortinget, vedtak i sak [p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811): `CO₂ 3,09 kr/l` for autodiesel fra `1. mai`; appen bruker denne satsen i estimater med tydelig forbehold
 
 ## Hero slice
 
