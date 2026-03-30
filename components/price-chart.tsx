@@ -133,6 +133,8 @@ const PriceChartTooltip = function PriceChartTooltip({
     labelDate === null
       ? formatChartTooltipDate(new Date(row.date))
       : formatChartTooltipDate(labelDate);
+  const totalTaxes = row.veibruks + row.co2 + row.mva;
+  const taxSharePercent = row.total > 0 ? (totalTaxes / row.total) * 100 : null;
   return (
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
       <p className="text-sm text-muted-foreground mb-2">{dateHeading}</p>
@@ -158,6 +160,14 @@ const PriceChartTooltip = function PriceChartTooltip({
           <span>Sum pumpepris</span>
           <span className="tabular-nums">{formatChartKr(row.total)}</span>
         </div>
+        {taxSharePercent === null ? null : (
+          <div className="flex items-center justify-between gap-4 pt-1.5 text-xs text-muted-foreground">
+            <span>Andel avgifter inkl. MVA</span>
+            <span className="font-semibold tabular-nums text-foreground">
+              {taxSharePercent.toFixed(0)}%
+            </span>
+          </div>
+        )}
       </div>
       {row.price > 0 && (
         <p className="text-xs text-muted-foreground/80 mt-2 tabular-nums">

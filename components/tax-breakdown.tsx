@@ -167,7 +167,9 @@ export const TaxBreakdown = function TaxBreakdown({
 
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Andel avgifter</span>
+          <span className="text-sm text-muted-foreground">
+            Andel avgifter inkl. MVA
+          </span>
           <span className="text-lg font-bold text-foreground">
             {taxPercent.toFixed(0)}%
           </span>
