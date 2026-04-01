@@ -165,18 +165,23 @@ export type PumpPriceComponents = Record<PumpPriceLayerKey, number> & {
   total: number;
 };
 
-/** Stablet rekkefølge (bunn → topp), samme farger som paien. */
+/** Stablet rekkefølge (bunn → topp). Samme farger som paien. */
 export const PUMP_PRICE_STACK_LAYERS: readonly {
   key: PumpPriceLayerKey;
   name: string;
   color: string;
 }[] = [
-  { color: "#1a1a2e", key: "raw", name: "Råvarepris" },
   { color: "#4a5568", key: "distribution", name: "Modellert distribusjon" },
-  { color: "#22c55e", key: "veibruks", name: "Veibruksavgift" },
   { color: "#f59e0b", key: "co2", name: "CO2-avgift" },
+  { color: "#22c55e", key: "veibruks", name: "Veibruksavgift" },
+  { color: "#1a1a2e", key: "raw", name: "Råvarepris" },
   { color: "#ef4444", key: "mva", name: "MVA (25%)" },
 ];
+
+/** Hover/tooltip: øverst på stakken først i listen (som visuelt ovenfra på grafen). */
+export const PUMP_PRICE_STACK_LAYERS_TOOLTIP = [
+  ...PUMP_PRICE_STACK_LAYERS,
+].toReversed();
 
 export const pumpPriceComponents = function pumpPriceComponents(
   rawNokPerLiter: number,

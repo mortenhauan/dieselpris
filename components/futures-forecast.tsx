@@ -20,6 +20,7 @@ import {
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
   PUMP_PRICE_STACK_LAYERS,
+  PUMP_PRICE_STACK_LAYERS_TOOLTIP,
   pumpPriceComponents,
 } from "@/lib/pump-price-model";
 import type { PumpPriceLayerKey } from "@/lib/pump-price-model";
@@ -193,7 +194,7 @@ const FuturesChartTooltip = function FuturesChartTooltip({
         {formatKrPerLiter(row.total)}
       </p>
       <div className="space-y-1">
-        {PUMP_PRICE_STACK_LAYERS.map((layer) => (
+        {PUMP_PRICE_STACK_LAYERS_TOOLTIP.map((layer) => (
           <div key={layer.key} className="flex justify-between gap-4 text-xs">
             <span className="text-muted-foreground">{layer.name}</span>
             <span className="tabular-nums text-foreground">

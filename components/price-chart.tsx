@@ -19,6 +19,7 @@ import {
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
   PUMP_PRICE_STACK_LAYERS,
+  PUMP_PRICE_STACK_LAYERS_TOOLTIP,
   pumpPriceComponents,
 } from "@/lib/pump-price-model";
 import type { PumpPriceLayerKey } from "@/lib/pump-price-model";
@@ -139,7 +140,7 @@ const PriceChartTooltip = function PriceChartTooltip({
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
       <p className="text-sm text-muted-foreground mb-2">{dateHeading}</p>
       <div className="space-y-1.5">
-        {PUMP_PRICE_STACK_LAYERS.map((layer) => (
+        {PUMP_PRICE_STACK_LAYERS_TOOLTIP.map((layer) => (
           <div
             key={layer.key}
             className="flex items-center justify-between gap-4 text-sm"
