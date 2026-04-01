@@ -2,7 +2,8 @@
 
 - When Norwegian UI copy is wrong, fix å, ø, and æ (and related wording) across all user-facing text, not just a single screen; review all visible copy when fixing orthography.
 - User-facing Norwegian copy should read for drivers and fleet owners: short, plain language, minimal repetition, no developer-meta phrasing (avoid wording that talks about “when we have data” or similar instead of what the user needs to know).
-- For market and price UI, prefer labels and timestamps that reflect the **exchange or quoted market reference** (what the price refers to) rather than only when data was ingested; explain futures and “change” in plain language, not trader jargon.
+- For market and price UI, prefer labels and timestamps that reflect the **exchange or quoted market reference** (what the price refers to) rather than only when data was ingested; keep the **last visible tick’s date** consistent with the latest daily (or session) observation so it does not read one calendar day behind “now” elsewhere; explain futures and “change” in plain language, not trader jargon.
+- For stacked pump-price charts, list hover/tooltip rows **top-of-stack first** so reading the card matches the picture; keep **andel avgifter** / tax-share hints and labels (e.g. whether MVA is included) aligned with side or detail breakdown views.
 - Do not show fabricated, placeholder, or demo values as if they were live market data; use clear unavailable or empty states instead.
 - In global metadata and share copy, avoid implying a lookup of the user’s local station price or overstating freshness; keep futures- and model-based, indicative framing consistent with the README.
 - Attach repo skills (e.g. Next cache components) when you want a specific workflow or stack doc followed end-to-end.
@@ -20,6 +21,9 @@
 - Vercel project config for this app is `vercel.ts` (not `vercel.json`).
 - Region routes live under ASCII segments (`/sor`, `/ost`, `/vest`, `/nord`, `/midt`); avoid unicode folder names in `app/` for regions; the national view is `/`, not a separate `/nasjonal` route.
 - Primary audience is drivers and fleet owners learning what moves diesel prices; keep explanations short, plain Norwegian, and fact-checked when stating duties, shares, or regulatory claims; treat numbers as indicative and not financial advice (project README stance).
+- Forward or multi-month charts use **time-based** X positions (e.g. delivery-month timestamps) rather than categorical contract slots so month labels align with the calendar; commodity overlays on a second axis often scale from 0 to a padded max.
+- Pump-price stack drawing order comes from **`PUMP_PRICE_STACK_LAYERS`**; hover row order uses **`PUMP_PRICE_STACK_LAYERS_TOOLTIP`** (top-first) in chart tooltips.
+- When revising **`/nyheter`** articles from fact-check feedback, update copy and figures but **do not change URL slugs**.
 
 # Ultracite Code Standards
 

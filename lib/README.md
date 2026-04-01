@@ -7,6 +7,7 @@ Shared utilities and pricing models used across the app.
 - [`chart-time-axis.ts`](./chart-time-axis.ts): UTC noon timestamps from `YYYY-MM-DD` and calendar month tick positions for Recharts time-based X-axes (proportional spacing across weekends).
 - [`get-diesel-prices.ts`](./get-diesel-prices.ts): Cached ICE/Norges Bank loader (`"use cache"`, tag `diesel-prices`, `cacheLife("dieselPrices")` profile from [`next.config.mjs`](../next.config.mjs)); warmed by [`/api/revalidate-diesel`](../app/api/revalidate-diesel/route.ts) cron on Vercel. Loads gasoil plus a parallel **ICE Brent** daily series (90 days) for the crude benchmark card; Brent failure only clears that series.
 - [`diesel-prices-payload.ts`](./diesel-prices-payload.ts): Shared `DieselPricesPayload` shape and the honest empty payload when live ICE/TradingView data is missing (no fabricated prices).
+- [`expand-historical-to-calendar-days.ts`](./expand-historical-to-calendar-days.ts): Expands trading-day-only historical rows to every calendar day in range by forward-filling råvare (NOK/L and USD/MT); `pumpPriceComponents(..., atDate)` then applies avgifter for that kalenderdag.
 - [`news-articles.ts`](./news-articles.ts): Typed article content, sorting helpers, and slug lookup for the public `/nyheter` overview and `/nyheter/[slug]` pages.
 - [`news-articles.md`](./news-articles.md): Intent and copy principles for the news article data.
 - [`pump-price-model.ts`](./pump-price-model.ts): Shared pump price composition logic with date-based tax rates for historical views.

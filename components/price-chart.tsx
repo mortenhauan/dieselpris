@@ -17,6 +17,7 @@ import {
   monthStartTimestampsUtc,
 } from "@/lib/chart-time-axis";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
+import { expandHistoricalTradingToCalendarDays } from "@/lib/expand-historical-to-calendar-days";
 import {
   PUMP_PRICE_STACK_LAYERS,
   PUMP_PRICE_STACK_LAYERS_TOOLTIP,
@@ -227,7 +228,8 @@ export const PriceChart = function PriceChart({
 }: PriceChartProps) {
   const stackedData = useMemo(() => {
     const sorted = [...data].toSorted((a, b) => a.date.localeCompare(b.date));
-    return toStackedRows(sorted, regionId);
+    const daily = expandHistoricalTradingToCalendarDays(sorted);
+    return toStackedRows(daily, regionId);
   }, [data, regionId]);
   const { monthTicks, yTicks, yDomain, spanYears } = useMemo(
     () => axisTicksFromStacked(stackedData),
