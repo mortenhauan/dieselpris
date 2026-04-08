@@ -1,9 +1,11 @@
 import { SITE_URL } from "@/lib/site-url";
+import { SOCIAL_PROFILE_HREFS } from "@/lib/social-profiles";
 
 const organization = function organization(): Record<string, unknown> {
   return {
     "@type": "Organization",
     name: "Dieselpris.no",
+    sameAs: [...SOCIAL_PROFILE_HREFS],
     url: SITE_URL,
   };
 };

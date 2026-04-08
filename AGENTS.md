@@ -11,6 +11,7 @@
 - Prefer Tailwind and CSS for responsive layout and simple visual fixes; avoid React hooks or JS layout measurement when the same result is achievable cleanly with styling alone; before adding `useEffect` or other client effects, check whether server data, derived state, or CSS already solves it (see react-useeffect skill when relevant).
 - Remove temporary debug or ingest instrumentation after the underlying bug or investigation is resolved.
 - For Ultracite/Oxlint issues, prefer fixing code (structure, patterns, refactors) over turning off or relaxing lint rules when still practical.
+- For public contact or press pages, prefer **domain aliases** (e.g. `kontakt@` / `presse@` on the site domain) or **server-side forms** with the recipient only in env vars over publishing a personal email address.
 
 ## Learned Workspace Facts
 
@@ -23,6 +24,8 @@
 - Primary audience is drivers and fleet owners learning what moves diesel prices; keep explanations short, plain Norwegian, and fact-checked when stating duties, shares, or regulatory claims; treat numbers as indicative and not financial advice (project README stance).
 - Forward or multi-month charts use **time-based** X positions (e.g. delivery-month timestamps) rather than categorical contract slots so month labels align with the calendar; commodity overlays on a second axis often scale from 0 to a padded max.
 - Pump-price stack drawing order comes from **`PUMP_PRICE_STACK_LAYERS`**; hover row order uses **`PUMP_PRICE_STACK_LAYERS_TOOLTIP`** (top-first) in chart tooltips.
+- Continuous ICE symbols referenced for TradingView (and related code) are **`ICEEUR:ULS1!`** (gasoil / råvare) and **`ICEEUR:BRN1!`** (Brent); see `lib/tradingview-ice-gasoil.ts`.
+- The stacked pump **history** series forward-fills råvare on non-trading calendar days but runs **`pumpPriceComponents` per calendar date** so duty changes land on the correct day; see `lib/expand-historical-to-calendar-days.ts`.
 - When revising **`/nyheter`** articles from fact-check feedback, update copy and figures but **do not change URL slugs**.
 
 # Ultracite Code Standards

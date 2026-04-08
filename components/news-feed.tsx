@@ -10,6 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatNewsDate, NEWS_INDEX } from "@/lib/news-articles";
+import {
+  SOCIAL_FACEBOOK,
+  SOCIAL_X,
+  X_SITE_HANDLE,
+} from "@/lib/social-profiles";
 
 export const NewsFeed = function NewsFeed() {
   return (
@@ -22,6 +27,29 @@ export const NewsFeed = function NewsFeed() {
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             Korte saker om vedtak og endringer som kan påvirke prisen du betaler
             for diesel. Skrevet for folk som fyller tanken, ikke for politikere.
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+            Få med deg nye saker på{" "}
+            <a
+              aria-label={SOCIAL_X.ariaLabel}
+              className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+              href={SOCIAL_X.href}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              X ({X_SITE_HANDLE})
+            </a>{" "}
+            og{" "}
+            <a
+              aria-label={SOCIAL_FACEBOOK.ariaLabel}
+              className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+              href={SOCIAL_FACEBOOK.href}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Facebook
+            </a>
+            .
           </p>
         </div>
 

@@ -8,6 +8,7 @@ import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 import { websiteJsonLd } from "@/lib/site-structured-data";
 import { SITE_URL } from "@/lib/site-url";
+import { X_SITE_HANDLE } from "@/lib/social-profiles";
 
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export const metadata: Metadata = {
     "Dieselpris.no – forstå bedre råvarepriser og avgifter på diesel i Norge",
   twitter: {
     card: "summary_large_image",
+    site: X_SITE_HANDLE,
   },
 };
 
