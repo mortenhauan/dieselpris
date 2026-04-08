@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
@@ -9,6 +10,8 @@ import { websiteJsonLd } from "@/lib/site-structured-data";
 import { SITE_URL } from "@/lib/site-url";
 
 import "./globals.css";
+
+const ADSENSE_CLIENT_ID = "ca-pub-9912628280603975";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,6 +66,12 @@ const RootLayout = function RootLayout({
         <JsonLd data={websiteJsonLd()} />
         {children}
         <Footer />
+        <Script
+          async
+          crossOrigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          strategy="afterInteractive"
+        />
         <Analytics />
         <SpeedInsights />
       </body>
