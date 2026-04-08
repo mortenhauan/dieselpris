@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
   },
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT_ID,
+  },
   robots: {
     follow: true,
     index: true,
