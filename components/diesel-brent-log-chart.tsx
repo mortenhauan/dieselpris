@@ -35,7 +35,9 @@ const LOG_AXIS_TICK_STEPS = 11;
 interface MergedRow {
   date: string;
   brent_nok_bbl: number;
+  brent_usd_bbl: number;
   gasoil_nok_mt: number;
+  gasoil_usd_mt: number;
 }
 
 interface TimeSeriesRow extends MergedRow {
@@ -90,8 +92,10 @@ const mergeGasoilBrentByDate = function mergeGasoilBrentByDate(
     const gasoilNokMt = row.price_nok_liter * DIESEL_LITERS_PER_METRIC_TON;
     return {
       brent_nok_bbl: brUsd * usdNok,
+      brent_usd_bbl: brUsd,
       date,
       gasoil_nok_mt: gasoilNokMt,
+      gasoil_usd_mt: row.price,
     };
   });
 };
@@ -150,6 +154,7 @@ interface LogTooltipProps {
   label?: unknown;
   payload?: readonly {
     dataKey?: unknown;
+    payload?: TimeSeriesRow;
     value?: unknown;
     color?: string;
   }[];
@@ -177,6 +182,20 @@ const lastPointDot = function lastPointDot(
   };
 };
 
+const formatUsdGasoil = function formatUsdGasoil(n: number): string {
+  return `${n.toLocaleString("nb-NO", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  })} USD/t`;
+};
+
+const formatUsdBrent = function formatUsdBrent(n: number): string {
+  return `${n.toLocaleString("nb-NO", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })} USD/fat`;
+};
+
 const LogDualTooltip = function LogDualTooltip({
   active,
   label,
@@ -185,6 +204,7 @@ const LogDualTooltip = function LogDualTooltip({
   if (!(active && payload?.length)) {
     return null;
   }
+  const dataRow = payload[0]?.payload;
   const labelDate = dateFromChartTooltipLabel(label);
   const dateLabel = labelDate
     ? labelDate.toLocaleDateString("nb-NO", {
@@ -220,26 +240,41 @@ const LogDualTooltip = function LogDualTooltip({
           const key = String(entry.dataKey ?? "");
           const isGasoil = key === "gasoil_nok_mt";
           const unit = isGasoil ? "kr/t (gasoil)" : "kr/fat (Brent)";
+          let usd: number | null = null;
+          if (dataRow !== undefined) {
+            usd = isGasoil ? dataRow.gasoil_usd_mt : dataRow.brent_usd_bbl;
+          }
+          let usdLabel: string | null = null;
+          if (usd !== null && Number.isFinite(usd) && usd > 0) {
+            usdLabel = isGasoil ? formatUsdGasoil(usd) : formatUsdBrent(usd);
+          }
           return (
             <div
               key={key}
-              className="flex items-center justify-between gap-4 text-sm"
+              className="flex items-start justify-between gap-4 text-sm"
             >
               <span className="flex items-center gap-2 text-muted-foreground">
                 <span
-                  className="size-2 shrink-0 rounded-full"
+                  className="size-2 shrink-0 rounded-full mt-1.5"
                   style={{ backgroundColor: entry.color }}
                 />
                 {isGasoil ? "Gasoil" : "Brent"}
               </span>
-              <span className="font-medium tabular-nums text-foreground">
-                {v.toLocaleString("nb-NO", {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                })}{" "}
-                <span className="text-xs font-normal text-muted-foreground">
-                  {unit}
+              <span className="text-right font-medium tabular-nums text-foreground">
+                <span className="block">
+                  {v.toLocaleString("nb-NO", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {unit}
+                  </span>
                 </span>
+                {usdLabel ? (
+                  <span className="block text-xs font-normal text-muted-foreground mt-0.5 tabular-nums">
+                    {usdLabel}
+                  </span>
+                ) : null}
               </span>
             </div>
           );
@@ -326,8 +361,10 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
       ...merged,
       {
         brent_nok_bbl: spotBrentUsdBbl * usdNok,
+        brent_usd_bbl: spotBrentUsdBbl,
         date: spotAsOfDate,
         gasoil_nok_mt: gasoilNokMt,
+        gasoil_usd_mt: spotGasoilUsdMt,
       },
     ];
   }, [
