@@ -1,10 +1,11 @@
 "use client";
 
-import { Fuel, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
+import { SiteLogoMark } from "@/components/site-logo-mark";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -82,9 +83,7 @@ export const Header = function Header({
             href="/"
             onClick={closeMobile}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground transition-transform group-hover:scale-105">
-              <Fuel className="h-4 w-4 text-background" />
-            </div>
+            <SiteLogoMark className="h-8 w-8 shrink-0 transition-transform group-hover:scale-105" />
             <span className="font-semibold text-base text-foreground tracking-tight">
               dieselpris
             </span>

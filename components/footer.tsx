@@ -1,5 +1,6 @@
-import { Droplet } from "lucide-react";
 import Link from "next/link";
+
+import { SiteLogoMark } from "@/components/site-logo-mark";
 
 const copyrightYear = 2026;
 
@@ -10,9 +11,7 @@ export const Footer = function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
-                <Droplet className="h-4 w-4 text-background" />
-              </div>
+              <SiteLogoMark className="h-8 w-8 shrink-0" />
               <span className="text-base font-semibold tracking-tight text-foreground">
                 dieselpris
               </span>

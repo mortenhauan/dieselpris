@@ -33,7 +33,7 @@ export const metadata: Metadata = {
       },
       {
         type: "image/svg+xml",
-        url: "/icon.svg",
+        url: "/logo.svg",
       },
     ],
   },
