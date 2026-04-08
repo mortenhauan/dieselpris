@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { ReactElement } from "react";
 import {
+  Area,
   ComposedChart,
   Line,
   ReferenceLine,
@@ -17,26 +18,44 @@ import {
   isoDateToUtcNoonMs,
   monthStartTimestampsUtc,
 } from "@/lib/chart-time-axis";
+import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import type {
   BrentHistoricalRow,
   DieselPricesHistoricalRow,
 } from "@/lib/diesel-prices-payload";
+import { PUMP_PRICE_STACK_LAYERS } from "@/lib/pump-price-model";
 
 const MONTH_MARKER_STROKE = "oklch(0.88 0.012 250)";
-const GASOIL_STROKE = "oklch(0.35 0.14 145)";
+const GASOIL_RAW_COLOR =
+  PUMP_PRICE_STACK_LAYERS.find((l) => l.key === "raw")?.color ?? "#1a1a2e";
 const BRENT_STROKE = "oklch(0.50 0.14 250)";
 /** Enough steps so log axes span min→max (Recharts log default ticks often stop mid-range). */
 const LOG_AXIS_TICK_STEPS = 11;
 
 interface MergedRow {
   date: string;
-  gasoil_usd_mt: number;
-  brent_usd_bbl: number;
+  brent_nok_bbl: number;
+  gasoil_nok_mt: number;
 }
 
 interface TimeSeriesRow extends MergedRow {
   timeMs: number;
 }
+
+const impliedUsdNokFromGasoilRow = function impliedUsdNokFromGasoilRow(
+  priceUsdMt: number,
+  nokPerLiter: number
+): number | null {
+  if (!Number.isFinite(priceUsdMt) || priceUsdMt <= 0) {
+    return null;
+  }
+  const gasoilNokMt = nokPerLiter * DIESEL_LITERS_PER_METRIC_TON;
+  if (!Number.isFinite(gasoilNokMt) || gasoilNokMt <= 0) {
+    return null;
+  }
+  const v = gasoilNokMt / priceUsdMt;
+  return Number.isFinite(v) ? v : null;
+};
 
 const mergeGasoilBrentByDate = function mergeGasoilBrentByDate(
   historical: DieselPricesHistoricalRow[],
@@ -45,29 +64,36 @@ const mergeGasoilBrentByDate = function mergeGasoilBrentByDate(
   const brentByDate = new Map(
     brent.map((b) => [b.date, b.usd_per_barrel] as const)
   );
-  const gasoilByDate = new Map(
-    historical.map((h) => [h.date, h.price] as const)
-  );
+  const gasoilByDate = new Map(historical.map((h) => [h.date, h] as const));
   const dates = [...new Set([...gasoilByDate.keys(), ...brentByDate.keys()])]
     .filter((d) => {
-      const g = gasoilByDate.get(d);
-      const br = brentByDate.get(d);
-      return (
-        g !== undefined &&
-        br !== undefined &&
-        g > 0 &&
-        br > 0 &&
-        Number.isFinite(g) &&
-        Number.isFinite(br)
-      );
+      const row = gasoilByDate.get(d);
+      const brUsd = brentByDate.get(d);
+      if (row === undefined || brUsd === undefined) {
+        return false;
+      }
+      if (!(brUsd > 0 && Number.isFinite(brUsd))) {
+        return false;
+      }
+      const fx = impliedUsdNokFromGasoilRow(row.price, row.price_nok_liter);
+      return fx !== null;
     })
     .toSorted((a, b) => a.localeCompare(b));
 
-  return dates.map((date) => ({
-    brent_usd_bbl: brentByDate.get(date) as number,
-    date,
-    gasoil_usd_mt: gasoilByDate.get(date) as number,
-  }));
+  return dates.map((date) => {
+    const row = gasoilByDate.get(date) as DieselPricesHistoricalRow;
+    const brUsd = brentByDate.get(date) as number;
+    const usdNok = impliedUsdNokFromGasoilRow(row.price, row.price_nok_liter);
+    if (usdNok === null) {
+      throw new Error("mergeGasoilBrentByDate: forventet gyldig USD/NOK");
+    }
+    const gasoilNokMt = row.price_nok_liter * DIESEL_LITERS_PER_METRIC_TON;
+    return {
+      brent_nok_bbl: brUsd * usdNok,
+      date,
+      gasoil_nok_mt: gasoilNokMt,
+    };
+  });
 };
 
 const createMonthTickFormatterMs = function createMonthTickFormatterMs(
@@ -82,13 +108,13 @@ const createMonthTickFormatterMs = function createMonthTickFormatterMs(
 };
 
 const formatGasoilAxisTick = function formatGasoilAxisTick(n: number): string {
-  const rounded = n >= 100 ? Math.round(n) : Math.round(n * 10) / 10;
-  return `${rounded.toLocaleString("nb-NO", { maximumFractionDigits: 1 })} $/t`;
+  const rounded = n >= 10_000 ? Math.round(n) : Math.round(n * 10) / 10;
+  return `${rounded.toLocaleString("nb-NO", { maximumFractionDigits: 1 })} kr/t`;
 };
 
 const formatBrentAxisTick = function formatBrentAxisTick(n: number): string {
-  const rounded = n >= 20 ? Math.round(n) : Math.round(n * 10) / 10;
-  return `${rounded.toLocaleString("nb-NO", { maximumFractionDigits: 1 })} $/f`;
+  const rounded = n >= 1000 ? Math.round(n) : Math.round(n * 10) / 10;
+  return `${rounded.toLocaleString("nb-NO", { maximumFractionDigits: 1 })} kr/f`;
 };
 
 const logDomainPad = function logDomainPad(
@@ -167,21 +193,33 @@ const LogDualTooltip = function LogDualTooltip({
       })
     : null;
 
+  const ordered = [...payload].toSorted((a, b) => {
+    const ak = String(a.dataKey ?? "");
+    const bk = String(b.dataKey ?? "");
+    if (ak === "brent_nok_bbl" && bk === "gasoil_nok_mt") {
+      return -1;
+    }
+    if (ak === "gasoil_nok_mt" && bk === "brent_nok_bbl") {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <div className="bg-card border border-border rounded-lg p-3 shadow-lg min-w-[200px]">
       {dateLabel ? (
         <p className="text-sm text-muted-foreground mb-2">{dateLabel}</p>
       ) : null}
       <div className="space-y-1.5">
-        {payload.map((entry) => {
+        {ordered.map((entry) => {
           const raw = entry.value;
           const v = typeof raw === "number" ? raw : Number(raw);
           if (!Number.isFinite(v)) {
             return null;
           }
           const key = String(entry.dataKey ?? "");
-          const isGasoil = key === "gasoil_usd_mt";
-          const unit = isGasoil ? "USD/t (gasoil)" : "USD/fat (Brent)";
+          const isGasoil = key === "gasoil_nok_mt";
+          const unit = isGasoil ? "kr/t (gasoil)" : "kr/fat (Brent)";
           return (
             <div
               key={key}
@@ -217,12 +255,15 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
   spotAsOfDate,
   spotBrentUsdBbl,
   spotGasoilUsdMt,
+  spotPriceNokLiter,
 }: {
   brent: BrentHistoricalRow[];
   historical: DieselPricesHistoricalRow[];
   spotAsOfDate?: string;
   spotBrentUsdBbl?: number;
   spotGasoilUsdMt?: number;
+  /** Råvare kr/l samme dag som visningsdato — trengs for NOK-omregning av spot-stumpen. */
+  spotPriceNokLiter?: number;
 }) {
   const merged = useMemo(
     () => mergeGasoilBrentByDate(historical, brent),
@@ -237,7 +278,8 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
     if (
       spotAsOfDate === undefined ||
       spotGasoilUsdMt === undefined ||
-      spotBrentUsdBbl === undefined
+      spotBrentUsdBbl === undefined ||
+      spotPriceNokLiter === undefined
     ) {
       return false;
     }
@@ -245,33 +287,57 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
       !(
         spotGasoilUsdMt > 0 &&
         spotBrentUsdBbl > 0 &&
+        spotPriceNokLiter > 0 &&
         Number.isFinite(spotGasoilUsdMt) &&
-        Number.isFinite(spotBrentUsdBbl)
+        Number.isFinite(spotBrentUsdBbl) &&
+        Number.isFinite(spotPriceNokLiter)
       )
     ) {
       return false;
     }
     return spotAsOfDate.localeCompare(last.date) > 0;
-  }, [merged, spotAsOfDate, spotBrentUsdBbl, spotGasoilUsdMt]);
+  }, [
+    merged,
+    spotAsOfDate,
+    spotBrentUsdBbl,
+    spotGasoilUsdMt,
+    spotPriceNokLiter,
+  ]);
 
   const chartData = useMemo((): MergedRow[] => {
     if (
       !showSpotTail ||
       spotAsOfDate === undefined ||
       spotGasoilUsdMt === undefined ||
-      spotBrentUsdBbl === undefined
+      spotBrentUsdBbl === undefined ||
+      spotPriceNokLiter === undefined
     ) {
       return merged;
     }
+    const usdNok = impliedUsdNokFromGasoilRow(
+      spotGasoilUsdMt,
+      spotPriceNokLiter
+    );
+    if (usdNok === null) {
+      return merged;
+    }
+    const gasoilNokMt = spotPriceNokLiter * DIESEL_LITERS_PER_METRIC_TON;
     return [
       ...merged,
       {
-        brent_usd_bbl: spotBrentUsdBbl,
+        brent_nok_bbl: spotBrentUsdBbl * usdNok,
         date: spotAsOfDate,
-        gasoil_usd_mt: spotGasoilUsdMt,
+        gasoil_nok_mt: gasoilNokMt,
       },
     ];
-  }, [merged, showSpotTail, spotAsOfDate, spotBrentUsdBbl, spotGasoilUsdMt]);
+  }, [
+    merged,
+    showSpotTail,
+    spotAsOfDate,
+    spotBrentUsdBbl,
+    spotGasoilUsdMt,
+    spotPriceNokLiter,
+  ]);
 
   const timeSeriesData = useMemo(
     (): TimeSeriesRow[] =>
@@ -309,7 +375,7 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
     if (timeSeriesData.length === 0) {
       return undefined;
     }
-    const vals = timeSeriesData.map((r) => r.gasoil_usd_mt);
+    const vals = timeSeriesData.map((r) => r.gasoil_nok_mt);
     return logDomainPad(Math.min(...vals), Math.max(...vals));
   }, [timeSeriesData]);
 
@@ -317,7 +383,7 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
     if (timeSeriesData.length === 0) {
       return undefined;
     }
-    const vals = timeSeriesData.map((r) => r.brent_usd_bbl);
+    const vals = timeSeriesData.map((r) => r.brent_nok_bbl);
     return logDomainPad(Math.min(...vals), Math.max(...vals));
   }, [timeSeriesData]);
 
@@ -373,7 +439,7 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
               niceTicks="none"
               orientation="left"
               scale="log"
-              tick={{ fill: "oklch(0.45 0.08 145)", fontSize: 11 }}
+              tick={{ fill: "oklch(0.42 0.03 250)", fontSize: 11 }}
               tickFormatter={formatGasoilAxisTick}
               tickLine={false}
               ticks={gasoilTicks}
@@ -397,18 +463,20 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
               yAxisId="brent"
             />
             <Tooltip content={LogDualTooltip} />
-            <Line
-              dataKey="gasoil_usd_mt"
-              dot={lastPointDot(GASOIL_STROKE, lastChartIndex)}
+            <Area
+              dataKey="gasoil_nok_mt"
+              dot={lastPointDot(GASOIL_RAW_COLOR, lastChartIndex)}
+              fill={GASOIL_RAW_COLOR}
+              fillOpacity={0.88}
               isAnimationActive={false}
               name="Gasoil"
-              stroke={GASOIL_STROKE}
-              strokeWidth={2}
+              stroke={GASOIL_RAW_COLOR}
+              strokeWidth={0.5}
               type="linear"
               yAxisId="gasoil"
             />
             <Line
-              dataKey="brent_usd_bbl"
+              dataKey="brent_nok_bbl"
               dot={lastPointDot(BRENT_STROKE, lastChartIndex)}
               isAnimationActive={false}
               name="Brent"
@@ -433,16 +501,16 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
         <span className="inline-flex items-center gap-1.5">
           <span
             className="size-2 rounded-full shrink-0"
-            style={{ backgroundColor: GASOIL_STROKE }}
+            style={{ backgroundColor: GASOIL_RAW_COLOR }}
           />
-          Venstre akse: lavsvovel gasoil (ICE), USD/t — log
+          Venstre akse: lavsvovel gasoil (ICE), kr/t — log
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span
             className="size-2 rounded-full shrink-0"
             style={{ backgroundColor: BRENT_STROKE }}
           />
-          Høyre akse: Brent råolje, USD/fat — log
+          Høyre akse: Brent råolje, kr/fat — log
         </span>
         {showSpotTail ? (
           <span className="w-full basis-full text-center max-w-xl mx-auto text-muted-foreground">

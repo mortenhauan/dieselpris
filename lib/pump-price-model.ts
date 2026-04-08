@@ -100,8 +100,46 @@ export const ANLEGGSDIESEL_RATE_SCHEDULE: readonly ScheduledComparisonDieselRate
     },
   ] as const;
 
+/**
+ * Fiske i fjerne farvann: redusert sats fra 2025 (0,93), hevet til 1,11 i 2026.
+ * Vedtak 591: 0 kr/l fra 1. april til 1. september 2026 (iverksatt).
+ */
+export const FISKE_FJERNE_RATE_SCHEDULE: readonly ScheduledComparisonDieselRates[] =
+  [
+    { co2: 0, effectiveFrom: "2024-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 0.93, effectiveFrom: "2025-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 1.11, effectiveFrom: "2026-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 0, effectiveFrom: "2026-04-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 1.11, effectiveFrom: "2026-09-01", mvaRate: 0.25, veibruks: 0 },
+  ] as const;
+
+/**
+ * Fiske i nære OG fjerne farvann: ny kategori fra 2026 (2,76 kr/l).
+ * Vedtak 592: 0 kr/l fra 1. april til 1. september 2026 (iverksatt).
+ */
+export const FISKE_NAERE_OG_FJERNE_RATE_SCHEDULE: readonly ScheduledComparisonDieselRates[] =
+  [
+    { co2: 3.79, effectiveFrom: "2025-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 2.76, effectiveFrom: "2026-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 0, effectiveFrom: "2026-04-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 2.76, effectiveFrom: "2026-09-01", mvaRate: 0.25, veibruks: 0 },
+  ] as const;
+
+/**
+ * Fiske utelukkende i nære farvann: ingen redusert sats i gjeldende lov —
+ * betaler ordinær CO₂ på mineralolje. Vedtak 594 (0 kr/l) er ikke iverksatt.
+ */
+export const FISKE_KUN_NAERE_RATE_SCHEDULE: readonly ScheduledComparisonDieselRates[] =
+  [
+    { co2: 3.79, effectiveFrom: "2025-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 4.42, effectiveFrom: "2026-01-01", mvaRate: 0.25, veibruks: 0 },
+  ] as const;
+
 const [FIRST_PUMP_PRICE_RATES] = PUMP_PRICE_RATE_SCHEDULE;
 const [FIRST_ANLEGGSDIESEL_RATES] = ANLEGGSDIESEL_RATE_SCHEDULE;
+const [FIRST_FISKE_FJERNE_RATES] = FISKE_FJERNE_RATE_SCHEDULE;
+const [FIRST_FISKE_NAERE_OG_FJERNE_RATES] = FISKE_NAERE_OG_FJERNE_RATE_SCHEDULE;
+const [FIRST_FISKE_KUN_NAERE_RATES] = FISKE_KUN_NAERE_RATE_SCHEDULE;
 
 const normalizeRateDate = function normalizeRateDate(
   atDate?: string | Date
@@ -149,6 +187,68 @@ export const getAnleggsdieselRates = function getAnleggsdieselRates(
   return match;
 };
 
+const resolveComparisonRates = function resolveComparisonRates(
+  schedule: readonly ScheduledComparisonDieselRates[],
+  fallback: ComparisonDieselRates,
+  atDate?: string | Date
+): ComparisonDieselRates {
+  const targetDate = normalizeRateDate(atDate);
+  if (!targetDate) {
+    return schedule.at(-1) ?? fallback;
+  }
+  let match = fallback;
+  for (const period of schedule) {
+    if (period.effectiveFrom <= targetDate) {
+      match = period;
+    }
+  }
+  return match;
+};
+
+export const getFiskeFjerneFarvannRates = (atDate?: string | Date) =>
+  resolveComparisonRates(
+    FISKE_FJERNE_RATE_SCHEDULE,
+    FIRST_FISKE_FJERNE_RATES,
+    atDate
+  );
+
+export const getFiskeNaereOgFjerneFarvannRates = (atDate?: string | Date) =>
+  resolveComparisonRates(
+    FISKE_NAERE_OG_FJERNE_RATE_SCHEDULE,
+    FIRST_FISKE_NAERE_OG_FJERNE_RATES,
+    atDate
+  );
+
+export const getFiskeKunNaereFarvannRates = (atDate?: string | Date) =>
+  resolveComparisonRates(
+    FISKE_KUN_NAERE_RATE_SCHEDULE,
+    FIRST_FISKE_KUN_NAERE_RATES,
+    atDate
+  );
+
+const distributionNokPerLiterForEstimate =
+  function distributionNokPerLiterForEstimate(
+    regionId: RegionId | undefined,
+    atDate?: string | Date
+  ): number {
+    const pumpRates = getPumpPriceRates(atDate);
+    return regionId
+      ? getRegionPriceProfile(regionId).distributionNokPerLiter
+      : pumpRates.defaultDistribution;
+  };
+
+const totalNokPerLiterFromRawDistributionAndRates =
+  function totalNokPerLiterFromRawDistributionAndRates(
+    rawNokPerLiter: number,
+    distributionNokPerLiter: number,
+    rates: ComparisonDieselRates
+  ): number {
+    const beforeMva =
+      rawNokPerLiter + distributionNokPerLiter + rates.veibruks + rates.co2;
+    const mva = beforeMva * rates.mvaRate;
+    return beforeMva + mva;
+  };
+
 export const VEIBRUKSAVGIFT = getPumpPriceRates().veibruks;
 export const CO2_AVGIFT = getPumpPriceRates().co2;
 export const MVA_RATE = getPumpPriceRates().mvaRate;
@@ -189,9 +289,7 @@ export const pumpPriceComponents = function pumpPriceComponents(
   atDate?: string | Date
 ): PumpPriceComponents {
   const rates = getPumpPriceRates(atDate);
-  const distribution = regionId
-    ? getRegionPriceProfile(regionId).distributionNokPerLiter
-    : rates.defaultDistribution;
+  const distribution = distributionNokPerLiterForEstimate(regionId, atDate);
   const { veibruks } = rates;
   const { co2 } = rates;
   const priceBeforeMva = rawNokPerLiter + distribution + veibruks + co2;
@@ -218,22 +316,31 @@ export const rawPlusPublicDutiesNokPerLiter =
     return beforeMva + mva;
   };
 
+export const estimateComparisonPriceNokPerLiter =
+  function estimateComparisonPriceNokPerLiter(
+    rawNokPerLiter: number,
+    rates: ComparisonDieselRates,
+    regionId?: RegionId,
+    atDate?: string | Date
+  ): number {
+    const distribution = distributionNokPerLiterForEstimate(regionId, atDate);
+    return totalNokPerLiterFromRawDistributionAndRates(
+      rawNokPerLiter,
+      distribution,
+      rates
+    );
+  };
+
 export const estimateAnleggsdieselPriceNokPerLiter =
   function estimateAnleggsdieselPriceNokPerLiter(
     rawNokPerLiter: number,
     regionId?: RegionId,
     atDate?: string | Date
   ): number {
-    const pumpRates = getPumpPriceRates(atDate);
-    const comparisonRates = getAnleggsdieselRates(atDate);
-    const distribution = regionId
-      ? getRegionPriceProfile(regionId).distributionNokPerLiter
-      : pumpRates.defaultDistribution;
-    const beforeMva =
-      rawNokPerLiter +
-      distribution +
-      comparisonRates.veibruks +
-      comparisonRates.co2;
-    const mva = beforeMva * comparisonRates.mvaRate;
-    return beforeMva + mva;
+    return estimateComparisonPriceNokPerLiter(
+      rawNokPerLiter,
+      getAnleggsdieselRates(atDate),
+      regionId,
+      atDate
+    );
   };

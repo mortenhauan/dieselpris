@@ -36,9 +36,25 @@ If the chart later expands further back in time, this schedule should be extende
 - Regjeringen, `Oppfølging av Stortingets vedtak om reduksjon i avgifter på drivstoff` (30.03.2026): confirms `veibruksavgift 0` for road diesel from `1. april` to `1. september`, and that road-diesel `CO2` changes are not yet implemented
 - Skatteetaten, `Veibruksavgift på drivstoff`: confirms current `2026` diesel veibruksavgift
 - Skatteetaten, `Merverdiavgift`: confirms general `25 %` sats
-- Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026`
+- Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026` (generell mineraloljesats og reduserte satser for fiske etter bruksområde)
 - Lovdata, `Stortingsvedtak om veibruksavgift på drivstoff for 2025`
 - Stortinget, vedtak i sak [p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811): `CO₂ 3,09 kr/l` for autodiesel fra `1. mai`; appen bruker denne satsen i estimater med tydelig forbehold
+
+## Fiske-sammenligninger (tre kategorier)
+
+CO₂-avgift på mineralolje til fiske har tre forskjellige satstabeller, basert på [Stortingsvedtak om CO₂-avgift for 2026](https://lovdata.no/dokument/STV/forskrift/2025-12-18-2763) og [Skatteetaten](https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/saravgifter/om/mineralske-produkter/):
+
+| Kategori               | 2025 | 2026            | 1. apr–1. sep 2026 | Vedtak    | Status             |
+| ---------------------- | ---- | --------------- | ------------------ | --------- | ------------------ |
+| Fjerne farvann         | 0,93 | 1,11            | **0**              | 591       | Iverksatt          |
+| Nære og fjerne farvann | 3,79 | 2,76            | **0**              | 592       | Iverksatt          |
+| Kun nære farvann       | 3,79 | 4,42 (generell) | 4,42               | 594 (→ 0) | **Ikke iverksatt** |
+
+«Kun nære» har ingen redusert sats i gjeldende lov og betaler ordinær CO₂. Vedtak 594 ville opprettet en ny post med 0 kr/l, men er ikke iverksatt grunnet statsstøtterettslige spørsmål. `FISKE_KUN_NAERE_RATE_SCHEDULE` oppdateres med 0-sats når forskriftsendring er bekreftet.
+
+Alle tre schedules bruker veibruksavgift 0 og MVA 25 %. `estimateComparisonPriceNokPerLiter` er den generiske prisformelen som brukes for alle sammenligningsrader.
+
+Se [nyhetsartikkelen om ulik påvirkning](/nyheter/slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart) for brukerrettet forklaring.
 
 ## Hero slice
 

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { DieselBrentLogChart } from "@/components/diesel-brent-log-chart";
+import { DieselUseCaseComparison } from "@/components/diesel-use-case-comparison";
 import { FuturesForecast } from "@/components/futures-forecast";
 import { HomeNewsHighlight } from "@/components/home-news-highlight";
 import { PriceChart } from "@/components/price-chart";
@@ -147,9 +148,11 @@ export const DieselPricesStream = async function DieselPricesStream({
                   <strong className="font-medium text-foreground">
                     gasoil
                   </strong>{" "}
-                  (dieselråvare, USD per tonn) mot{" "}
+                  (dieselråvare, kr per tonn) mot{" "}
                   <strong className="font-medium text-foreground">Brent</strong>{" "}
-                  (råolje, USD per fat). Hver serie har egen akse og{" "}
+                  (råolje, kr per fat). Omregning fra USD følger samme daglige
+                  kurs som råvareprisen i grafen over (ICE og kr/l per dato).
+                  Hver serie har egen akse og{" "}
                   <strong className="font-medium text-foreground">
                     logaritmisk skala
                   </strong>
@@ -157,7 +160,7 @@ export const DieselPricesStream = async function DieselPricesStream({
                   — nyttig for å se om begge beveger seg i samme retning.
                   Enhetene er fortsatt ulike; dette er ikke et prisforhold i
                   kroner per liter. Er kalenderdagen nyere enn siste felles
-                  handelsdag, strekkes linjen til visningsdato med samme nivåer
+                  handelsdag, forlenges serien til visningsdato med samme nivåer
                   som i råvarekortet øverst.
                 </p>
               </div>
@@ -171,6 +174,7 @@ export const DieselPricesStream = async function DieselPricesStream({
                         spotBrentUsdBbl:
                           brent_historical.at(-1)?.usd_per_barrel,
                         spotGasoilUsdMt: currentPrice.price_usd_mt,
+                        spotPriceNokLiter: currentPrice.price_nok_liter,
                       }
                     : {})}
                 />
@@ -185,6 +189,14 @@ export const DieselPricesStream = async function DieselPricesStream({
               </p>
             </div>
           </div>
+
+          {hasLive && currentPrice ? (
+            <DieselUseCaseComparison
+              dutyReferenceDate={dutyReferenceDate}
+              rawPriceNokPerLiter={currentPrice.price_nok_liter}
+              regionId={regionId}
+            />
+          ) : null}
 
           <div className="mt-8 max-w-2xl rounded-xl border border-border bg-secondary/40 p-5 text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-2">

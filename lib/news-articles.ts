@@ -24,6 +24,15 @@ export const formatNewsDate = function formatNewsDate(iso: string): string {
 
 const entries: NewsIndexEntry[] = [
   {
+    category: "Nyhet",
+    intro:
+      "USA og Iran har inngått to ukers våpenhvile. Oljeprisen falt 14 prosent på én natt – men norske dieselpriser forblir høye i måneder fremover.",
+    publishedAtIso: "2026-04-08T10:00:00+02:00",
+    slug: "vapenhvile-iran-oljeprisen-stuper-men-dieselen-forblir-dyr",
+    title:
+      "Våpenhvile mellom USA og Iran – oljeprisen stuper, men dieselen forblir dyr",
+  },
+  {
     category: "Forklart",
     intro:
       "Olje handles i dollar. Når kronen er svak, betaler du mer for diesel – selv om oljeprisen er stabil. Slik fungerer det.",

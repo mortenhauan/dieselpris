@@ -10,7 +10,7 @@ Shared utilities and pricing models used across the app.
 - [`expand-historical-to-calendar-days.ts`](./expand-historical-to-calendar-days.ts): Expands trading-day-only historical rows to every calendar day in range by forward-filling råvare (NOK/L and USD/MT); `pumpPriceComponents(..., atDate)` then applies avgifter for that kalenderdag.
 - [`news-articles.ts`](./news-articles.ts): Typed article content, sorting helpers, and slug lookup for the public `/nyheter` overview and `/nyheter/[slug]` pages.
 - [`news-articles.md`](./news-articles.md): Intent and copy principles for the news article data.
-- [`pump-price-model.ts`](./pump-price-model.ts): Shared pump price composition logic with date-based tax rates for historical views.
+- [`pump-price-model.ts`](./pump-price-model.ts): Shared pump price composition logic with date-based tax rates for historical views, plus anleggsdiesel and fiske (kun nære farvann) comparison estimates.
 - [`pump-price-model.md`](./pump-price-model.md): Intent, rate sources, and modeling limits for the pump price schedule.
 - [`regional-price-model.ts`](./regional-price-model.ts): Shared regional selector data and modeled distribution assumptions for estimate sections.
 - [`regional-price-model.md`](./regional-price-model.md): Intent, scope, and modeling limits for the regional estimate layer.
