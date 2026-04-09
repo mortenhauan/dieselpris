@@ -1,7 +1,8 @@
 ---
-name: news-article-writer
+
+## name: news-article-writer
+
 description: "Write and publish news articles for the dieselpris.no /nyheter section. Uses a two-agent workflow: a redaktør (editor) plans articles and a journalist subagent writes each one. Use when adding news articles, covering Stortinget decisions, explaining tax changes, writing about fuel price developments, or when the user mentions nyheter, artikler, news, or wants to explain a policy change to ordinary diesel users. Also use when researching stortinget.no, regjeringen.no, or lovdata.no for article-worthy developments."
----
 
 # News Article Writer for Dieselpris.no
 
@@ -12,6 +13,8 @@ Two-agent editorial workflow: **redaktør** plans, **journalist** writes.
 Truck drivers, fleet owners, fishers, construction workers, and regular car owners in Norway. They do not read political documents. They want: what happened, what changes for me, when, and how much.
 
 ## Editorial Principles
+
+Articles are held to the spirit of the Norwegian press ethics code, adapted for a personal transparency site. See [references/vaar-varsom-plakaten.md](references/vaar-varsom-plakaten.md) for the scoped principles — a mandatory Vær Varsom review is the last step before publication (see step 5 in the redaktør workflow).
 
 1. **Truth and accuracy over agenda.** No political spin. State facts. When something is uncertain, say so clearly.
 2. **Write journalism, not meta-commentary.** Tell the story. Never write "how to read this article" — the article IS the explanation.
@@ -54,6 +57,24 @@ After journalists deliver:
 - Add entries to `lib/news-articles.ts` (if not done by journalist)
 - Run `pnpm dlx ultracite check` and `pnpm typecheck`
 - Verify article reads like journalism, not a government summary
+
+### 5. Vær Varsom check (mandatory)
+
+After each article is written, launch a dedicated subagent to review it against the principles in [references/vaar-varsom-plakaten.md](references/vaar-varsom-plakaten.md).
+
+**Context for the subagent:** dieselpris.no is a personal, non-commercial transparency site — not a professional press outlet. Apply the principles proportionally. The full Vær Varsom document does not apply; only the scoped version in the reference file does.
+
+The subagent must:
+
+1. Read the article in full.
+2. Read `references/vaar-varsom-plakaten.md` in full.
+3. For each applicable principle, assess whether the article complies.
+4. Return a structured verdict:
+   - **Godkjent / Ikke godkjent**
+   - For each concern: which paragraph (e.g. § 4.3), what the issue is, and a concrete suggestion to fix it.
+   - Explicit confirmation on: sources identified (§ 3.1), facts vs. commentary separated (§ 4.2), no stigmatising language (§ 4.3), headline matches content (§ 4.4).
+
+The redaktør must resolve any flagged issues before publishing. Do not skip this step.
 
 ## Article Technical Spec
 
@@ -164,14 +185,15 @@ The array is auto-sorted newest-first. Sitemap picks up slugs automatically.
 
 Before marking an article done:
 
-- [ ] Opens with what matters to the reader, not background
-- [ ] Includes at least one concrete calculation (kr saved per filling, yearly cost)
-- [ ] Names specific fuel types when rules differ
-- [ ] No meta-commentary ("this article explains..." or "we recommend reading...")
-- [ ] For backdated articles: written from that date's perspective, no future knowledge
-- [ ] Dates are correct (check calendar — does the weekday match?)
-- [ ] Numbers match the cited sources exactly
-- [ ] Sources are linked in the footer
-- [ ] SEO metadata is set with canonical URL
-- [ ] Entry added to news index
-- [ ] Lint and typecheck pass
+- Opens with what matters to the reader, not background
+- Includes at least one concrete calculation (kr saved per filling, yearly cost)
+- Names specific fuel types when rules differ
+- No meta-commentary ("this article explains..." or "we recommend reading...")
+- For backdated articles: written from that date's perspective, no future knowledge
+- Dates are correct (check calendar — does the weekday match?)
+- Numbers match the cited sources exactly
+- Sources are linked in the footer
+- SEO metadata is set with canonical URL
+- Entry added to news index
+- Lint and typecheck pass
+- Vær Varsom sub-agent review completed with no unresolved breaches

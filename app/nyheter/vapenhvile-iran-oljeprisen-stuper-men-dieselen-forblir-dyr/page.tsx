@@ -191,8 +191,9 @@ const Page = function Page() {
               </li>
             </ul>
             <p className="mt-3 text-sm text-muted-foreground">
-              Faller oljeprisen videre mot 80 dollar fatet, kan pumpeprisen
-              nærme seg 20–21 kr/l igjen.
+              Tallene er illustrerende estimater basert på historiske marginer
+              og avgiftsnivå per april 2026. Faktisk pris avhenger av kronekurs,
+              råvarepris og stasjonens marginer.
             </p>
           </div>
 
@@ -206,20 +207,22 @@ const Page = function Page() {
           </p>
 
           <p>
-            Over 2 000 skip står i kø i Persiagulfen. Bare å rydde køen vil ta
-            uker. Kuwait alene trenger fire måneder for å gjenopprette
-            produksjonen. Skadet infrastruktur, blant annet Qatars Ras
-            Laffan-anlegg, vil koste over 25 milliarder dollar og ta år å
+            Ifølge Reuters og El País rapporter står over 2 000 skip i kø i
+            Persiagulfen. Bare å rydde køen vil ta uker. Analytikere anslår at
+            Kuwait alene kan trenge opptil fire måneder for å gjenopprette
+            produksjonen. Skadet infrastruktur i regionen, blant annet ved
+            Qatars Ras Laffan-anlegg, beskrives som kostbar og tidkrevende å
             reparere.
           </p>
 
           <p>
-            Gulfstatene har stengt inn 7,5 millioner fat råolje per dag. Diesel
-            og flybensin er ekstra utsatt fordi Midtøsten er en nøkkelleverandør
-            både av ferdig drivstoff og av de tunge råoljesortene som trengs for
-            å raffinere diesel. Luftfartsorganisasjonen IATA sier det vil ta
-            måneder før flybensinmarkedet normaliseres fordi raffineriene må
-            startes opp på nytt.
+            Konflikten har holdt anslagsvis 7,5 millioner fat råolje per dag
+            utenfor markedet. Diesel og flybensin er ekstra utsatt fordi
+            Midtøsten er en nøkkelleverandør både av ferdig drivstoff og av de
+            tunge råoljesortene som trengs for å raffinere diesel.
+            Luftfartsorganisasjonen IATA sier det vil ta måneder før
+            flybensinmarkedet normaliseres fordi raffineriene må startes opp på
+            nytt.
           </p>
 
           <p>
