@@ -26,7 +26,7 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Forklart",
     intro:
-      "Råoljeprisen stupte onsdag på våpenhvile-nyheten – men ICE gasoil-futures steg 12,45 prosent torsdag. Her er grunnen til at de to prisene ikke følger hverandre.",
+      "Torsdag 9. april holdt råoljeprisen seg rolig – men ICE gasoil-futures steg 12,45 prosent samme dag. Her er grunnen til at de to prisene ikke følger hverandre.",
     publishedAtIso: "2026-04-09T21:15:00+02:00",
     slug: "raolje-stabil-men-gasoil-stiger",
     title: "Råoljeprisen holder seg – gasoilen stiger likevel",

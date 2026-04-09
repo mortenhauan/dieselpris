@@ -8,7 +8,7 @@ import { SITE_URL } from "@/lib/site-url";
 
 const TITLE = "Råoljeprisen holder seg – gasoilen stiger likevel";
 const DESCRIPTION =
-  "Brent-olje er relativt rolig etter onsdagens våpenhvile, men gasoil-futures steg over 12 prosent torsdag. Her er grunnen til at de to prisene ikke følger hverandre.";
+  "Torsdag 9. april steg ICE gasoil-futures 12,45 prosent mens råoljeprisen holdt seg rolig. Her er grunnen til at de to prisene ikke følger hverandre.";
 const SLUG = "raolje-stabil-men-gasoil-stiger";
 const CANONICAL = `${SITE_URL}/nyheter/${SLUG}`;
 
@@ -64,9 +64,10 @@ const Page = function Page() {
           title={TITLE}
         >
           <p className="text-lg font-medium">
-            Onsdag kom våpenhvilenyhetene fra Midtøsten – og råoljeprisen stupte
-            14 prosent. Men torsdag steg ICE gasoil-futures 12,45 prosent. To
-            priser, to helt forskjellige retninger. Hva skjedde?
+            Torsdag 9. april holdt råoljeprisen seg relativt rolig rundt 96–97
+            dollar fatet. Samme dag steg ICE gasoil-futures 12,45 prosent.
+            Hvorfor gikk diesel i motsatt retning av det overskriftene om
+            råoljeprisen skulle tilsi?
           </p>
 
           <h2 className="text-xl font-bold">
@@ -76,15 +77,15 @@ const Page = function Page() {
           <p>
             Råolje er utgangspunktet. Diesel er sluttproduktet du får etter at
             råoljen er raffinert. De to prisene henger sammen over tid, men de
-            reagerer forskjellig på nyheter – og torsdag 9. april var det
-            akkurat det som skjedde.
+            reagerer forskjellig på nyheter.
           </p>
 
           <p>
-            Brent-olje ble torsdag handlet rundt 96–97 dollar fatet, opp
-            beskjedne to prosent. ICE gasoil-futures – råvaren som bestemmer hva
-            norsk diesel faktisk koster – steg 12,45 prosent og toppet ut på 1
-            412 dollar per tonn. Det er en ekstrem skillelinje.
+            Onsdag hadde råoljeprisen stupt 14 prosent da USA og Iran kunngjorde
+            våpenhvile. Torsdag lå Brent rolig rundt 96–97 dollar fatet. ICE
+            gasoil-futures – råvaren som bestemmer hva norsk diesel faktisk
+            koster – brukte samme torsdag til å stige 12,45 prosent og toppe ut
+            på 1 412 dollar per tonn. Det er en ekstrem skillelinje.
           </p>
 
           <h2 className="text-xl font-bold">Knapphet på ferdig diesel</h2>
