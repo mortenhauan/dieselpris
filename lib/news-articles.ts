@@ -26,7 +26,7 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Forklart",
     intro:
-      "Brent-olje er relativt rolig etter gårsdagens våpenhvile, men gasoil-futures stiger rundt fire prosent. Her er grunnen til at råolje og diesel ikke følger hverandre.",
+      "Råoljeprisen stupte onsdag på våpenhvile-nyheten – men ICE gasoil-futures steg 12,45 prosent torsdag. Her er grunnen til at de to prisene ikke følger hverandre.",
     publishedAtIso: "2026-04-09T21:15:00+02:00",
     slug: "raolje-stabil-men-gasoil-stiger",
     title: "Råoljeprisen holder seg – gasoilen stiger likevel",
