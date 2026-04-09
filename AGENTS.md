@@ -6,7 +6,7 @@
 - For stacked pump-price charts, list hover/tooltip rows **top-of-stack first** so reading the card matches the picture; keep **andel avgifter** / tax-share hints and labels (e.g. whether MVA is included) aligned with side or detail breakdown views.
 - Do not show fabricated, placeholder, or demo values as if they were live market data; use clear unavailable or empty states instead.
 - In global metadata and share copy, avoid implying a lookup of the user’s local station price or overstating freshness; keep futures- and model-based, indicative framing consistent with the README.
-- Attach repo skills (e.g. Next cache components) when you want a specific workflow or stack doc followed end-to-end.
+- In Norwegian copy, use "flåteeiere" (not "vognparkeiere") for fleet operators; verify domain-specific Norwegian vocabulary when writing for drivers and fleet owners.
 - For git actions you care about (e.g. push), ask the agent to run them rather than only listing commands.
 - Prefer Tailwind and CSS for responsive layout and simple visual fixes; avoid React hooks or JS layout measurement when the same result is achievable cleanly with styling alone; before adding `useEffect` or other client effects, check whether server data, derived state, or CSS already solves it (see react-useeffect skill when relevant).
 - Remove temporary debug or ingest instrumentation after the underlying bug or investigation is resolved.
@@ -18,7 +18,8 @@
 - Package manager is pnpm with `packageManager` pinned in `package.json`; Node is pinned via `.nvmrc` and `engines`; use `scripts/use-nvm.sh` when the shell does not load nvm.
 - Next.js 16 uses Cache Components (`cacheComponents`); avoid non-deterministic prerender (e.g. `new Date()` in places that run during static shell prerender); keep purely presentational server UI in the root layout when it should not be pulled under a client page.
 - Linting and formatting use **Ultracite** with **Oxlint** + **Oxfmt** (see `.oxlintrc.json`, `.oxfmtrc.jsonc`).
-- `*.zip` in the repo is gitignored (e.g. v0 exports); integrate zips by extracting and merging, not committing the archive.
+- Social profiles (X: `@DieselprisNo`, Facebook: `dieselpris.no`) are defined in `lib/social-profiles.ts` (exports `SOCIAL_X`, `SOCIAL_FACEBOOK`, `X_SITE_HANDLE`, `SOCIAL_PROFILE_HREFS`); published post logs live in `social-media/logg/`; always log posts there after publishing.
+- Site logo lives at `public/logo.svg` (CSS classes `.dp-logo-*`); use `components/site-logo-mark.tsx` for in-page rendering; primary color token is deep Norwegian blue `oklch(0.28 0.09 260)`, accent is orange `oklch(0.72 0.24 32)` in `app/globals.css`.
 - Vercel project config for this app is `vercel.ts` (not `vercel.json`).
 - Region routes live under ASCII segments (`/sor`, `/ost`, `/vest`, `/nord`, `/midt`); avoid unicode folder names in `app/` for regions; the national view is `/`, not a separate `/nasjonal` route.
 - Primary audience is drivers and fleet owners learning what moves diesel prices; keep explanations short, plain Norwegian, and fact-checked when stating duties, shares, or regulatory claims; treat numbers as indicative and not financial advice (project README stance).

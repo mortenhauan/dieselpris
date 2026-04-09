@@ -24,6 +24,14 @@ export const formatNewsDate = function formatNewsDate(iso: string): string {
 
 const entries: NewsIndexEntry[] = [
   {
+    category: "Forklart",
+    intro:
+      "Brent-olje er relativt rolig etter gårsdagens våpenhvile, men gasoil-futures stiger rundt fire prosent. Her er grunnen til at råolje og diesel ikke følger hverandre.",
+    publishedAtIso: "2026-04-09T21:15:00+02:00",
+    slug: "raolje-stabil-men-gasoil-stiger",
+    title: "Råoljeprisen holder seg – gasoilen stiger likevel",
+  },
+  {
     category: "Nyhet",
     intro:
       "USA og Iran har inngått to ukers våpenhvile. Oljeprisen falt 14 prosent på én natt – men norske dieselpriser forblir høye i måneder fremover.",
