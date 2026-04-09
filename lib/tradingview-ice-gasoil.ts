@@ -94,9 +94,12 @@ export const fetchIceDailyBarsFromTradingView =
     settleMs: number;
     hardTimeoutMs: number;
     timeoutMinBars?: number;
+    /** TradingView timeframe string. Defaults to "D" (daily). Examples: "60" (1h), "240" (4h). */
+    timeframe?: string;
   }): Promise<IceGasoilDailyFromTv> {
     const { symbol, barCount, minBars, settleMs, hardTimeoutMs } = options;
     const timeoutMinBars = options.timeoutMinBars ?? minBars;
+    const timeframe = options.timeframe ?? "D";
 
     const client = new Client();
     const chart = new client.Session.Chart();
@@ -185,7 +188,7 @@ export const fetchIceDailyBarsFromTradingView =
     chart.setMarket(symbol, {
       backadjustment: true,
       range: barCount,
-      timeframe: "D",
+      timeframe,
     });
 
     return promise;

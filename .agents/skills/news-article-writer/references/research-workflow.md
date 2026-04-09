@@ -2,6 +2,11 @@
 
 How to find article-worthy developments for the news section.
 
+> **Automated research:** The `news-researcher` subagent (`.cursor/agents/news-researcher.md`)
+> handles discovery across Twitter/X, Norwegian newspapers, and official sources,
+> and returns a structured brief you can feed directly into the redaktør workflow.
+> Use it before starting a writing session.
+
 ## Primary sources
 
 | Source                      | URL pattern                                 | What to look for                                           |
