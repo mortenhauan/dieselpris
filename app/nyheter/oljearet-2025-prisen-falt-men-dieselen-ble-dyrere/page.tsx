@@ -49,6 +49,11 @@ const SOURCES: NewsSource[] = [
     href: "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2763/",
     label: "Lovdata: CO₂-avgift 2025",
   },
+  {
+    href: "https://home.treasury.gov/news/press-releases/jy2777",
+    label:
+      "US Treasury: Sanctions against Russia's oil production and exports, 10. januar 2025",
+  },
 ];
 
 const Page = function Page() {
@@ -174,11 +179,13 @@ const Page = function Page() {
           </h2>
 
           <p>
-            I januar 2025 innførte USA og Storbritannia nye sanksjoner mot den
-            russiske tankerflåten. Russland hadde vært en stor leverandør av
-            diesel til Europa. Da skipene ble vanskeligere å bruke, måtte
-            europeiske raffinerier og importører finne dyrere alternativer. Det
-            holdt dieselmarginen oppe selv når råoljen ble billigere.
+            10. januar 2025 innførte det amerikanske finansdepartementet
+            sanksjoner mot 183 russiske skyggeflåte-tankere, koordinert med
+            tilsvarende tiltak fra Storbritannia. Russland hadde vært en stor
+            leverandør av diesel til Europa. Da skipene ble vanskeligere å
+            bruke, måtte europeiske raffinerier og importører finne dyrere
+            alternativer. Det holdt dieselmarginen oppe selv når råoljen ble
+            billigere.
           </p>
 
           <h2 className="text-xl font-bold">

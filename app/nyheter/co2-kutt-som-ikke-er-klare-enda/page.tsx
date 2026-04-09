@@ -40,6 +40,10 @@ const SOURCES: NewsSource[] = [
     href: "https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811",
     label: "Stortinget: vedtakene",
   },
+  {
+    href: "https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/2025-2026/refs-202526-03-26?m=8",
+    label: "Stortinget: referat fra debatten 26. mars 2026",
+  },
 ];
 
 const Page = function Page() {

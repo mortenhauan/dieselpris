@@ -44,6 +44,10 @@ const SOURCES: NewsSource[] = [
     href: "https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/2025-2026/refs-202526-01-29?teleession=10",
     label: "Stortingsdebatten 29. januar 2026",
   },
+  {
+    href: "https://euperspectives.eu/2025/06/member-states-demand-reform-ets2/",
+    label: "EU Perspectives: Sixteen member states call for reform of ETS2",
+  },
 ];
 
 const Page = function Page() {
@@ -168,11 +172,12 @@ const Page = function Page() {
           <h2 className="text-xl font-bold">Også EU-land vil ha endringer</h2>
 
           <p>
-            Motstanden mot ETS2 finnes ikke bare i Norge. I sommer sendte
-            Tsjekkia, Tyskland, Italia, Spania, Polen og 13 andre EU-land brev
-            til EU-kommisjonen der de ba om endringer – blant annet at
-            kvoteprisen holdes nær gulvet på 45 euro per tonn. Foreløpig har de
-            ikke fått gjennomslag.
+            Motstanden mot ETS2 finnes ikke bare i Norge. I sommer sendte 16
+            EU-land – blant dem Tsjekkia, Tyskland, Italia, Spania og Polen – et
+            felles brev til EU-kommisjonen der de ba om endringer, blant annet
+            at kvoteprisen holdes nær gulvet på 45 euro per tonn. EU-kommisjonen
+            la i november 2025 frem et forslag til justeringer av
+            markedsstabilitetsreserven som delvis imøtekommer kravene.
           </p>
 
           <h2 className="text-xl font-bold">

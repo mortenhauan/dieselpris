@@ -38,6 +38,10 @@ const SOURCES: NewsSource[] = [
       "Reuters: How the Strait of Hormuz closure affects global oil supply",
   },
   {
+    href: "https://www.reuters.com/world/middle-east/us-military-says-it-has-sunk-over-30-iranian-ships-so-far-2026-03-05/",
+    label: "Reuters: US military says it has sunk over 30 Iranian ships so far",
+  },
+  {
     href: "https://lastebil.no/aktuelt/nyheter/2026/dieselprisene-stiger-kraftig-nlf-ber-medlemsbedriftene-foelge-noeye-med",
     label: "NLF: Dieselprisene stiger kraftig",
   },
@@ -207,10 +211,12 @@ const Page = function Page() {
           <h2 className="text-xl font-bold">Hva skjer nå?</h2>
 
           <p>
-            USA har satt i gang luftoperasjoner for å gjenåpne stredet. Over 140
-            iranske marinefartøy er ødelagt. Men Iran holder foreløpig stand og
-            slipper bare gjennom skip fra land som ikke er alliert med Vesten.
-            Fredsforslag fra USA er avvist.
+            USA har satt i gang luftoperasjoner for å gjenåpne stredet. Ifølge
+            US Central Command er et stort antall iranske marinefartøy ødelagt i
+            operasjonene – Reuters bekreftet over 30 sunkne skip allerede 5.
+            mars. Iran holder foreløpig stand og slipper bare gjennom skip fra
+            land som ikke er alliert med Vesten. Et fredsforslag fra USA,
+            formidlet gjennom Pakistan, er blitt avvist av Iran.
           </p>
 
           <p>
