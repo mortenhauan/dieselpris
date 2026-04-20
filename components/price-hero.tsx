@@ -9,7 +9,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
-import { SOCIAL_FACEBOOK, SOCIAL_X } from "@/lib/social-profiles";
 import { cn } from "@/lib/utils";
 
 const formatUpdatedAt = function formatUpdatedAt(iso: string) {
@@ -86,43 +85,6 @@ interface PriceHeroProps {
   isLoading?: boolean;
   exchangeSource?: string;
 }
-
-const PriceHeroSocialBlurb = function PriceHeroSocialBlurb({
-  className,
-}: {
-  className?: string;
-}) {
-  return (
-    <p
-      className={cn(
-        "mb-10 max-w-2xl text-pretty text-muted-foreground text-sm leading-relaxed",
-        className
-      )}
-    >
-      Vi er nye på{" "}
-      <a
-        aria-label={SOCIAL_X.ariaLabel}
-        className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
-        href={SOCIAL_X.href}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        X
-      </a>{" "}
-      og{" "}
-      <a
-        aria-label={SOCIAL_FACEBOOK.ariaLabel}
-        className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
-        href={SOCIAL_FACEBOOK.href}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Facebook
-      </a>
-      — følg gjerne for korte oppdateringer om pris og avgifter.
-    </p>
-  );
-};
 
 const InstrumentHint = function InstrumentHint() {
   return (
@@ -275,11 +237,10 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
             Ingen live pris akkurat nå
           </h1>
-          <p className="mb-4 max-w-xl text-pretty leading-relaxed text-muted-foreground">
+          <p className="mb-10 max-w-xl text-pretty leading-relaxed text-muted-foreground">
             Ingen oppdatert råvarepris akkurat nå. Kom tilbake om litt — da skal
             tallene ligge her som vanlig.
           </p>
-          <PriceHeroSocialBlurb className="max-w-xl" />
         </div>
         <div className="rounded-2xl border border-border bg-card px-8 py-6 text-sm text-muted-foreground">
           Sist forsøkt oppdatert: {formattedTime}
@@ -311,13 +272,12 @@ export const PriceHero = function PriceHero({
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
             Dagens råvarepris
           </h1>
-          <p className="mb-4 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+          <p className="mb-10 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
             Her ser du børsnotert råvare i dollar per tonn, samme råvare i
             kroner per liter uten avgifter — og råvare pluss veibruks- og
             CO₂-avgift og MVA. Modellert distribusjon og stasjonens påslag er
             ikke med i det siste tallet.
           </p>
-          <PriceHeroSocialBlurb />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
