@@ -107,8 +107,11 @@ export const DieselPricesStream = async function DieselPricesStream({
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Estimert pumpepris for {region.label.toLowerCase()}.
-                    Historiske punkter bruker avgiftssatsene som gjaldt på
-                    datoen.
+                    Historiske punkter bruker avgiftssatsene som gjaldt på hver
+                    kalenderdag (CO₂-kuttet til 3,09 kr/l for autodiesel gjelder
+                    fra 1. mai 2026 i modellen). Dekker grafen bare dager før
+                    den datoen, ser du fortsatt 4,42 kr/l i CO₂-laget — da vises
+                    kuttet i månedsprognosen under.
                   </p>
                 </div>
                 {historical.length > 0 ? (

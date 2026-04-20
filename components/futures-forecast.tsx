@@ -302,7 +302,10 @@ export const FuturesForecast = function FuturesForecast({
             Tallene bygger på månedlige ICE-kontrakter og speiler grovt hva
             markedet priser inn for diesellevering den måneden — nivået det
             faktisk handles til. Ment som oversikt, ikke eksakte kjøpspriser på
-            stasjon.
+            stasjon. Øverst på siden brukes avgiftene som gjelder på siste
+            kursdag; her brukes nasjonale satser per leveringsmåned (1. i
+            måneden), så f.eks. mai viser allerede CO₂-kuttet som gjelder fra 1.
+            mai.
           </p>
         </div>
         {firstRow && lastRow && stackedData.length >= 2 ? (

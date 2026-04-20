@@ -1,6 +1,7 @@
 "use client";
 
 import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { getPumpPriceRates, pumpPriceComponents } from "@/lib/pump-price-model";
 
@@ -162,12 +163,36 @@ export const TaxExplainer = function TaxExplainer({
           </p>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
             Stortinget har vedtatt å redusere CO₂-avgiften for autodiesel til
-            3,09 kr/l fra 1. mai. Vi har lagt dette inn i prisestimatene på
-            siden, men regjeringen skriver samtidig at oppfølgingen fortsatt
-            avventer avklaringer. Satsene kan derfor bli endret senere.
+            3,09 kr/l fra 1. mai. Finansdepartementets forskrift 30. mars 2026
+            nr. 525 fastsetter at de aktuelle stortingsvedtakene trer i kraft 1.
+            mai 2026. Vi har lagt dette inn i prisestimatene på siden, men
+            regjeringen skriver samtidig at oppfølgingen fortsatt avventer
+            avklaringer. Satsene kan derfor bli endret senere.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            EØS-rettslig avklaring om statsstøtte er ikke ferdig.
+            Finansministeren har trukket fram risiko for at vedtakene kan bli
+            vurdert som ulovlig statsstøtte — i et verstefall kan det i teorien
+            bli aktuelt med tilbakebetaling av oppnådd besparelse.
           </p>
           <p className="mt-3 text-xs text-muted-foreground">
-            Les mer hos{" "}
+            Les mer i{" "}
+            <Link
+              className="text-foreground underline underline-offset-2 hover:no-underline"
+              href="/nyheter/co2-kutt-1-mai-anleggsdiesel-autodiesel-sjoefart"
+            >
+              nyhetssaken om 1. mai
+            </Link>
+            , hos{" "}
+            <a
+              className="text-foreground underline underline-offset-2 hover:no-underline"
+              href="https://lovdata.no/forskrift/2026-03-30-525"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Lovdata (forskrift 525/2026)
+            </a>
+            ,{" "}
             <a
               className="text-foreground underline underline-offset-2 hover:no-underline"
               href="https://www.regjeringen.no/no/aktuelt/oppfolging-av-stortingets-vedtak-om-reduksjon-i-avgifter-pa-drivstoff/id3155277/"
