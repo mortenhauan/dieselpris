@@ -35,4 +35,3 @@ Denne mappen inneholder publiseringsplaner og retningslinjer for sosiale medier.
 ## Se også
 
 - Skill for innholdsproduksjon: `.cursor/skills/social-media-content/SKILL.md`
-- Sosiale profiler i kode: `lib/social-profiles.ts`

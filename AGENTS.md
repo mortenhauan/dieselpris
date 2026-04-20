@@ -1,33 +1,32 @@
 ## Learned User Preferences
 
-- When Norwegian UI copy is wrong, fix å, ø, and æ (and related wording) across all user-facing text, not just a single screen; review all visible copy when fixing orthography.
-- User-facing Norwegian copy should read for drivers and fleet owners: short, plain language, minimal repetition, no developer-meta phrasing (avoid wording that talks about “when we have data” or similar instead of what the user needs to know).
-- For market and price UI, prefer labels and timestamps that reflect the **exchange or quoted market reference** (what the price refers to) rather than only when data was ingested; keep the **last visible tick’s date** consistent with the latest daily (or session) observation so it does not read one calendar day behind “now” elsewhere; explain futures and “change” in plain language, not trader jargon.
+- User-facing Norwegian copy should read for drivers and fleet owners: short, plain language, correct orthography (å, ø, æ); when fixing wording or spelling, review **all** visible copy across pages and avoid developer-meta phrasing (e.g. "when we have data" instead of what the user needs to know).
+- For market and price UI, metadata, and share copy, labels and timestamps should reflect the **quoted market/exchange reference** rather than ingest time; keep the last visible tick's date consistent with the latest daily observation; explain futures and "change" in plain language; keep indicative, futures/model-based framing and avoid implying a lookup of the user's local pump price.
 - For stacked pump-price charts, list hover/tooltip rows **top-of-stack first** so reading the card matches the picture; keep **andel avgifter** / tax-share hints and labels (e.g. whether MVA is included) aligned with side or detail breakdown views.
 - Do not show fabricated, placeholder, or demo values as if they were live market data; use clear unavailable or empty states instead.
-- In global metadata and share copy, avoid implying a lookup of the user’s local station price or overstating freshness; keep futures- and model-based, indicative framing consistent with the README.
 - In Norwegian copy, use "flåteeiere" (not "vognparkeiere") for fleet operators; verify domain-specific Norwegian vocabulary when writing for drivers and fleet owners.
-- For git actions you care about (e.g. push), ask the agent to run them rather than only listing commands.
+- For git actions you care about (e.g. push), ask the agent to run them rather than only listing commands; split commits into logical groups (e.g. feature vs unrelated dep bumps) when they appear together.
 - Prefer Tailwind and CSS for responsive layout and simple visual fixes; avoid React hooks or JS layout measurement when the same result is achievable cleanly with styling alone; before adding `useEffect` or other client effects, check whether server data, derived state, or CSS already solves it (see react-useeffect skill when relevant).
 - Remove temporary debug or ingest instrumentation after the underlying bug or investigation is resolved.
 - For Ultracite/Oxlint issues, prefer fixing code (structure, patterns, refactors) over turning off or relaxing lint rules when still practical.
-- For public contact or press pages, prefer **domain aliases** (e.g. `kontakt@` / `presse@` on the site domain) or **server-side forms** with the recipient only in env vars over publishing a personal email address.
+- For public contact or press pages, prefer **domain aliases** (e.g. `kontakt@` / `presse@` on the site domain) or server-side forms with the recipient only in env vars over publishing a personal email address.
+- For `/nyheter` articles, do not cap length — accuracy, sources, and depth take priority over brevity; always run the full 4-way parallel fact-check (Claude, GPT, Grok, Gemini) before publishing or revising, and address any **blocking** finding from any checker before it ships.
+- Run multi-step subagents (e.g. `news-researcher`, fact-checkers, writers) in the background with explicit models so they do **not** inherit the parent chat's model.
 
 ## Learned Workspace Facts
 
-- Package manager is pnpm with `packageManager` pinned in `package.json`; Node is pinned via `.nvmrc` and `engines`; use `scripts/use-nvm.sh` when the shell does not load nvm.
+- Package manager is pnpm with `packageManager` pinned in `package.json`; Node is pinned via `.nvmrc` and `engines` (use `scripts/use-nvm.sh` when the shell does not load nvm); lint/format uses **Ultracite** (Oxlint + Oxfmt; see `.oxlintrc.json`, `.oxfmtrc.jsonc`).
 - Next.js 16 uses Cache Components (`cacheComponents`); avoid non-deterministic prerender (e.g. `new Date()` in places that run during static shell prerender); keep purely presentational server UI in the root layout when it should not be pulled under a client page.
-- Linting and formatting use **Ultracite** with **Oxlint** + **Oxfmt** (see `.oxlintrc.json`, `.oxfmtrc.jsonc`).
-- Social profiles (X: `@DieselprisNo`, Facebook: `dieselpris.no`) are defined in `lib/social-profiles.ts` (exports `SOCIAL_X`, `SOCIAL_FACEBOOK`, `X_SITE_HANDLE`, `SOCIAL_PROFILE_HREFS`); published post logs live in `social-media/logg/`; always log posts there after publishing.
+- Social publishing (X and Facebook) is documented under `social-media/`; published post logs live in `social-media/logg/` — always log posts there after publishing. The public site does not link to those profiles.
 - Site logo lives at `public/logo.svg` (CSS classes `.dp-logo-*`); use `components/site-logo-mark.tsx` for in-page rendering; primary color token is deep Norwegian blue `oklch(0.28 0.09 260)`, accent is orange `oklch(0.72 0.24 32)` in `app/globals.css`.
 - Vercel project config for this app is `vercel.ts` (not `vercel.json`).
 - Region routes live under ASCII segments (`/sor`, `/ost`, `/vest`, `/nord`, `/midt`); avoid unicode folder names in `app/` for regions; the national view is `/`, not a separate `/nasjonal` route.
 - Primary audience is drivers and fleet owners learning what moves diesel prices; keep explanations short, plain Norwegian, and fact-checked when stating duties, shares, or regulatory claims; treat numbers as indicative and not financial advice (project README stance).
 - Forward or multi-month charts use **time-based** X positions (e.g. delivery-month timestamps) rather than categorical contract slots so month labels align with the calendar; commodity overlays on a second axis often scale from 0 to a padded max.
-- Pump-price stack drawing order comes from **`PUMP_PRICE_STACK_LAYERS`**; hover row order uses **`PUMP_PRICE_STACK_LAYERS_TOOLTIP`** (top-first) in chart tooltips.
-- Continuous ICE symbols referenced for TradingView (and related code) are **`ICEEUR:ULS1!`** (gasoil / råvare) and **`ICEEUR:BRN1!`** (Brent); see `lib/tradingview-ice-gasoil.ts`.
-- The stacked pump **history** series forward-fills råvare on non-trading calendar days but runs **`pumpPriceComponents` per calendar date** so duty changes land on the correct day; see `lib/expand-historical-to-calendar-days.ts`.
-- When revising **`/nyheter`** articles from fact-check feedback, update copy and figures but **do not change URL slugs**.
+- Pump-price stack draws via **`PUMP_PRICE_STACK_LAYERS`** and hover rows via **`PUMP_PRICE_STACK_LAYERS_TOOLTIP`** (top-first); the stacked **history** series forward-fills råvare on non-trading calendar days but runs **`pumpPriceComponents` per calendar date** (see `lib/expand-historical-to-calendar-days.ts`) so duty changes land on the correct day.
+- TradingView is the price source: in-app code uses **`ICEEUR:ULS1!`** (gasoil / råvare) and **`ICEEUR:BRN1!`** (Brent) via `lib/tradingview-ice-gasoil.ts`; the news pipeline (`news-researcher` agent + `news-article-writer` skill under `.agents/skills/` with 4 parallel fact-check subagents: Claude, GPT, Grok, Gemini) fetches live / 48h / 7-day price context with a standalone TS script using the same TradingView package (run from terminal, `source scripts/use-nvm.sh` first).
+- `/nyheter` articles follow **Vær Varsom-plakaten** applied as a personal transparency site (user is the ansvarlig redaktør/utgiver); when revising from fact-check feedback, update copy and figures but **do not change URL slugs**.
+- Google AdSense publisher ID is **`ca-pub-9912628280603975`**; all pages include the `<meta name="google-adsense-account">` tag, `public/ads.txt` carries the `google.com, pub-9912628280603975, DIRECT, f08c47fec0942fa0` record, and the AdSense loader is gated behind a **Vercel Flags SDK** feature flag (default **off**) rather than being hard-coded.
 
 # Ultracite Code Standards
 

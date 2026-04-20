@@ -11,7 +11,7 @@ description: Create and plan social media posts for dieselpris.no on X and Faceb
 - **Audience:** Sjåfører og flåteeiere (drivers and fleet owners)
 - **Tone:** Faktabasert, forklarende, kort bokmål. Never salesy or clickbait.
 - **Independence:** Not affiliated with fuel chains. Show indicative data, not price guarantees.
-- **Accounts:** X @DieselprisNo, Facebook dieselpris.no (see `lib/social-profiles.ts`)
+- **Accounts:** X @DieselprisNo, Facebook dieselpris.no (see `social-media/README.md`)
 
 ## Content Pillars
 
@@ -119,5 +119,4 @@ Check `social-media/README.md` for links to all published plans.
 ## Reference Files
 
 - Article index: `lib/news-articles.ts`
-- Social profiles: `lib/social-profiles.ts`
 - Site URL: `lib/site-url.ts`
