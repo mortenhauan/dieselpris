@@ -24,6 +24,14 @@ export const formatNewsDate = function formatNewsDate(iso: string): string {
 
 const entries: NewsIndexEntry[] = [
   {
+    category: "Nyhet",
+    intro:
+      "Stoltenberg bekrefter kuttet fra 1. mai. Anleggsdiesel sparer 3,13 kr/l, autodiesel 1,66 kr/l ekstra. Men ESA-avklaringen er ikke ferdig.",
+    publishedAtIso: "2026-04-20T14:00:00+02:00",
+    slug: "co2-kutt-1-mai-anleggsdiesel-autodiesel-sjoefart",
+    title: "CO₂-avgiften på anleggsdiesel og autodiesel kuttes fra 1. mai",
+  },
+  {
     category: "Forklart",
     intro:
       "Torsdag 9. april holdt råoljeprisen seg rolig – men ICE gasoil-futures steg 12,45 prosent samme dag. Her er grunnen til at de to prisene ikke følger hverandre.",

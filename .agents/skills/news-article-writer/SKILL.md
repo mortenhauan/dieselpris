@@ -58,23 +58,40 @@ After journalists deliver:
 - Run `pnpm dlx ultracite check` and `pnpm typecheck`
 - Verify article reads like journalism, not a government summary
 
-### 5. Vær Varsom check (mandatory)
+### 5. Faktasjekk (mandatory — four parallel subagents)
 
-After each article is written, launch a dedicated subagent to review it against the principles in [references/vaar-varsom-plakaten.md](references/vaar-varsom-plakaten.md).
+After each article is written, launch all four fact-checker subagents **in
+parallel**. They run the same check with different model "brains", catching
+different issues.
 
-**Context for the subagent:** dieselpris.no is a personal, non-commercial transparency site — not a professional press outlet. Apply the principles proportionally. The full Vær Varsom document does not apply; only the scoped version in the reference file does.
+```
+fact-checker-grok   (model: grok-4-20-thinking)
+fact-checker-gpt    (model: gpt-5.4-medium)
+fact-checker-claude (model: claude-4.6-opus-high-thinking)
+fact-checker-gemini (model: gemini-2.5-pro)
+```
 
-The subagent must:
+Pass each subagent:
 
-1. Read the article in full.
-2. Read `references/vaar-varsom-plakaten.md` in full.
-3. For each applicable principle, assess whether the article complies.
-4. Return a structured verdict:
-   - **Godkjent / Ikke godkjent**
-   - For each concern: which paragraph (e.g. § 4.3), what the issue is, and a concrete suggestion to fix it.
-   - Explicit confirmation on: sources identified (§ 3.1), facts vs. commentary separated (§ 4.2), no stigmatising language (§ 4.3), headline matches content (§ 4.4).
+- The article file path (`app/nyheter/{slug}/page.tsx`)
+- The list of source URLs from the article's `SOURCES` array
 
-The redaktør must resolve any flagged issues before publishing. Do not skip this step.
+**Context for all fact-checkers:** dieselpris.no is a personal,
+non-commercial transparency site — not a professional press outlet. The
+scoped Vær Varsom principles apply (`.agents/skills/news-article-writer/references/vaar-varsom-plakaten.md`),
+not the full document.
+
+Each fact-checker returns:
+
+- **GODKJENT / IKKE GODKJENT**
+- A table of verified/failed factual claims
+- A Vær Varsom paragraph-by-paragraph assessment
+- A list of blocking issues (must fix) and non-blocking recommendations
+
+**Synthesising the verdicts:** Collect all four responses. Any blocking
+issue raised by **any** fact-checker must be resolved before publishing —
+even if the other three approved. Non-blocking recommendations are at your
+discretion. Do not skip this step.
 
 ## Article Technical Spec
 
