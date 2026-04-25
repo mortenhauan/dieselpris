@@ -53,6 +53,7 @@ The repo includes [`vercel.ts`](./vercel.ts) ([programmatic Vercel config](https
 - `app/` — routes and layout
 - `components/` — UI and feature blocks (charts, tax explainers, etc.)
 - `lib/` — shared utilities ([readme](./lib/README.md))
+- `docs/seo/` — Search Console / SEO notes ([readme](./docs/seo/README.md))
 
 ## Data and responsibility
 
