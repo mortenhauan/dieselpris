@@ -112,7 +112,7 @@ export const reducer = (state: State, action: Action): State => {
 
 const flushRemoveToast = (toastId: string) => {
   memoryState = reducer(memoryState, {
-    toastId: toastId,
+    toastId,
     type: "REMOVE_TOAST",
   });
   for (const listener of listeners) {
@@ -178,7 +178,7 @@ const toast = function toast({ ...toastProps }: Toast) {
 
   return {
     dismiss,
-    id: id,
+    id,
     update,
   };
 };
