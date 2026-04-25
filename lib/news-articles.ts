@@ -26,6 +26,14 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "CO₂-kuttene kommer 1. mai, men Stoltenberg sier fire av dem trolig er ulovlig statsstøtte. I verste fall kan bedrifter måtte betale tilbake.",
+    publishedAtIso: "2026-04-25T10:15:00+02:00",
+    slug: "dieselkutt-kan-vaere-ulovlig-statsstotte",
+    title: "Dieselkutt kommer 1. mai – men kan måtte betales tilbake",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Stoltenberg bekrefter kuttet fra 1. mai. Anleggsdiesel sparer 3,13 kr/l, autodiesel 1,66 kr/l ekstra. Men ESA-avklaringen er ikke ferdig.",
     publishedAtIso: "2026-04-20T14:00:00+02:00",
     slug: "co2-kutt-1-mai-anleggsdiesel-autodiesel-sjoefart",
