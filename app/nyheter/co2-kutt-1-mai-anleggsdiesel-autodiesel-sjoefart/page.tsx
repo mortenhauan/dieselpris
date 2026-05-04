@@ -188,7 +188,7 @@ const Page = function Page() {
           </h2>
 
           <p>
-            Anleggsdiesel (rødt diesel til gravemaskiner, bulldosere og annet
+            Anleggsdiesel (rød diesel til gravemaskiner, bulldosere og annet
             anleggsutstyr) betaler ikke veibruksavgift. Det betyr at
             april-kuttet der avgiften ble satt til null, ikke gjaldt for
             anleggsbransjen. Fra 1. mai er CO₂-avgiften på anleggsdiesel ned fra

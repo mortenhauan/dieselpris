@@ -26,6 +26,23 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "CO₂-avgiften er kuttet fra 1. mai, men høy råvarepris gjør at mange ikke merker hele lettelsen ved pumpen.",
+    publishedAtIso: "2026-05-04T13:25:00+02:00",
+    slug: "avgiftskutt-men-diesel-fortsatt-dyr",
+    title: "Avgiftskutt er nå i kraft – men diesel er fortsatt dyr",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "Hormuz er fortsatt en flaskehals for oljemarkedet. Brent lå rundt 109 dollar mandag, og dieselråvaren er fortsatt dyr.",
+    publishedAtIso: "2026-05-04T13:15:00+02:00",
+    slug: "hormuz-fortsatt-stengt-diesel-sommeren",
+    title:
+      "To måneder inn i konflikten: Hormuz fortsatt stengt – diesel forblir dyr",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "CO₂-kuttene kommer 1. mai, men Stoltenberg sier fire av dem trolig er ulovlig statsstøtte. I verste fall kan bedrifter måtte betale tilbake.",
     publishedAtIso: "2026-04-25T10:15:00+02:00",
     slug: "dieselkutt-kan-vaere-ulovlig-statsstotte",
