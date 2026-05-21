@@ -108,7 +108,7 @@ export const fetchNorgesBankUsdNokSeries =
       const date = timeValues[idx].id;
       const [raw] = valArr;
       const rate = Number.parseFloat(raw);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(rate)) {
+      if (!/^\d{4}-\d{2}-\d{2}$/u.test(date) || !Number.isFinite(rate)) {
         continue;
       }
       byDate.set(date, rate);

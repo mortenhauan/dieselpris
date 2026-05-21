@@ -176,7 +176,7 @@ export const fetchNextSixIceUlsMonthlyContracts =
       const { dayHigh, dayLow, last, open, prev } = closes;
       const change = last - prev;
       const changePercent = prev === 0 ? 0 : round2((change / prev) * 100);
-      const code = symbol.replace(/^ICEEUR:/, "");
+      const code = symbol.replace(/^ICEEUR:/u, "");
       const duty_at_utc_ymd = `${y}-${String(m + 1).padStart(2, "0")}-01`;
       settled.push({
         change: round2(change),
