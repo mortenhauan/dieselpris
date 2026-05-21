@@ -26,6 +26,15 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "Stortinget behandler utredning av 61–90 dagers beredskapslagring av diesel og flybensin. Norge har 20 dager i dag – det endrer ikke pumpeprisen nå.",
+    publishedAtIso: "2026-05-21T15:30:00+02:00",
+    slug: "stortinget-vil-utrede-dieselberedskap-61-90-dager",
+    title:
+      "Stortinget vil utrede opptil 90 dagers dieselberedskap – Norge har 20 i dag",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "CO₂-avgiften er kuttet fra 1. mai, men høy råvarepris gjør at mange ikke merker hele lettelsen ved pumpen.",
     publishedAtIso: "2026-05-04T13:25:00+02:00",
     slug: "avgiftskutt-men-diesel-fortsatt-dyr",
