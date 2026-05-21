@@ -1,3 +1,4 @@
+import { NATIONAL_SITE_SUMMARY_DESCRIPTION } from "@/lib/site-seo-copy";
 import { SITE_URL } from "@/lib/site-url";
 
 const organization = function organization(): Record<string, unknown> {
@@ -38,6 +39,7 @@ export const websiteJsonLd = function websiteJsonLd(): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    description: NATIONAL_SITE_SUMMARY_DESCRIPTION,
     name: "Dieselpris.no",
     publisher: pub,
     url: SITE_URL,

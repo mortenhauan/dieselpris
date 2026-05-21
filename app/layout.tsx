@@ -6,6 +6,7 @@ import Script from "next/script";
 
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
+import { NATIONAL_SITE_SUMMARY_DESCRIPTION } from "@/lib/site-seo-copy";
 import { websiteJsonLd } from "@/lib/site-structured-data";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -19,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  description: "Forstå bedre råvarepriser og avgifter på diesel i Norge.",
+  description: NATIONAL_SITE_SUMMARY_DESCRIPTION,
   icons: {
     apple: "/apple-icon.png",
     icon: [
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(SITE_URL),
   openGraph: {
+    description: NATIONAL_SITE_SUMMARY_DESCRIPTION,
     locale: "nb_NO",
     siteName: "Dieselpris.no",
     type: "website",
@@ -55,6 +57,7 @@ export const metadata: Metadata = {
     "Dieselpris.no – forstå bedre råvarepriser og avgifter på diesel i Norge",
   twitter: {
     card: "summary_large_image",
+    description: NATIONAL_SITE_SUMMARY_DESCRIPTION,
   },
 };
 

@@ -82,6 +82,7 @@ interface PriceHeroProps {
   priceNokLiterPlusDuties: number;
   changePercent: number;
   updatedAt: string;
+  seoIntro: string;
   isLoading?: boolean;
   exchangeSource?: string;
 }
@@ -222,8 +223,10 @@ const ChangeHint = function ChangeHint({
 };
 
 export const PriceHeroUnavailable = function PriceHeroUnavailable({
+  seoIntro,
   updatedAt,
 }: {
+  seoIntro: string;
   updatedAt: string;
 }) {
   const formattedTime = formatUpdatedAt(updatedAt);
@@ -237,6 +240,9 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
             Ingen live pris akkurat nå
           </h1>
+          <p className="mb-6 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+            {seoIntro}
+          </p>
           <p className="mb-10 max-w-xl text-pretty leading-relaxed text-muted-foreground">
             Ingen oppdatert råvarepris akkurat nå. Kom tilbake om litt — da skal
             tallene ligge her som vanlig.
@@ -256,6 +262,7 @@ export const PriceHero = function PriceHero({
   priceNokLiterPlusDuties,
   changePercent,
   updatedAt,
+  seoIntro,
   isLoading,
   exchangeSource,
 }: PriceHeroProps) {
@@ -272,6 +279,9 @@ export const PriceHero = function PriceHero({
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
             Dagens råvarepris
           </h1>
+          <p className="mb-6 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+            {seoIntro}
+          </p>
           <p className="mb-10 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
             Her ser du børsnotert råvare i dollar per tonn, samme råvare i
             kroner per liter uten avgifter — og råvare pluss veibruks- og

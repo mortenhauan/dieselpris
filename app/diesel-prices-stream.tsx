@@ -14,6 +14,7 @@ import { getDieselPricesData } from "@/lib/get-diesel-prices";
 import { rawPlusPublicDutiesNokPerLiter } from "@/lib/pump-price-model";
 import { getRegionPriceProfile } from "@/lib/regional-price-model";
 import type { RegionId } from "@/lib/regional-price-model";
+import { siteSummaryDescriptionForRegion } from "@/lib/site-seo-copy";
 
 export const DieselPricesStream = async function DieselPricesStream({
   regionId,
@@ -22,6 +23,7 @@ export const DieselPricesStream = async function DieselPricesStream({
 }) {
   const data = await getDieselPricesData();
   const region = getRegionPriceProfile(regionId);
+  const seoIntro = siteSummaryDescriptionForRegion(regionId);
   const currentPrice = data.current;
   const { contracts } = data;
   const { brent_historical, historical } = data;
@@ -64,15 +66,16 @@ export const DieselPricesStream = async function DieselPricesStream({
     <main>
       {hasLive ? (
         <PriceHero
-          priceUsdMt={currentPrice.price_usd_mt}
+          changePercent={currentPrice.change_percent}
+          exchangeSource={data.exchange_rate.source}
           priceNokLiter={currentPrice.price_nok_liter}
           priceNokLiterPlusDuties={priceNokLiterPlusDuties}
-          changePercent={currentPrice.change_percent}
+          priceUsdMt={currentPrice.price_usd_mt}
+          seoIntro={seoIntro}
           updatedAt={data.updated_at}
-          exchangeSource={data.exchange_rate.source}
         />
       ) : (
-        <PriceHeroUnavailable updatedAt={data.updated_at} />
+        <PriceHeroUnavailable seoIntro={seoIntro} updatedAt={data.updated_at} />
       )}
 
       <HomeNewsHighlight />
@@ -288,7 +291,7 @@ export const DieselPricesStream = async function DieselPricesStream({
               ut fra dagens valutakurs.
             </p>
             {hasLive ? (
-              <p>
+              <p data-nosnippet>
                 Frontkontrakten (ICE gasoil, sammenhengende serie) ligger typisk
                 rundt{" "}
                 <strong className="text-foreground">

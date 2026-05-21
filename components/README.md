@@ -7,7 +7,7 @@ Reusable UI sections and app-specific presentation components.
 - [`news-article-layout.tsx`](./news-article-layout.tsx): Shared chrome (header, footer, sources) for individual article pages.
 - [`news-article-layout.md`](./news-article-layout.md): Intent for the article layout component.
 - [`news-feed.tsx`](./news-feed.tsx): Card-based news listing for the `/nyheter` index.
-- [`news-feed.md`](./news-feed.md): Intent for the news feed component.
+- [`price-hero.tsx`](./price-hero.tsx): Homepage/region diesel hero with live ICE reference; **`seoIntro`** mirrors [`site-seo-copy`](../lib/site-seo-copy.md) early in the DOM for SEO-friendly snippets alongside the `<h1>`.
 - [`regional-margins.tsx`](./regional-margins.tsx): Region explainer section that mirrors the selected estimate region and explains why prices vary.
 - [`regional-margins.md`](./regional-margins.md): Intent and copy principles for the regional pricing explainer.
 - [`tax-explainer.tsx`](./tax-explainer.tsx): End-user explainer for Norwegian diesel taxes, active rates, and clearly labeled planned changes.

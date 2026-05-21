@@ -6,7 +6,6 @@
   article topics, check what's happening in the diesel/fuel space, or before
   starting a news writing session.
 name: news-researcher
-model: grok-4-20-thinking
 description: >
 readonly: true
 is_background: true

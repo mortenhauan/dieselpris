@@ -15,4 +15,4 @@ Shared utilities and pricing models used across the app.
 - [`regional-price-model.ts`](./regional-price-model.ts): Shared regional selector data and modeled distribution assumptions for estimate sections.
 - [`regional-price-model.md`](./regional-price-model.md): Intent, scope, and modeling limits for the regional estimate layer.
 - [`region-route.ts`](./region-route.ts): Builds region URLs (`/` for default/national, `/{regionId}` for others).
-- [`region-page-metadata.ts`](./region-page-metadata.ts): Shared `metadata` for each static region route.
+- [`site-seo-copy.ts`](./site-seo-copy.ts): Shared short descriptions for homepage/region `<meta description>`, hero intro, and `WebSite` JSON-LD (`site-seo-copy.md`).
