@@ -26,6 +26,24 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "ICE-gasoil steg 45 prosent i juli mens Iran-konflikten blusset opp igjen. Etter at Trump varslet angrepspause, falt råvaren 8,6 prosent 3. august.",
+    publishedAtIso: "2026-08-04T01:20:00+02:00",
+    slug: "dieselravaren-steg-45-prosent-i-juli",
+    title:
+      "Dieselråvaren steg 45 prosent i juli – Trump varslet pause i angrep mot Iran",
+  },
+  {
+    category: "Nyhet",
+    intro:
+      "En foreløpig USA-Iran-avtale om Hormuz sender Brent og dieselråvaren ned. Men råvarefallet er ikke det samme som lavere pumpepris samme kveld.",
+    publishedAtIso: "2026-06-15T18:00:00+02:00",
+    slug: "iran-avtale-sender-dieselravaren-ned",
+    title:
+      "Iran-avtale sender dieselråvaren ned – men pumpa faller ikke over natten",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Stortinget behandler utredning av 61–90 dagers beredskapslagring av diesel og flybensin. Norge har 20 dager i dag – det endrer ikke pumpeprisen nå.",
     publishedAtIso: "2026-05-21T15:30:00+02:00",
     slug: "stortinget-vil-utrede-dieselberedskap-61-90-dager",
