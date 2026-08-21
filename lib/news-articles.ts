@@ -26,6 +26,14 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "Dieselkuttet utløper 1. september. Finansdepartementet anslår en mulig prisvirkning på 4,26 kr/l for en vanlig dieselblanding.",
+    publishedAtIso: "2026-08-21T11:00:00+02:00",
+    slug: "dieselavgiftene-oker-1-september",
+    title: "Dieselavgiftene øker igjen 1. september – slik slår det ut",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "ICE-gasoil steg 45 prosent i juli mens Iran-konflikten blusset opp igjen. Etter at Trump varslet angrepspause, falt råvaren 8,6 prosent 3. august.",
     publishedAtIso: "2026-08-04T01:20:00+02:00",
     slug: "dieselravaren-steg-45-prosent-i-juli",
