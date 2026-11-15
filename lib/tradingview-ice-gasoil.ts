@@ -1,14 +1,6 @@
-import { createRequire } from "node:module";
+import { TradingViewClient } from "@mathieuc/tradingview";
 
-const require = createRequire(import.meta.url);
-const { Client } = require("@mathieuc/tradingview") as {
-  Client: new (opts?: Record<string, unknown>) => TradingViewClient;
-};
-
-interface TradingViewClient {
-  Session: { Chart: new () => TradingViewChart };
-  end: () => Promise<void>;
-}
+import { observedMarketBars } from "@/lib/market-observations";
 
 interface TvBar {
   time: number;
@@ -24,23 +16,6 @@ interface TvMarketInfos {
   full_name?: string;
   currency_code?: string;
   listed_exchange?: string;
-}
-
-interface TradingViewChart {
-  periods: TvBar[];
-  infos: TvMarketInfos;
-  setMarket: (
-    symbol: string,
-    options?: {
-      timeframe?: string;
-      range?: number;
-      backadjustment?: boolean;
-    }
-  ) => void;
-  onSymbolLoaded: (cb: () => void) => void;
-  onUpdate: (cb: () => void) => void;
-  onError: (cb: (...args: unknown[]) => void) => void;
-  delete: () => void;
 }
 
 export const ICEEUR_ULS1_CONTINUOUS = "ICEEUR:ULS1!";
@@ -68,24 +43,6 @@ export const barTimeToExchangeDate = function barTimeToExchangeDate(
     .slice(0, 10);
 };
 
-export const tradingViewBarsToHistorical = function tradingViewBarsToHistorical(
-  bars: TvBar[],
-  litersPerTon: number,
-  usdNokForUtcYmd: (utcYmd: string) => number
-): { date: string; price: number; price_nok_liter: number }[] {
-  const sorted = [...bars].toSorted((a, b) => a.time - b.time);
-  return sorted.map((b) => {
-    const date = barTimeToExchangeDate(b.time);
-    const usdToNok = usdNokForUtcYmd(date);
-    return {
-      date,
-      price: b.close,
-      price_nok_liter:
-        Math.round(((b.close * usdToNok) / litersPerTon) * 100) / 100,
-    };
-  });
-};
-
 export const fetchIceDailyBarsFromTradingView =
   function fetchIceDailyBarsFromTradingView(options: {
     symbol: string;
@@ -101,8 +58,8 @@ export const fetchIceDailyBarsFromTradingView =
     const timeoutMinBars = options.timeoutMinBars ?? minBars;
     const timeframe = options.timeframe ?? "D";
 
-    const client = new Client();
-    const chart = new client.Session.Chart();
+    const client = new TradingViewClient();
+    const chart = client.createChart();
 
     const { promise, reject, resolve } =
       Promise.withResolvers<IceGasoilDailyFromTv>();
@@ -111,6 +68,7 @@ export const fetchIceDailyBarsFromTradingView =
     let settleTimer: ReturnType<typeof setTimeout> | undefined;
 
     const cleanup = () => {
+      clearTimeout(hardTimer);
       if (settleTimer) {
         clearTimeout(settleTimer);
       }
@@ -122,7 +80,7 @@ export const fetchIceDailyBarsFromTradingView =
       queueMicrotask(() => {
         (async () => {
           try {
-            await client.end();
+            await client.close();
           } catch {
             /* ignore */
           }
@@ -136,8 +94,16 @@ export const fetchIceDailyBarsFromTradingView =
       }
       settled = true;
       cleanup();
-      const bars = [...chart.periods].toSorted((a, b) => a.time - b.time);
-      resolve({ bars, infos: { ...chart.infos } });
+      const bars = observedMarketBars(chart.candles, Date.now()).map((bar) => ({
+        ...bar,
+        max: bar.high,
+        min: bar.low,
+      }));
+      if (bars.length < timeoutMinBars) {
+        reject(new Error("TradingView returned too few observed bars"));
+        return;
+      }
+      resolve({ bars, infos: { ...chart.symbolInfo } });
     };
 
     const finishErr = (err: Error) => {
@@ -149,18 +115,12 @@ export const fetchIceDailyBarsFromTradingView =
       reject(err);
     };
 
-    chart.onError((...args: unknown[]) => {
-      const msg = args.map(String).join(" ");
-      console.error("[TradingView] WebSocket/chart error", {
-        args,
-        message: msg || "TradingView chart error",
-        symbol,
-      });
-      finishErr(new Error(msg || "TradingView chart error"));
-    });
+    chart.on("error", finishErr);
+    client.on("error", finishErr);
+    void client.ready.catch(finishErr);
 
     const scheduleSettle = () => {
-      if (chart.periods.length < minBars) {
+      if (chart.candles.length < minBars) {
         return;
       }
       if (settleTimer) {
@@ -169,16 +129,16 @@ export const fetchIceDailyBarsFromTradingView =
       settleTimer = setTimeout(finishOk, settleMs);
     };
 
-    chart.onUpdate(() => {
+    chart.on("update", () => {
       scheduleSettle();
     });
 
-    chart.onSymbolLoaded(() => {
+    chart.on("symbolLoaded", () => {
       scheduleSettle();
     });
 
-    setTimeout(() => {
-      if (chart.periods.length >= timeoutMinBars) {
+    const hardTimer = setTimeout(() => {
+      if (chart.candles.length >= timeoutMinBars) {
         finishOk();
       } else {
         finishErr(new Error("TradingView timeout or insufficient bars"));
@@ -186,8 +146,8 @@ export const fetchIceDailyBarsFromTradingView =
     }, hardTimeoutMs);
 
     chart.setMarket(symbol, {
-      backadjustment: true,
-      range: barCount,
+      backAdjustment: true,
+      count: barCount,
       timeframe,
     });
 

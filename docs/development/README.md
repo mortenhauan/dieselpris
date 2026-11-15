@@ -1,3 +1,4 @@
 # Development notes
 
-- [npm / pnpm supply chain hygiene](./npm-supply-chain.md) — Socket.dev context, update workflow, pinned choices, `pnpm.overrides`.
+- [Dependencies and toolchain](./npm-supply-chain.md) — pinned runtime,
+  native TypeScript compiler, pnpm settings, migration decisions, and checks.

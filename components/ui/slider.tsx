@@ -5,14 +5,14 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const Slider = function Slider({
+const Slider = ({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root>) => {
   const _values = React.useMemo(() => {
     if (Array.isArray(value)) {
       return value;

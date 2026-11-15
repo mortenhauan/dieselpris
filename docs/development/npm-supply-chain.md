@@ -1,34 +1,85 @@
-# npm/pnpm supply chain (2025–2026)
+# Dependency maintenance
 
-## Why this page exists
+The runtime is pinned in `.nvmrc` to Node **26.13.1 LTS**, the 11 November
+2026 security release. `engines.node` stays on the Node 26 line. Load it with
+`source scripts/use-nvm.sh` before running project commands.
 
-[Kompromitterte npm-registreringspakker](https://socket.dev/blog) har økt kraftig — blant annet «Mini Shai-Hulud»-kampanjen (store treff i **@antv**- og **TanStack**-økosystemene, vår/våren 2026) og angrep som stjeler **CI/npm-tokens** på `postinstall`. Socket publiserer analysedetaljer og IOC-lister; følg [@SocketSecurity](https://x.com/SocketSecurity) / [socket.dev/blog](https://socket.dev/blog) ved nye hendelser.
+`packageManager` pins **pnpm 12.21.0**. pnpm 12 is the stable Rust implementation;
+Corepack selects the pinned version. Install settings, build permissions, and
+transitive dependency overrides live in `pnpm-workspace.yaml` because pnpm 12
+no longer reads the `pnpm` field in `package.json`.
 
-Denne kodebasen bruker verken **TanStack Router/Query** eller **@antv** som direkte avhengigheter (sjekket i `pnpm-lock.yaml` etter siste avhengighetsløft), men **alle** prosjekter bør behandle `pnpm install` og nye versjoner skeptisk.
+## Compiler and checks
 
-## Praktisk «trygg oppdatering»-flyt
+**TypeScript 7.0.2 is the stable Go compiler.** Its public command is `tsc`, which
+launches the native platform binary from `@typescript/typescript-darwin-arm64`
+(or the corresponding package on other platforms). The old preview command
+`tsgo` and `@typescript/native-preview` are unnecessary.
 
-1. **Les** siste Socket-/GitHub-advisory for scope du rører (`@tanstack/*`, `echarts-for-react`, `@antv/*`, `node-ipc`, osv.).
-2. **`pnpm outdated`** — se hva som faktisk kan løftes.
-3. **Løft** med `pnpm dlx npm-check-updates …` eller manuelle versjoner **i en egen sak/PR** med lesbar `pnpm-lock.yaml`-diff.
-4. **`pnpm audit`** etter install (og revider transittive veier med `pnpm why <pkg>`).
-5. **Test:** `pnpm lint`, `pnpm typecheck`, `pnpm build`.
-6. **Valgfritt:** [Socket CLI «safe npm»](https://docs.socket.dev/docs/socket-npm-socket-npx) (`pnpm dlx socket …` / wrapper) for ekstra blokkering før install.
-
-## Bevisste valg i dette repo
-
-| Valg                                      | Årsak                                                                                                                                      |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`pnpm.overrides` for `next>postcss`**   | Next 16 trakk tidligere inn `postcss@8.4.x` (kjent moderate XSS-advisory). Vi tvinger patched `8.5.15` i tråd med GHSA.                    |
-| **`brace-expansion`**                     | Transittivt via `ultracite` → `glob` → `minimatch`; overstyr til patched `5.0.6`.                                                          |
-| **`react-day-picker` forblir 9.14.0**     | Siste v9; v10 er major med API-endringer/shadcn-justeringer — egen migrasjon ([daypicker.dev/upgrading](https://daypicker.dev/upgrading)). |
-| **`pnpm` 10.x i `packageManager`**        | Oppgrader til pnpm 11 når teamet er klart (`corepack use pnpm@…`); ikke sprunget her.                                                      |
-| **Mange `@radix-ui/*` med eksakt semver** | Matcher shadcn/leverte UI-filer; oppgrader samlet når du oppfrisker komponenter.                                                           |
-
-## Regenerere låsefil
+Use the locally installed tools:
 
 ```bash
-pnpm install
-pnpm audit
-pnpm lint && pnpm typecheck && pnpm build
+source scripts/use-nvm.sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm typecheck
+pnpm test
+pnpm build
 ```
+
+`test` and `prices` use the pinned `tsx` loader through `node --import tsx`.
+`pnpm prices` fetches current market context without downloading an unpinned
+runner.
+
+## November 2026 migration
+
+- Next.js **16.4.6**, React/React DOM **19.3.1**, Tailwind CSS **4.3.5**.
+  Partial Prefetching is enabled alongside Cache Components. The news layout
+  requires complete static output through `ensureStatic = "navigation"`.
+- TradingView **4.1.2** uses typed ESM imports, `TradingViewClient`, chart events,
+  `count`, and `backAdjustment`. The adapter maps the new `high`/`low` candle
+  fields to the existing application bar shape. Connection and chart errors
+  reject the request, and all completion timers are cleared during cleanup.
+- DayPicker **10.0.2** uses the preferred `@daypicker/react` package and
+  `month_grid` class-name key. Calendar component overrides have stable
+  module-level identities.
+- Ultracite **8.2.1**, Oxlint **1.93.0**, Oxfmt **0.78.0** retain the Oxlint
+  backend. The formatter uses the stable `sortImports` and `sortPackageJson`
+  settings. Imported agent skills are excluded from formatting; application code
+  remains checked.
+- The obsolete TradingView `axios`/`ws` v3 overrides are removed. Compatible overrides keep Next.js's PostCSS on **8.5.33**,
+  Vercel routing's `path-to-regexp` on **6.3.0**, and `source-map-js` on
+  **1.2.2** to address published advisories.
+
+Check the registry for stable releases before a future upgrade, review major
+release guides, install and inspect the lockfile diff, then run the checks
+above and `pnpm audit`. Commit the manifest and lockfile together.
+
+## Primary references
+
+- [Node 26.13.1 release](https://nodejs.org/en/blog/release/v26.13.1)
+- [TypeScript 7 native compiler](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
+- [pnpm 12 release](https://pnpm.io/blog/releases/12.0)
+- [pnpm 12.21.0 release](https://pnpm.io/blog/releases/12.21.0)
+- [Next.js 16.4](https://nextjs.org/blog/next-16-4)
+- [TradingView v4 migration](https://github.com/Mathieu2301/TradingView-API/blob/main/docs/migration-v4.md)
+- [DayPicker v10 migration](https://daypicker.dev/upgrading)
+- [Ultracite v8 migration notes](https://www.ultracite.ai/changelog/ultracite-8-0-0)
+
+Next.js reference pages matching the installed version are bundled under
+`node_modules/next/dist/docs/`.
+
+## Remaining development-tool advisories
+
+The current stable `@vercel/config` still depends on Zod 3.25.76. Its
+[oversized-collection advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)
+has no Zod 3 patch. Forcing Zod 4 across this major-version boundary would alter
+the upstream tool's schema API. The application itself uses patched Zod 4.6.7;
+`@vercel/config` is a development dependency used for trusted project
+configuration.
+
+Ultracite depends on deepmerge 4.3.1, whose
+[prototype-poisoning advisory](https://github.com/advisories/GHSA-gcqx-w48m-w2h4)
+has no published patch. It is a development dependency processing trusted
+linter configuration. Keep both findings visible in `pnpm audit` until upstream
+releases compatible fixes.

@@ -125,7 +125,7 @@ ${colorConfig
   return <style ref={styleRef} suppressHydrationWarning />;
 };
 
-const ChartContainer = function ChartContainer({
+const ChartContainer = ({
   id,
   className,
   children,
@@ -138,7 +138,7 @@ const ChartContainer = function ChartContainer({
     typeof RechartsPrimitive.ResponsiveContainer
   >["children"];
   initialDimension?: { width: number; height: number };
-}) {
+}) => {
   const uniqueId = React.useId();
   const chartId = `chart-${id ?? uniqueId.replaceAll(":", "")}`;
 
@@ -185,7 +185,7 @@ const tooltipEntryKey = function tooltipEntryKey(
   ].join("|");
 };
 
-const ChartTooltipPayloadDefaultRow = function ChartTooltipPayloadDefaultRow({
+const ChartTooltipPayloadDefaultRow = ({
   hideIndicator,
   indicator,
   indicatorColor,
@@ -201,63 +201,61 @@ const ChartTooltipPayloadDefaultRow = function ChartTooltipPayloadDefaultRow({
   itemConfig: ReturnType<typeof getPayloadConfigFromPayload>;
   nestLabel: boolean;
   tooltipLabel: React.ReactNode;
-}) {
-  return (
+}) => (
+  <div
+    className={cn(
+      "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
+      indicator === "dot" && "items-center"
+    )}
+  >
+    {itemConfig?.icon ? (
+      <itemConfig.icon />
+    ) : (
+      hideIndicator === false && (
+        <div
+          className={cn(
+            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+            {
+              "h-2.5 w-2.5": indicator === "dot",
+              "my-0.5": nestLabel && indicator === "dashed",
+              "w-0 border-[1.5px] border-dashed bg-transparent":
+                indicator === "dashed",
+              "w-1": indicator === "line",
+            }
+          )}
+          style={
+            {
+              "--color-bg": indicatorColor,
+              "--color-border": indicatorColor,
+            } as React.CSSProperties
+          }
+        />
+      )
+    )}
     <div
       className={cn(
-        "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
-        indicator === "dot" && "items-center"
+        "flex flex-1 justify-between leading-none",
+        nestLabel ? "items-end" : "items-center"
       )}
     >
-      {itemConfig?.icon ? (
-        <itemConfig.icon />
-      ) : (
-        hideIndicator === false && (
-          <div
-            className={cn(
-              "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
-              {
-                "h-2.5 w-2.5": indicator === "dot",
-                "my-0.5": nestLabel && indicator === "dashed",
-                "w-0 border-[1.5px] border-dashed bg-transparent":
-                  indicator === "dashed",
-                "w-1": indicator === "line",
-              }
-            )}
-            style={
-              {
-                "--color-bg": indicatorColor,
-                "--color-border": indicatorColor,
-              } as React.CSSProperties
-            }
-          />
-        )
-      )}
-      <div
-        className={cn(
-          "flex flex-1 justify-between leading-none",
-          nestLabel ? "items-end" : "items-center"
-        )}
-      >
-        <div className="grid gap-1.5">
-          {nestLabel ? tooltipLabel : null}
-          <span className="text-muted-foreground">
-            {itemConfig?.label ?? item.name}
-          </span>
-        </div>
-        {item.value === null ? null : (
-          <span className="text-foreground font-mono font-medium tabular-nums">
-            {typeof item.value === "number"
-              ? item.value.toLocaleString()
-              : String(item.value)}
-          </span>
-        )}
+      <div className="grid gap-1.5">
+        {nestLabel ? tooltipLabel : null}
+        <span className="text-muted-foreground">
+          {itemConfig?.label ?? item.name}
+        </span>
       </div>
+      {item.value === null ? null : (
+        <span className="text-foreground font-mono font-medium tabular-nums">
+          {typeof item.value === "number"
+            ? item.value.toLocaleString()
+            : String(item.value)}
+        </span>
+      )}
     </div>
-  );
-};
+  </div>
+);
 
-const ChartTooltipPayloadRow = function ChartTooltipPayloadRow({
+const ChartTooltipPayloadRow = ({
   color,
   config,
   formatter,
@@ -281,7 +279,7 @@ const ChartTooltipPayloadRow = function ChartTooltipPayloadRow({
   nestLabel: boolean;
   payload: readonly TooltipPayloadEntry[];
   tooltipLabel: React.ReactNode;
-}) {
+}) => {
   const resolvedKey = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`;
   const itemConfig = getPayloadConfigFromPayload(config, item, resolvedKey);
   const indicatorColor = color ?? item.payload?.fill ?? item.color;
@@ -312,7 +310,7 @@ const ChartTooltipPayloadRow = function ChartTooltipPayloadRow({
   );
 };
 
-const ChartTooltipContent = function ChartTooltipContent({
+const ChartTooltipContent = ({
   active,
   payload,
   className,
@@ -333,7 +331,7 @@ const ChartTooltipContent = function ChartTooltipContent({
     indicator?: "line" | "dot" | "dashed";
     nameKey?: string;
     labelKey?: string;
-  } & Omit<DefaultTooltipContentProps, "accessibilityLayer">) {
+  } & Omit<DefaultTooltipContentProps, "accessibilityLayer">) => {
   const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
@@ -415,7 +413,7 @@ const ChartTooltipContent = function ChartTooltipContent({
 
 const ChartLegend = RechartsPrimitive.Legend;
 
-const ChartLegendContent = function ChartLegendContent({
+const ChartLegendContent = ({
   className,
   hideIcon = false,
   payload,
@@ -424,7 +422,7 @@ const ChartLegendContent = function ChartLegendContent({
 }: React.ComponentProps<"div"> & {
   hideIcon?: boolean;
   nameKey?: string;
-} & DefaultLegendContentProps) {
+} & DefaultLegendContentProps) => {
   const { config } = useChart();
 
   if (!payload?.length) {

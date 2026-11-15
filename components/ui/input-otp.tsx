@@ -1,51 +1,46 @@
 "use client";
 
 import { OTPInput, OTPInputContext } from "input-otp";
-import { MinusIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const InputOTP = function InputOTP({
+const InputOTP = ({
   className,
   containerClassName,
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string;
-}) {
-  return (
-    <OTPInput
-      data-slot="input-otp"
-      containerClassName={cn(
-        "flex items-center gap-2 has-disabled:opacity-50",
-        containerClassName
-      )}
-      className={cn("disabled:cursor-not-allowed", className)}
-      {...props}
-    />
-  );
-};
+}) => (
+  <OTPInput
+    data-slot="input-otp"
+    containerClassName={cn(
+      "flex items-center gap-2 has-disabled:opacity-50",
+      containerClassName
+    )}
+    className={cn("disabled:cursor-not-allowed", className)}
+    {...props}
+  />
+);
 
-const InputOTPGroup = function InputOTPGroup({
+const InputOTPGroup = ({
   className,
   ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="input-otp-group"
-      className={cn("flex items-center", className)}
-      {...props}
-    />
-  );
-};
+}: React.ComponentProps<"div">) => (
+  <div
+    data-slot="input-otp-group"
+    className={cn("flex items-center", className)}
+    {...props}
+  />
+);
 
-const InputOTPSlot = function InputOTPSlot({
+const InputOTPSlot = ({
   index,
   className,
   ...props
 }: React.ComponentProps<"div"> & {
   index: number;
-}) {
+}) => {
   const inputOTPContext = React.useContext(OTPInputContext);
   const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
 
@@ -69,14 +64,8 @@ const InputOTPSlot = function InputOTPSlot({
   );
 };
 
-const InputOTPSeparator = function InputOTPSeparator({
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div data-slot="input-otp-separator" role="separator" {...props}>
-      <MinusIcon />
-    </div>
-  );
-};
+const InputOTPSeparator = ({ ...props }: React.ComponentProps<"hr">) => (
+  <hr data-slot="input-otp-separator" {...props} />
+);
 
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };

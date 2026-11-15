@@ -2,16 +2,17 @@
 // https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [".agents/skills/**", ".claude/skills/**"],
   "arrowParens": "always",
   "bracketSameLine": false,
   "bracketSpacing": true,
   "endOfLine": "lf",
-  "experimentalSortImports": {
+  "sortImports": {
     "ignoreCase": true,
     "newlinesBetween": true,
     "order": "asc",
   },
-  "experimentalSortPackageJson": true,
+  "sortPackageJson": true,
   "jsxSingleQuote": false,
   "printWidth": 80,
   "quoteProps": "as-needed",

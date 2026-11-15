@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   cacheComponents: true,
+  partialPrefetching: true,
   cacheLife: {
     dieselPrices: {
       // Idle expire: long enough that a Fri visitor → Mon visitor rarely forces a cold

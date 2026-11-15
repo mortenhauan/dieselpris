@@ -22,29 +22,27 @@ const buttonGroupVariants = cva(
   }
 );
 
-const ButtonGroup = function ButtonGroup({
+const ButtonGroup = ({
   className,
   orientation,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
-  return (
-    <div
-      role="group"
-      data-slot="button-group"
-      data-orientation={orientation}
-      className={cn(buttonGroupVariants({ orientation }), className)}
-      {...props}
-    />
-  );
-};
+}: React.ComponentProps<"fieldset"> &
+  VariantProps<typeof buttonGroupVariants>) => (
+  <fieldset
+    data-slot="button-group"
+    data-orientation={orientation}
+    className={cn(buttonGroupVariants({ orientation }), className)}
+    {...props}
+  />
+);
 
-const ButtonGroupText = function ButtonGroupText({
+const ButtonGroupText = ({
   className,
   asChild = false,
   ...props
 }: React.ComponentProps<"div"> & {
   asChild?: boolean;
-}) {
+}) => {
   const Comp = asChild ? Slot : "div";
 
   return (
@@ -58,23 +56,21 @@ const ButtonGroupText = function ButtonGroupText({
   );
 };
 
-const ButtonGroupSeparator = function ButtonGroupSeparator({
+const ButtonGroupSeparator = ({
   className,
   orientation = "vertical",
   ...props
-}: React.ComponentProps<typeof Separator>) {
-  return (
-    <Separator
-      data-slot="button-group-separator"
-      orientation={orientation}
-      className={cn(
-        "bg-input relative !m-0 self-stretch data-[orientation=vertical]:h-auto",
-        className
-      )}
-      {...props}
-    />
-  );
-};
+}: React.ComponentProps<typeof Separator>) => (
+  <Separator
+    data-slot="button-group-separator"
+    orientation={orientation}
+    className={cn(
+      "bg-input relative !m-0 self-stretch data-[orientation=vertical]:h-auto",
+      className
+    )}
+    {...props}
+  />
+);
 
 export {
   ButtonGroup,

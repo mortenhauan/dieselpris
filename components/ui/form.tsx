@@ -76,10 +76,7 @@ const useFormField = () => {
   };
 };
 
-const FormItem = function FormItem({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+const FormItem = ({ className, ...props }: React.ComponentProps<"div">) => {
   const id = React.useId();
   const itemContextValue = React.useMemo(() => ({ id }), [id]);
 
@@ -94,10 +91,10 @@ const FormItem = function FormItem({
   );
 };
 
-const FormLabel = function FormLabel({
+const FormLabel = ({
   className,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+}: React.ComponentProps<typeof LabelPrimitive.Root>) => {
   const { error, formItemId } = useFormField();
 
   return (
@@ -111,9 +108,7 @@ const FormLabel = function FormLabel({
   );
 };
 
-const FormControl = function FormControl({
-  ...props
-}: React.ComponentProps<typeof Slot>) {
+const FormControl = ({ ...props }: React.ComponentProps<typeof Slot>) => {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
@@ -130,10 +125,10 @@ const FormControl = function FormControl({
   );
 };
 
-const FormDescription = function FormDescription({
+const FormDescription = ({
   className,
   ...props
-}: React.ComponentProps<"p">) {
+}: React.ComponentProps<"p">) => {
   const { formDescriptionId } = useFormField();
 
   return (
@@ -146,10 +141,7 @@ const FormDescription = function FormDescription({
   );
 };
 
-const FormMessage = function FormMessage({
-  className,
-  ...props
-}: React.ComponentProps<"p">) {
+const FormMessage = ({ className, ...props }: React.ComponentProps<"p">) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? "") : props.children;
 

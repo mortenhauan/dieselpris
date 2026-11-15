@@ -1,4 +1,7 @@
-import { fetchIceDailyBarsFromTradingView } from "@/lib/tradingview-ice-gasoil";
+import {
+  barTimeToExchangeDate,
+  fetchIceDailyBarsFromTradingView,
+} from "@/lib/tradingview-ice-gasoil";
 
 const ICE_MONTH_LETTERS = [
   "F",
@@ -28,6 +31,8 @@ const delay = async function delay(ms: number): Promise<void> {
 
 export interface IceUlsContractRow {
   contract_code: string;
+  /** Exchange reference date of the latest observed daily bar. */
+  quote_date: string;
   /** UTC `YYYY-MM-DD` (1. i leveringsmåneden) — til dato-styrt avgift i pumpeprismodellen. */
   duty_at_utc_ymd: string;
   contract_month: string;
@@ -105,6 +110,8 @@ const round2 = function round2(n: number): number {
 const lastCloseForSymbol = async function lastCloseForSymbol(
   symbol: string
 ): Promise<{
+  quoteDate: string;
+  volume: number;
   dayHigh: number;
   dayLow: number;
   last: number;
@@ -134,6 +141,8 @@ const lastCloseForSymbol = async function lastCloseForSymbol(
     const lo = Number.isFinite(lastBar.min) ? lastBar.min : settle;
     const o = Number.isFinite(lastBar.open) ? lastBar.open : settle;
     return {
+      quoteDate: barTimeToExchangeDate(lastBar.time),
+      volume: lastBar.volume,
       dayHigh: round2(Math.max(hi, lo)),
       dayLow: round2(Math.min(hi, lo)),
       last: settle,
@@ -156,42 +165,40 @@ export const fetchNextSixIceUlsMonthlyContracts =
       addCalendarMonthsUTC(y0, m0, startOffset + i)
     );
 
-    const settled: (IceUlsContractRow | null)[] = [];
-    for (let i = 0; i < slots.length; i += 1) {
-      if (i > 0) {
-        await delay(MS_BETWEEN_TV_REQUESTS);
-      }
-      const slot = slots[i];
+    // Recursion preserves sequential sockets and their throttling gap.
+    const collectSlot = async (
+      index: number,
+      rows: IceUlsContractRow[]
+    ): Promise<IceUlsContractRow[]> => {
+      const slot = slots[index];
       if (!slot) {
-        settled.push(null);
-        continue;
+        return rows;
+      }
+      if (index > 0) {
+        await delay(MS_BETWEEN_TV_REQUESTS);
       }
       const { y, m } = slot;
       const symbol = ulsTvSymbol(y, m);
       const closes = await lastCloseForSymbol(symbol);
-      if (!closes) {
-        settled.push(null);
-        continue;
+      if (closes) {
+        const { dayHigh, dayLow, last, open, prev, quoteDate, volume } = closes;
+        const change = last - prev;
+        rows.push({
+          change: round2(change),
+          change_percent: prev === 0 ? 0 : round2((change / prev) * 100),
+          contract_code: symbol.replace(/^ICEEUR:/u, ""),
+          contract_month: formatContractMonthNb(y, m),
+          duty_at_utc_ymd: `${y}-${String(m + 1).padStart(2, "0")}-01`,
+          high: dayHigh,
+          last_price: round2(last),
+          low: dayLow,
+          open,
+          previous: round2(prev),
+          quote_date: quoteDate,
+          volume,
+        });
       }
-      const { dayHigh, dayLow, last, open, prev } = closes;
-      const change = last - prev;
-      const changePercent = prev === 0 ? 0 : round2((change / prev) * 100);
-      const code = symbol.replace(/^ICEEUR:/u, "");
-      const duty_at_utc_ymd = `${y}-${String(m + 1).padStart(2, "0")}-01`;
-      settled.push({
-        change: round2(change),
-        change_percent: changePercent,
-        contract_code: code,
-        contract_month: formatContractMonthNb(y, m),
-        duty_at_utc_ymd,
-        high: dayHigh,
-        last_price: round2(last),
-        low: dayLow,
-        open,
-        previous: round2(prev),
-        volume: 0,
-      });
-    }
-
-    return settled.filter((r): r is IceUlsContractRow => r !== null);
+      return collectSlot(index + 1, rows);
+    };
+    return await collectSlot(0, []);
   };
