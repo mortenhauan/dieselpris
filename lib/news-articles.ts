@@ -28,6 +28,23 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "Regjeringen foreslår lavere veibruksavgift og høyere CO₂-avgift i 2027. Merket anleggsdiesel får ikke samme lettelse.",
+    slug: "dieselavgifter-2027-autodiesel-anleggsdiesel",
+    title:
+      "Regjeringen vil skjerme autodiesel i 2027 – anleggsdiesel får ikke samme kutt",
+    publishedAtIso: "2026-11-15T19:29:45Z",
+  },
+  {
+    category: "Forklart",
+    intro:
+      "IEA melder om fortsatt knapp tilgang på diesel. Siden starten av oktober har europeisk diesel falt mindre enn råoljen.",
+    slug: "dieselmarkedet-i-november-raoljen-faller-mer-enn-diesel",
+    title: "Råoljen har falt kraftig – dieselmarkedet er fortsatt stramt",
+    publishedAtIso: "2026-11-15T19:29:45Z",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Dieselkuttet utløper 1. september. Finansdepartementet anslår en mulig prisvirkning på 4,26 kr/l for en vanlig dieselblanding.",
     publishedAtIso: "2026-08-21T11:00:00+02:00",
     slug: "dieselavgiftene-oker-1-september",

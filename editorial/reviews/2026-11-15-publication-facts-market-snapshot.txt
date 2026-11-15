@@ -1,0 +1,25 @@
+Fetching prices from TradingView + Norges Bank…
+
+USD/NOK  9.5634  (Norges Bank, 2026-11-13)
+
+ICE Low Sulphur Gasoil  ICEEUR:ULS1!  (siste 7 dager)
+  Dato        Open      High       Low     Close   Endring  NOK/L
+  ─────────────────────────────────────────────────────────
+  2026-11-05  1250.50  1315.50  1230.00  1294.25     +0.00  10.23
+  2026-11-06  1306.25  1330.50  1278.50  1301.75     +7.50  10.44
+  2026-11-09  1297.50  1311.50  1237.25  1270.75    -31.00  10.17
+  2026-11-10  1256.75  1256.75  1171.75  1218.00    -52.75  9.80
+  2026-11-11  1220.75  1290.75  1212.25  1278.50    +60.50  10.37
+  2026-11-12  1249.75  1285.75  1235.75  1249.75    -28.75  10.13
+  2026-11-13  1276.25  1301.25  1270.00  1287.50    +37.75  10.47
+
+ICE ULS1 siste 48t  (timesintervall)
+  ▃▃▃▃▂▂▂▁▂▃▃▄▃▃▃▂▃▃▃▄▄▅▆▆▆▆▅▅▅▅▅▆▆▇▇▆▇▇█▇▇▅▆▆▆▇██
+  Lav: 1235.75  Høy: 1301.25  Total endring: +39.00 USD/mt
+
+ICE Brent Crude  ICEEUR:BRN1!
+  ██▂▁▂▅▅  (2026-11-05 → 2026-11-13)
+  Siste: 95.84 USD/fat  Endring: +0.02  7d-høy: 100.83  7d-lav: 89.16
+
+NB: Råvareprisen er en futuresreferanse, ikke en lokal pumpepris.
+Pumpeprisestimatet inkluderer datobestemte avgifter, modellert distribusjon og MVA.
