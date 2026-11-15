@@ -2,7 +2,7 @@
 
 How to find article-worthy developments for the news section.
 
-> **Automated research:** The `news-researcher` subagent (`.cursor/agents/news-researcher.md`)
+> **Automated research:** The [news-researcher skill](../../news-researcher/SKILL.md)
 > handles discovery across Twitter/X, Norwegian newspapers, and official sources,
 > and returns a structured brief you can feed directly into the redaktør workflow.
 > Use it before starting a writing session.
@@ -35,7 +35,7 @@ Not everything on Stortinget is newsworthy. Apply these filters:
 ### Write about it if:
 
 - A concrete tax rate changed or will change
-- A proposal affects pump prices or operating costs
+- A concrete adopted or announced measure affects pump prices or operating costs; distinguish announced, adopted, and effective status
 - The decision directly impacts one of our user groups
 - It explains WHY something happened that readers noticed
 
@@ -49,7 +49,7 @@ Not everything on Stortinget is newsworthy. Apply these filters:
 ## Cross-referencing existing coverage
 
 Before writing, read `lib/news-articles.ts` to see the existing timeline.
-Ask: does this fill a gap, or would it duplicate something we already have?
-
-The goal is a coherent chronological timeline the reader can browse to
-understand how diesel taxes developed over time.
+For discovery, apply the current-event cutoff and editorial filter in the
+news-researcher skill. Avoid duplicate coverage and historical gap-filling;
+revise older coverage only when the user requests it or a current development
+requires a correction. This reference does not override that canonical filter.

@@ -1,8 +1,7 @@
 ---
-
-## name: news-article-writer
-
-description: "Write and publish news articles for the dieselpris.no /nyheter section. Uses a two-agent workflow: a redaktør (editor) plans articles and a journalist subagent writes each one. Use when adding news articles, covering Stortinget decisions, explaining tax changes, writing about fuel price developments, or when the user mentions nyheter, artikler, news, or wants to explain a policy change to ordinary diesel users. Also use when researching stortinget.no, regjeringen.no, or lovdata.no for article-worthy developments."
+name: news-article-writer
+description: Write or revise sourced Norwegian news articles for dieselpris.no, including editorial planning, journalist briefs, mandatory independent fact-checking, and publication readiness. Use for article drafting and revisions; use news-researcher for finding new stories.
+---
 
 # News Article Writer for Dieselpris.no
 
@@ -49,6 +48,12 @@ Decide which articles to write. Consider:
 ### 3. Dispatch journalist subagents
 
 Launch one subagent per article with a detailed brief. See [references/journalist-brief.md](references/journalist-brief.md) for the complete prompt template.
+Use background subagents with an explicit model and reasoning effort supported
+by the current host (in Codex: `gpt-6.1-sol`, `high`). Start them with fresh
+context and give them the brief, source URLs, and relevant file paths rather
+than inheriting the editor's entire conversation. Queue work within the host's
+concurrency limit. If delegation is unavailable, write the draft directly;
+the mandatory independent review below still applies.
 
 ### 4. Register and verify
 
@@ -58,40 +63,39 @@ After journalists deliver:
 - Run `pnpm dlx ultracite check` and `pnpm typecheck`
 - Verify article reads like journalism, not a government summary
 
-### 5. Faktasjekk (mandatory — four parallel subagents)
+### 5. Mandatory independent fact-checking
 
-After each article is written, launch all four fact-checker subagents **in
-parallel**. They run the same check with different model "brains", catching
-different issues.
+Every new article and every revision must be checked before publication.
+Different model families, external providers, and API keys are **not required**.
+Use available models; independence comes from separate review contexts and
+checking original sources, not from provider names.
 
-```
-fact-checker-grok   (model: grok-4-20-thinking)
-fact-checker-gpt    (model: gpt-5.4-medium)
-fact-checker-claude (model: claude-4.6-opus-high-thinking)
-fact-checker-gemini (model: gemini-2.5-pro)
-```
+Run two background reviewers in parallel with fresh context and explicit
+supported model settings (in Codex: `gpt-6.1-sol`, `high` for both):
 
-Pass each subagent:
+1. **Facts and calculations:** verify every factual claim against original
+   sources, reproduce calculations, and check units, fuel types, dates,
+   market references, and effective tax rates.
+2. **Editorial and source review:** independently read the sources and article;
+   challenge headline, lead, causal claims, omissions, uncertainty, and the
+   scoped Vær Varsom principles. Cross-check central numbers as well.
 
-- The article file path (`app/nyheter/{slug}/page.tsx`)
-- The list of source URLs from the article's `SOURCES` array
+Give both reviewers the article path, source URLs, review focus, and
+[references/fact-checking.md](references/fact-checking.md). Both must read that
+protocol and the scoped Vær Varsom reference. Do not give them another
+reviewer's verdict or tell them the draft is already correct. Reviewers must
+not edit the article.
 
-**Context for all fact-checkers:** dieselpris.no is a personal,
-non-commercial transparency site — not a professional press outlet. The
-scoped Vær Varsom principles apply (`.agents/skills/news-article-writer/references/vaar-varsom-plakaten.md`),
-not the full document.
+Collect both reports. Resolve every blocking finding from either reviewer;
+re-run the affected checks against the final text after corrections. If a
+correction materially changes the story or numbers, repeat both reviews.
+Keep a compact record of sources, findings, corrections, and final verdicts
+in the task response. Technical checks alone do not constitute fact-checking.
 
-Each fact-checker returns:
-
-- **GODKJENT / IKKE GODKJENT**
-- A table of verified/failed factual claims
-- A Vær Varsom paragraph-by-paragraph assessment
-- A list of blocking issues (must fix) and non-blocking recommendations
-
-**Synthesising the verdicts:** Collect all four responses. Any blocking
-issue raised by **any** fact-checker must be resolved before publishing —
-even if the other three approved. Non-blocking recommendations are at your
-discretion. Do not skip this step.
+If independent review or required source access is unavailable, report the
+missing check and leave the article as a draft. Do not claim approval or
+publish an unchecked article. Publication readiness does not itself authorize
+deployment; follow the user's publishing instructions.
 
 ## Article Technical Spec
 
@@ -176,7 +180,7 @@ export default Page;
 
 ### Constraints
 
-- Max 300 lines per file
+- No article length or line-count cap; accuracy, sources, and depth determine length
 - Max 155 characters for SEO description
 - Slug: lowercase ASCII, hyphens only
 - Function style: `const Page = function Page() {`
@@ -213,4 +217,6 @@ Before marking an article done:
 - SEO metadata is set with canonical URL
 - Entry added to news index
 - Lint and typecheck pass
-- Vær Varsom sub-agent review completed with no unresolved breaches
+- Both independent fact-check reports complete, corrections rechecked, and no unresolved blockers
+- Vær Varsom review completed with no unresolved breaches
+- Preserve existing URL slugs when revising articles

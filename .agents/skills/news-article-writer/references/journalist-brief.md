@@ -14,7 +14,7 @@ workers, and regular car owners. They do not read political documents.
 They want: what happened, what changes for me, when, and how much.
 
 Write a Next.js page component at this exact path:
-/Users/mortenhauan/Developer/morten/dieselpris/app/nyheter/{SLUG}/page.tsx
+{REPOSITORY_ROOT}/app/nyheter/{SLUG}/page.tsx
 
 ## The story
 {FACTUAL_BRIEF — what happened, specific numbers, dates, who voted
@@ -56,9 +56,9 @@ what, what is confirmed vs pending}
   bg-amber-500/8 p-5">
 - Tables: <div className="overflow-x-auto"><table className="w-full
   text-sm">
-- Keep under {MAX_LINES} lines
+- No word or line limit; give the story the depth its evidence requires
 - Function style: const Page = function Page() {
-- Also register the article in lib/news-articles.ts
+- The editor registers the article in lib/news-articles.ts after delivery
 - Sources: {SOURCES_LIST}
 
 Write the complete file.
@@ -66,16 +66,16 @@ Write the complete file.
 
 ## Filling in the template
 
-| Placeholder       | How to fill it                                                                                                                                  |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{DATE}`          | The publication date in human form: "March 30, 2026"                                                                                            |
-| `{SLUG}`          | URL-friendly slug, lowercase ASCII + hyphens                                                                                                    |
-| `{FACTUAL_BRIEF}` | All facts the journalist needs. Use exact numbers from sources. Include what is confirmed, what is pending, relevant dates, vote counts, costs. |
-| `{CATEGORY}`      | One of: Nyhet, Forklart, Bakgrunn                                                                                                               |
-| `{TITLE}`         | Article title in Norwegian                                                                                                                      |
-| `{ISO_DATE}`      | ISO 8601 with timezone: "2026-03-30T13:00:00+02:00"                                                                                             |
-| `{SOURCES_LIST}`  | Array of { href, label } objects                                                                                                                |
-| `{MAX_LINES}`     | Usually 250–300                                                                                                                                 |
+| Placeholder         | How to fill it                                                                                                                                  |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{DATE}`            | The publication date in human form: "March 30, 2026"                                                                                            |
+| `{REPOSITORY_ROOT}` | Absolute path to the current checkout or worktree supplied by the editor; never assume the main checkout.                                       |
+| `{SLUG}`            | URL-friendly slug, lowercase ASCII + hyphens                                                                                                    |
+| `{FACTUAL_BRIEF}`   | All facts the journalist needs. Use exact numbers from sources. Include what is confirmed, what is pending, relevant dates, vote counts, costs. |
+| `{CATEGORY}`        | One of: Nyhet, Forklart, Bakgrunn                                                                                                               |
+| `{TITLE}`           | Article title in Norwegian                                                                                                                      |
+| `{ISO_DATE}`        | ISO 8601 with timezone: "2026-03-30T13:00:00+02:00"                                                                                             |
+| `{SOURCES_LIST}`    | Array of { href, label } objects                                                                                                                |
 
 ## Cross-linking
 
