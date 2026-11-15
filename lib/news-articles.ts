@@ -26,6 +26,14 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "ICE-gasoil steg 10,8 prosent fra 9. til 16. september. Lav eksport og fallende lagre holder dieselmarkedet stramt.",
+    publishedAtIso: "2026-09-17T19:40:00+02:00",
+    slug: "dieselmangel-presser-prisene-i-september",
+    title: "Dieselmarkedet strammes til – råvaren er blitt dyrere i september",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Dieselkuttet utløper 1. september. Finansdepartementet anslår en mulig prisvirkning på 4,26 kr/l for en vanlig dieselblanding.",
     publishedAtIso: "2026-08-21T11:00:00+02:00",
     slug: "dieselavgiftene-oker-1-september",
