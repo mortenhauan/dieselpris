@@ -16,6 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { isoDateToUtcNoonMs } from "@/lib/chart-time-axis";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
   forecastPumpPriceComponents,
@@ -30,6 +31,7 @@ import type { RegionId } from "@/lib/regional-price-model";
 
 interface Contract {
   contract_code: string;
+  quote_date: string;
   duty_at_utc_ymd: string;
   contract_month: string;
   last_price: number;
@@ -42,6 +44,7 @@ interface Contract {
 interface FuturesForecastProps {
   contracts: Contract[];
   exchangeRate: number;
+  exchangeDate: string | null;
   regionId: RegionId;
 }
 
@@ -60,7 +63,9 @@ const sessionDayRangeHintBody = (): ReactNode => (
 
 type StackedFuturesRow = {
   contract_code: string;
+  quote_date: string;
   contract_month: string;
+  timeMs: number;
   price: number;
   price_nok_liter: number;
   session_pump_low: number;
@@ -101,6 +106,8 @@ const toStackedFutures = function toStackedFutures(
     return {
       co2: parts.co2,
       contract_code: c.contract_code,
+      quote_date: c.quote_date,
+      timeMs: isoDateToUtcNoonMs(c.duty_at_utc_ymd),
       contract_month: c.contract_month,
       distribution: parts.distribution,
       mva: parts.mva,
@@ -182,6 +189,9 @@ const FuturesChartTooltip = ({ active, payload }: FuturesChartTooltipProps) => {
       <p className="mb-2 text-sm font-medium text-foreground">
         {row.contract_month}
       </p>
+      <p className="mb-2 text-xs text-muted-foreground">
+        Børsdag {row.quote_date}
+      </p>
       <p className="mb-2 text-sm font-semibold tabular-nums text-foreground">
         {formatKrPerLiter(row.total)}
       </p>
@@ -229,9 +239,17 @@ const FuturesChartTooltip = ({ active, payload }: FuturesChartTooltipProps) => {
   );
 };
 
+const tickLabel = (timeMs: number) =>
+  new Date(timeMs).toLocaleDateString("nb-NO", {
+    month: "short",
+    year: "2-digit",
+    timeZone: "UTC",
+  });
+
 export const FuturesForecast = ({
   contracts,
   exchangeRate,
+  exchangeDate,
   regionId,
 }: FuturesForecastProps) => {
   const region = getRegionPriceProfile(regionId);
@@ -242,7 +260,7 @@ export const FuturesForecast = ({
     DIESEL_LITERS_PER_METRIC_TON
   );
   const { yTicks, yDomain } = yScaleFromTotals(stackedData.map((d) => d.total));
-  const xCategories = stackedData.map((r) => r.contract_code);
+  const monthTicks = stackedData.map((r) => r.timeMs);
 
   const [firstRow] = stackedData;
   const lastRow = stackedData.at(-1);
@@ -250,8 +268,12 @@ export const FuturesForecast = ({
   const firstTotal = firstRow?.total ?? 0;
   const lastTotal = lastRow?.total ?? 0;
   const priceDiff = lastTotal - firstTotal;
-  const priceDiffPercent =
-    firstTotal > 0 ? ((priceDiff / firstTotal) * 100).toFixed(1) : "0.0";
+  const priceDiffPercent = (
+    firstTotal > 0 ? (priceDiff / firstTotal) * 100 : 0
+  ).toLocaleString("nb-NO", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
 
   let priceDiffClass = "text-muted-foreground";
   if (priceDiff < 0) {
@@ -259,9 +281,6 @@ export const FuturesForecast = ({
   } else if (priceDiff > 0) {
     priceDiffClass = "text-amber-600";
   }
-
-  const tickLabel = (code: string) =>
-    stackedData.find((r) => r.contract_code === code)?.contract_month ?? code;
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
@@ -276,10 +295,10 @@ export const FuturesForecast = ({
                 Et grovt pumpeprisanslag per måned, basert på hva markedet
                 legger til grunn for diesellevering den måneden. Det er ikke det
                 du betaler på en bestemt dag på stasjonen, og det er ikke en
-                spådom om fremtidig pumpepris. Beregningen bruker dagens
-                valutakurs, nasjonale avgifter per leveringsmåned (forenklet: 1.
-                i måneden), og en modellert andel for distribusjon i{" "}
-                {region.label.toLowerCase()}.
+                spådom om fremtidig pumpepris. Beregningen bruker valutakursen
+                fra Norges Bank, nasjonale avgifter per leveringsmåned
+                (forenklet: 1. i måneden), og en modellert andel for
+                distribusjon i {region.label.toLowerCase()}.
               </p>
             </Hint>
           </div>
@@ -287,8 +306,8 @@ export const FuturesForecast = ({
             Tallene bygger på månedlige ICE-kontrakter og speiler grovt hva
             markedet priser inn for diesellevering den måneden — nivået det
             faktisk handles til. Ment som oversikt, ikke eksakte kjøpspriser på
-            stasjon. Beregningen bruker dagens valutakurs og avgiftene for
-            leveringsmåneden, med 1. i måneden som avgiftsdato.
+            stasjon. Beregningen bruker den oppgitte valutakursen og avgiftene
+            for leveringsmåneden, med 1. i måneden som avgiftsdato.
           </p>
           {hasProposedRates ? (
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
@@ -312,7 +331,11 @@ export const FuturesForecast = ({
           <p className={`text-sm font-medium tabular-nums ${priceDiffClass}`}>
             {firstRow.contract_month} → {lastRow.contract_month}:{" "}
             {priceDiff > 0 ? "+" : ""}
-            {priceDiff.toFixed(2)} kr/L ({priceDiff > 0 ? "+" : ""}
+            {priceDiff.toLocaleString("nb-NO", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            kr/L ({priceDiff > 0 ? "+" : ""}
             {priceDiffPercent}%)
           </p>
         ) : null}
@@ -334,9 +357,11 @@ export const FuturesForecast = ({
             margin={{ bottom: 0, left: 0, right: 8, top: 8 }}
           >
             <XAxis
-              dataKey="contract_code"
-              type="category"
-              ticks={xCategories}
+              dataKey="timeMs"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              ticks={monthTicks}
               tickFormatter={tickLabel}
               tick={{ fill: "oklch(0.50 0.02 250)", fontSize: 11 }}
               axisLine={{ stroke: "oklch(0.90 0.01 250)" }}
@@ -407,6 +432,12 @@ export const FuturesForecast = ({
               >
                 <td className="px-4 py-3 text-foreground">
                   {row.contract_month}
+                  <time
+                    dateTime={row.quote_date}
+                    className="mt-1 block text-xs text-muted-foreground"
+                  >
+                    Børsdag {row.quote_date}
+                  </time>
                   {row.usesProposedRates ? (
                     <span className="mt-1 block text-xs text-muted-foreground">
                       Foreslåtte avgifter
@@ -430,7 +461,11 @@ export const FuturesForecast = ({
 
       <p className="mt-4 text-xs text-muted-foreground">
         Avgifter etter leveringsmåned (dato 1. i måneden) · Valuta{" "}
-        {exchangeRate.toFixed(4)} USD/NOK · ICE lavsvovel gasoil
+        {exchangeRate.toLocaleString("nb-NO", {
+          minimumFractionDigits: 4,
+          maximumFractionDigits: 4,
+        })}{" "}
+        USD/NOK ({exchangeDate ?? "ukjent dato"}) · ICE lavsvovel gasoil
       </p>
       {hasProposedRates ? (
         <p className="mt-2 text-xs text-muted-foreground">

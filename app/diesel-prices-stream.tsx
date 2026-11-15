@@ -16,11 +16,11 @@ import { getRegionPriceProfile } from "@/lib/regional-price-model";
 import type { RegionId } from "@/lib/regional-price-model";
 import { siteSummaryDescriptionForRegion } from "@/lib/site-seo-copy";
 
-export const DieselPricesStream = async function DieselPricesStream({
+export const DieselPricesStream = async ({
   regionId,
 }: {
   regionId: RegionId;
-}) {
+}) => {
   const data = await getDieselPricesData();
   const region = getRegionPriceProfile(regionId);
   const seoIntro = siteSummaryDescriptionForRegion(regionId);
@@ -29,35 +29,34 @@ export const DieselPricesStream = async function DieselPricesStream({
   const { brent_historical, historical } = data;
   const exchangeRate = data.exchange_rate.usd_nok;
   const hasLive = currentPrice !== null;
-  const dutyReferenceDate =
-    data.historical.at(-1)?.date ?? data.updated_at.slice(0, 10);
+  const rawPrice = currentPrice?.price_nok_liter ?? null;
+  const dutyReferenceDate = data.market_date ?? data.fetched_at.slice(0, 10);
   const priceNokLiterPlusDuties =
-    hasLive && currentPrice
-      ? rawPlusPublicDutiesNokPerLiter(
-          currentPrice.price_nok_liter,
-          dutyReferenceDate
-        )
-      : 0;
+    rawPrice === null
+      ? null
+      : rawPlusPublicDutiesNokPerLiter(rawPrice, dutyReferenceDate);
 
   let forecastBlock: ReactNode;
-  if (hasLive) {
+  if (hasLive && exchangeRate !== null) {
     forecastBlock =
       contracts.length > 0 ? (
         <FuturesForecast
           contracts={contracts}
           exchangeRate={exchangeRate}
+          exchangeDate={data.exchange_rate.date}
           regionId={regionId}
         />
       ) : (
         <p className="text-sm text-muted-foreground max-w-2xl">
-          Måned-for-måned-oversikten mangler akkurat nå. Grafen med siste
-          måneder og dagens råvarepris over fungerer som vanlig.
+          Månedskontraktene er utilgjengelige. Siste råvarepris og tilgjengelig
+          historikk vises over.
         </p>
       );
   } else {
     forecastBlock = (
       <p className="text-sm text-muted-foreground max-w-2xl">
-        Prognosen kan ikke vises akkurat nå. Sjekk igjen senere i dag.
+        Fremtidsanslaget krever både månedskontrakter og valutakurs. Prøv igjen
+        senere.
       </p>
     );
   }
@@ -72,10 +71,10 @@ export const DieselPricesStream = async function DieselPricesStream({
           priceNokLiterPlusDuties={priceNokLiterPlusDuties}
           priceUsdMt={currentPrice.price_usd_mt}
           seoIntro={seoIntro}
-          updatedAt={data.updated_at}
+          marketDate={data.market_date ?? ""}
         />
       ) : (
-        <PriceHeroUnavailable seoIntro={seoIntro} updatedAt={data.updated_at} />
+        <PriceHeroUnavailable seoIntro={seoIntro} fetchedAt={data.fetched_at} />
       )}
 
       <HomeNewsHighlight />
@@ -89,7 +88,9 @@ export const DieselPricesStream = async function DieselPricesStream({
             <p className="text-muted-foreground max-w-xl">
               Se hvordan råvarepris, avgifter og modellert regional distribusjon
               bygger opp prisestimatet. Dette er pedagogikk og indikasjon — ikke
-              en fasit eller garanti for hva du betaler på stasjonen.
+              en fasit eller garanti for hva du betaler på stasjonen. Modellen
+              regner med fossil diesel. Innblanding av biodrivstoff kan gi andre
+              avgifter.
             </p>
             <p className="text-sm text-muted-foreground mt-3">
               Valgt region:{" "}
@@ -111,10 +112,7 @@ export const DieselPricesStream = async function DieselPricesStream({
                   <p className="text-sm text-muted-foreground">
                     Estimert pumpepris for {region.label.toLowerCase()}.
                     Historiske punkter bruker avgiftssatsene som gjaldt på hver
-                    kalenderdag (CO₂-kuttet til 3,09 kr/l for autodiesel gjelder
-                    fra 1. mai 2026 i modellen). Dekker grafen bare dager før
-                    den datoen, ser du fortsatt 4,42 kr/l i CO₂-laget — da vises
-                    kuttet i månedsprognosen under.
+                    kalenderdag. Siste punkt er siste tilgjengelige børsdag.
                   </p>
                 </div>
                 {historical.length > 0 ? (
@@ -128,17 +126,17 @@ export const DieselPricesStream = async function DieselPricesStream({
             </div>
 
             <div className="lg:col-span-2 h-full">
-              {hasLive ? (
+              {rawPrice === null ? (
+                <div className="bg-card rounded-2xl border border-border p-6 md:p-8 h-full flex items-center justify-center text-center text-sm text-muted-foreground">
+                  Prisfordelingen er utilgjengelig fordi råvarepris eller
+                  valutakurs mangler.
+                </div>
+              ) : (
                 <TaxBreakdown
                   dutyReferenceDate={dutyReferenceDate}
-                  rawPrice={currentPrice.price_nok_liter}
+                  rawPrice={rawPrice}
                   regionId={regionId}
                 />
-              ) : (
-                <div className="bg-card rounded-2xl border border-border p-6 md:p-8 h-full flex items-center justify-center text-center text-sm text-muted-foreground">
-                  Straks dagens råvarepris er på plass, ser du her hvordan den
-                  fordeles på avgifter og margin.
-                </div>
               )}
             </div>
           </div>
@@ -165,24 +163,14 @@ export const DieselPricesStream = async function DieselPricesStream({
                   , så lik avstand på aksen betyr omtrent lik prosentvis endring
                   — nyttig for å se om begge beveger seg i samme retning.
                   Enhetene er fortsatt ulike; dette er ikke et prisforhold i
-                  kroner per liter. Er kalenderdagen nyere enn siste felles
-                  handelsdag, forlenges serien til visningsdato med samme nivåer
-                  som i råvarekortet øverst.
+                  kroner per liter. Grafen slutter på siste børsdag med tall for
+                  begge råvarene.
                 </p>
               </div>
               {historical.length > 1 && brent_historical.length > 1 ? (
                 <DieselBrentLogChart
                   brent={brent_historical}
                   historical={historical}
-                  {...(hasLive && currentPrice
-                    ? {
-                        spotAsOfDate: data.updated_at.slice(0, 10),
-                        spotBrentUsdBbl:
-                          brent_historical.at(-1)?.usd_per_barrel,
-                        spotGasoilUsdMt: currentPrice.price_usd_mt,
-                        spotPriceNokLiter: currentPrice.price_nok_liter,
-                      }
-                    : {})}
                 />
               ) : (
                 <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
@@ -196,13 +184,13 @@ export const DieselPricesStream = async function DieselPricesStream({
             </div>
           </div>
 
-          {hasLive && currentPrice ? (
+          {rawPrice === null ? null : (
             <DieselUseCaseComparison
               dutyReferenceDate={dutyReferenceDate}
-              rawPriceNokPerLiter={currentPrice.price_nok_liter}
+              rawPriceNokPerLiter={rawPrice}
               regionId={regionId}
             />
-          ) : null}
+          )}
 
           <div className="mt-8 max-w-2xl rounded-xl border border-border bg-secondary/40 p-5 text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-2">
@@ -257,8 +245,9 @@ export const DieselPricesStream = async function DieselPricesStream({
 
       <section id="avgifter">
         <TaxExplainer
+          regionId={regionId}
           dutyReferenceDate={dutyReferenceDate}
-          rawPrice={hasLive ? currentPrice.price_nok_liter : null}
+          rawPrice={rawPrice}
         />
       </section>
 
@@ -288,12 +277,13 @@ export const DieselPricesStream = async function DieselPricesStream({
               . For å få literpris i Norge regnes det om fra tonn til liter (1
               MT = ca. {DIESEL_LITERS_PER_METRIC_TON} liter diesel som fast
               antagelse — faktisk tetthet kan variere litt) og fra USD til NOK
-              ut fra dagens valutakurs.
+              ut fra Norges Banks siste publiserte valutakurs på eller før
+              børsdagen.
             </p>
-            {hasLive ? (
+            {hasLive && rawPrice !== null ? (
               <p data-nosnippet>
-                Frontkontrakten (ICE gasoil, sammenhengende serie) ligger typisk
-                rundt{" "}
+                Siste tilgjengelige børsnotering for frontkontrakten (ICE
+                gasoil) er{" "}
                 <strong className="text-foreground">
                   ${" "}
                   {currentPrice.price_usd_mt.toLocaleString("nb-NO", {
@@ -303,7 +293,7 @@ export const DieselPricesStream = async function DieselPricesStream({
                 </strong>
                 , tilsvarende ca.{" "}
                 <strong className="text-foreground">
-                  {currentPrice.price_nok_liter.toLocaleString("nb-NO", {
+                  {rawPrice.toLocaleString("nb-NO", {
                     maximumFractionDigits: 2,
                     minimumFractionDigits: 2,
                   })}{" "}
@@ -315,9 +305,8 @@ export const DieselPricesStream = async function DieselPricesStream({
               </p>
             ) : (
               <p>
-                Når kursene er tilbake, ligger et konkret eksempel her:
-                frontkontrakten i USD per tonn og tilsvarende råvarepris i
-                kroner per liter.
+                Omregningen til kroner per liter krever både råvarepris og en
+                kildebelagt valutakurs.
               </p>
             )}
           </div>

@@ -196,11 +196,7 @@ const formatUsdBrent = function formatUsdBrent(n: number): string {
   })} USD/fat`;
 };
 
-const LogDualTooltip = function LogDualTooltip({
-  active,
-  label,
-  payload,
-}: LogTooltipProps) {
+const LogDualTooltip = ({ active, label, payload }: LogTooltipProps) => {
   if (!(active && payload?.length)) {
     return null;
   }
@@ -284,107 +280,27 @@ const LogDualTooltip = function LogDualTooltip({
   );
 };
 
-export const DieselBrentLogChart = function DieselBrentLogChart({
+export const DieselBrentLogChart = ({
   brent,
   historical,
-  spotAsOfDate,
-  spotBrentUsdBbl,
-  spotGasoilUsdMt,
-  spotPriceNokLiter,
 }: {
-  brent: BrentHistoricalRow[];
   historical: DieselPricesHistoricalRow[];
-  spotAsOfDate?: string;
-  spotBrentUsdBbl?: number;
-  spotGasoilUsdMt?: number;
-  /** Råvare kr/l samme dag som visningsdato — trengs for NOK-omregning av spot-stumpen. */
-  spotPriceNokLiter?: number;
-}) {
+  brent: BrentHistoricalRow[];
+}) => {
   const merged = useMemo(
     () => mergeGasoilBrentByDate(historical, brent),
     [brent, historical]
   );
 
-  const showSpotTail = useMemo(() => {
-    const last = merged.at(-1);
-    if (last === undefined) {
-      return false;
-    }
-    if (
-      spotAsOfDate === undefined ||
-      spotGasoilUsdMt === undefined ||
-      spotBrentUsdBbl === undefined ||
-      spotPriceNokLiter === undefined
-    ) {
-      return false;
-    }
-    if (
-      !(
-        spotGasoilUsdMt > 0 &&
-        spotBrentUsdBbl > 0 &&
-        spotPriceNokLiter > 0 &&
-        Number.isFinite(spotGasoilUsdMt) &&
-        Number.isFinite(spotBrentUsdBbl) &&
-        Number.isFinite(spotPriceNokLiter)
-      )
-    ) {
-      return false;
-    }
-    return spotAsOfDate.localeCompare(last.date) > 0;
-  }, [
-    merged,
-    spotAsOfDate,
-    spotBrentUsdBbl,
-    spotGasoilUsdMt,
-    spotPriceNokLiter,
-  ]);
-
-  const chartData = useMemo((): MergedRow[] => {
-    if (
-      !showSpotTail ||
-      spotAsOfDate === undefined ||
-      spotGasoilUsdMt === undefined ||
-      spotBrentUsdBbl === undefined ||
-      spotPriceNokLiter === undefined
-    ) {
-      return merged;
-    }
-    const usdNok = impliedUsdNokFromGasoilRow(
-      spotGasoilUsdMt,
-      spotPriceNokLiter
-    );
-    if (usdNok === null) {
-      return merged;
-    }
-    const gasoilNokMt = spotPriceNokLiter * DIESEL_LITERS_PER_METRIC_TON;
-    return [
-      ...merged,
-      {
-        brent_nok_bbl: spotBrentUsdBbl * usdNok,
-        brent_usd_bbl: spotBrentUsdBbl,
-        date: spotAsOfDate,
-        gasoil_nok_mt: gasoilNokMt,
-        gasoil_usd_mt: spotGasoilUsdMt,
-      },
-    ];
-  }, [
-    merged,
-    showSpotTail,
-    spotAsOfDate,
-    spotBrentUsdBbl,
-    spotGasoilUsdMt,
-    spotPriceNokLiter,
-  ]);
-
   const timeSeriesData = useMemo(
     (): TimeSeriesRow[] =>
-      chartData
+      merged
         .map((r) => {
           const timeMs = isoDateToUtcNoonMs(r.date);
           return Number.isFinite(timeMs) ? { ...r, timeMs } : null;
         })
         .filter((r): r is TimeSeriesRow => r !== null),
-    [chartData]
+    [merged]
   );
 
   const spanYears = useMemo(() => {
@@ -549,12 +465,6 @@ export const DieselBrentLogChart = function DieselBrentLogChart({
           />
           Høyre akse: Brent råolje, kr/fat — log
         </span>
-        {showSpotTail ? (
-          <span className="w-full basis-full text-center max-w-xl mx-auto text-muted-foreground">
-            Siste punkt følger visningsdato og bruker samme nivåer som
-            råvarekortet når siste felles handelsdag i kilden er eldre.
-          </span>
-        ) : null}
       </div>
     </div>
   );

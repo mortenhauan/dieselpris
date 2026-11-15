@@ -17,7 +17,7 @@
 
 import {
   fetchNorgesBankUsdNokSeries,
-  USD_NOK_FALLBACK,
+  usdNokOnOrBefore,
 } from "../lib/norges-bank-usd-nok";
 import {
   barTimeToExchangeDate,
@@ -83,10 +83,12 @@ async function main() {
 
   const fx =
     fxResult.status === "fulfilled" && fxResult.value ? fxResult.value : null;
-  const usdNok = fx?.latestRate ?? USD_NOK_FALLBACK;
-  const fxDate = fx?.latestDate ?? "fallback";
+  const usdNok = fx?.latestRate ?? null;
+  const fxDate = fx?.latestDate ?? "utilgjengelig";
 
-  console.log(`USD/NOK  ${fmt(usdNok, 4)}  (Norges Bank, ${fxDate})`);
+  console.log(
+    `USD/NOK  ${usdNok === null ? "utilgjengelig" : fmt(usdNok, 4)}  (Norges Bank, ${fxDate})`
+  );
   console.log();
 
   // ── ULS1 daily OHLC table ─────────────────────────────────────────────────
@@ -106,7 +108,11 @@ async function main() {
       const prev = bars[i - 1];
       const date = barTimeToExchangeDate(bar.time);
       const change = prev ? bar.close - prev.close : 0;
-      const nokLiter = (bar.close * usdNok) / DIESEL_LITERS_PER_METRIC_TON;
+      const dateRate = usdNokOnOrBefore(fx, date);
+      const nokLiter =
+        dateRate === null
+          ? null
+          : (bar.close * dateRate) / DIESEL_LITERS_PER_METRIC_TON;
       console.log(
         `  ${date}` +
           `  ${pad(fmt(bar.open), 7)}` +
@@ -114,7 +120,7 @@ async function main() {
           `  ${pad(fmt(bar.min), 7)}` +
           `  ${pad(fmt(bar.close), 7)}` +
           `  ${pad(`${sign(change)}${fmt(change)}`, 8)}` +
-          `  ${fmt(nokLiter)}`
+          `  ${nokLiter === null ? "utilgjengelig" : fmt(nokLiter)}`
       );
     }
     console.log();
@@ -179,9 +185,11 @@ async function main() {
   }
 
   console.log(
-    "NB: Pumpepris = råvare + veibruksavgift (~2.10 kr/L) + CO2-avgift (~0.95 kr/L)"
+    "NB: Råvareprisen er en futuresreferanse, ikke en lokal pumpepris."
   );
-  console.log("    + biodrivstoff innblanding + distribusjonsmargin + 25% MVA");
+  console.log(
+    "Pumpeprisestimatet inkluderer datobestemte avgifter, modellert distribusjon og MVA."
+  );
 }
 
 main().catch((err) => {

@@ -38,41 +38,39 @@ interface TaxBreakdownProps {
   regionId: RegionId;
 }
 
-const BreakdownHint = function BreakdownHint({
+const BreakdownHint = ({
   label,
   description,
 }: {
   label: string;
   description: string;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
-          aria-label={`Forklaring: ${label}`}
-        >
-          <Info className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="top"
-        align="start"
-        sideOffset={6}
-        className={breakdownTooltipClass}
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+        aria-label={`Forklaring: ${label}`}
       >
-        <p>{description}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+        <Info className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="top"
+      align="start"
+      sideOffset={6}
+      className={breakdownTooltipClass}
+    >
+      <p>{description}</p>
+    </TooltipContent>
+  </Tooltip>
+);
 
-export const TaxBreakdown = function TaxBreakdown({
+export const TaxBreakdown = ({
   dutyReferenceDate,
   rawPrice,
   regionId,
-}: TaxBreakdownProps) {
+}: TaxBreakdownProps) => {
   const region = getRegionPriceProfile(regionId);
   const c = pumpPriceComponents(rawPrice, regionId, dutyReferenceDate);
   const anleggsdieselRates = getAnleggsdieselRates(dutyReferenceDate);
@@ -130,7 +128,10 @@ export const TaxBreakdown = function TaxBreakdown({
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <p className="text-3xl font-bold text-foreground tabular-nums">
-              {totalPrice.toFixed(2)}
+              {totalPrice.toLocaleString("nb-NO", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </p>
             <p className="text-xs text-muted-foreground">kr/liter</p>
           </div>
@@ -159,7 +160,11 @@ export const TaxBreakdown = function TaxBreakdown({
               </div>
             </div>
             <span className="text-sm font-medium text-foreground tabular-nums">
-              {component.value.toFixed(2)} kr
+              {component.value.toLocaleString("nb-NO", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
+              kr
             </span>
           </div>
         ))}
@@ -175,8 +180,11 @@ export const TaxBreakdown = function TaxBreakdown({
           </span>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          {totalTaxes.toFixed(2)} kr av prisen går til staten (veibruks, CO₂ og
-          MVA i modellen).
+          {totalTaxes.toLocaleString("nb-NO", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{" "}
+          kr av prisen går til staten (veibruks, CO₂ og MVA i modellen).
         </p>
         <p className="text-xs text-muted-foreground mt-2">
           Enkelte andre satser er ikke med. Svovelavgift gjelder i
@@ -187,11 +195,24 @@ export const TaxBreakdown = function TaxBreakdown({
           Til sammenligning: Med samme råvarepris og modellert distribusjon
           ville anleggsdiesel ligget rundt{" "}
           <span className="font-medium text-foreground tabular-nums">
-            {anleggsdieselPrice.toFixed(2)} kr/l
+            {anleggsdieselPrice.toLocaleString("nb-NO", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            kr/l
           </span>
           . Dette følger satsene for samme dato som kortet over, med
-          veibruksavgift {anleggsdieselRates.veibruks.toFixed(2)} kr/l og CO2{" "}
-          {anleggsdieselRates.co2.toFixed(2)} kr/l.
+          veibruksavgift{" "}
+          {anleggsdieselRates.veibruks.toLocaleString("nb-NO", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{" "}
+          kr/l og CO₂{" "}
+          {anleggsdieselRates.co2.toLocaleString("nb-NO", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{" "}
+          kr/l.
         </p>
       </div>
     </div>

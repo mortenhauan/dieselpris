@@ -6,7 +6,5 @@ import { RegionDieselShell } from "../region-diesel-shell";
 
 export const metadata: Metadata = regionPageMetadata("sor");
 
-const Page = function Page() {
-  return <RegionDieselShell regionId="sor" />;
-};
+const Page = () => <RegionDieselShell regionId="sor" />;
 export default Page;

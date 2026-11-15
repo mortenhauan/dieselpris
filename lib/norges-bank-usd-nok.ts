@@ -27,8 +27,6 @@ const sdmxZ = z.object({
   }),
 });
 
-export const USD_NOK_FALLBACK = 11;
-
 export interface NorgesBankUsdNokSeries {
   byDate: Map<string, number>;
   /** YYYY-MM-DD, ascending */
@@ -40,11 +38,10 @@ export interface NorgesBankUsdNokSeries {
 /** Last published NOK per 1 USD on or before `ymd` (YYYY-MM-DD). */
 export const usdNokOnOrBefore = function usdNokOnOrBefore(
   series: NorgesBankUsdNokSeries | null,
-  ymd: string,
-  fallback: number
-): number {
+  ymd: string
+): number | null {
   if (!series || series.sortedDatesAsc.length === 0) {
-    return fallback;
+    return null;
   }
   const { sortedDatesAsc, byDate } = series;
   let picked: string | null = null;
@@ -57,12 +54,37 @@ export const usdNokOnOrBefore = function usdNokOnOrBefore(
   }
   if (picked !== null) {
     const v = byDate.get(picked);
-    if (v !== undefined && Number.isFinite(v)) {
+    if (v !== undefined && Number.isFinite(v) && v > 0) {
       return v;
     }
   }
-  const [first] = sortedDatesAsc;
-  return byDate.get(first) ?? fallback;
+  return null;
+};
+
+const collectObservations = (
+  observations: Record<string, string[]>,
+  timeValues: { id: string }[],
+  byDate: Map<string, number>,
+  sortedDatesAsc: string[]
+): void => {
+  for (const [idxStr, valArr] of Object.entries(observations)) {
+    const idx = Number(idxStr);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= timeValues.length) {
+      continue;
+    }
+    const date = timeValues[idx].id;
+    const [raw] = valArr;
+    const rate = Number(raw);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/u.test(date) ||
+      !Number.isFinite(rate) ||
+      rate <= 0
+    ) {
+      continue;
+    }
+    byDate.set(date, rate);
+    sortedDatesAsc.push(date);
+  }
 };
 
 export const fetchNorgesBankUsdNokSeries =
@@ -70,8 +92,11 @@ export const fetchNorgesBankUsdNokSeries =
     lastNObservations = 130
   ): Promise<NorgesBankUsdNokSeries | null> {
     const url = `${NB_EXR_URL}${lastNObservations}`;
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) {
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
+    }).catch(() => null);
+    if (!res?.ok) {
       return null;
     }
     const json: unknown = await res.json().catch(() => null);
@@ -100,20 +125,7 @@ export const fetchNorgesBankUsdNokSeries =
     const byDate = new Map<string, number>();
     const sortedDatesAsc: string[] = [];
 
-    for (const [idxStr, valArr] of Object.entries(observations)) {
-      const idx = Number.parseInt(idxStr, 10);
-      if (!Number.isFinite(idx) || idx < 0 || idx >= timeValues.length) {
-        continue;
-      }
-      const date = timeValues[idx].id;
-      const [raw] = valArr;
-      const rate = Number.parseFloat(raw);
-      if (!/^\d{4}-\d{2}-\d{2}$/u.test(date) || !Number.isFinite(rate)) {
-        continue;
-      }
-      byDate.set(date, rate);
-      sortedDatesAsc.push(date);
-    }
+    collectObservations(observations, timeValues, byDate, sortedDatesAsc);
 
     sortedDatesAsc.sort((a, b) => a.localeCompare(b));
     if (sortedDatesAsc.length === 0) {

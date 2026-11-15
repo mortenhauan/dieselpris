@@ -2,7 +2,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
@@ -11,8 +10,6 @@ import { websiteJsonLd } from "@/lib/site-structured-data";
 import { SITE_URL } from "@/lib/site-url";
 
 import "./globals.css";
-
-const ADSENSE_CLIENT_ID = "ca-pub-9912628280603975";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,9 +43,6 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
   },
-  other: {
-    "google-adsense-account": ADSENSE_CLIENT_ID,
-  },
   robots: {
     follow: true,
     index: true,
@@ -61,27 +55,19 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
-    <html lang="no">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <JsonLd data={websiteJsonLd()} />
-        {children}
-        <Footer />
-        <Script
-          async
-          crossOrigin="anonymous"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
-  );
-};
+}>) => (
+  <html lang="no">
+    <body className={`${inter.variable} font-sans antialiased`}>
+      <JsonLd data={websiteJsonLd()} />
+      {children}
+      <Footer />
+      <Analytics />
+      <SpeedInsights />
+    </body>
+  </html>
+);
 export default RootLayout;

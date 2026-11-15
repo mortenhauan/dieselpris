@@ -1,9 +1,9 @@
 "use client";
 
 import { Truck, Leaf, Receipt, ArrowRight } from "lucide-react";
-import Link from "next/link";
 
 import { getPumpPriceRates, pumpPriceComponents } from "@/lib/pump-price-model";
+import type { RegionId } from "@/lib/regional-price-model";
 
 const fmtKr = (n: number): string =>
   n.toLocaleString("nb-NO", {
@@ -14,17 +14,19 @@ const fmtKr = (n: number): string =>
 interface TaxExplainerProps {
   dutyReferenceDate: string;
   rawPrice: number | null;
+  regionId: RegionId;
 }
 
-export const TaxExplainer = function TaxExplainer({
+export const TaxExplainer = ({
   dutyReferenceDate,
   rawPrice,
-}: TaxExplainerProps) {
+  regionId,
+}: TaxExplainerProps) => {
   const rates = getPumpPriceRates(dutyReferenceDate);
   const components =
     rawPrice === null
       ? null
-      : pumpPriceComponents(rawPrice, undefined, dutyReferenceDate);
+      : pumpPriceComponents(rawPrice, regionId, dutyReferenceDate);
   const taxPercent =
     components && components.total > 0
       ? ((components.veibruks + components.co2 + components.mva) /
@@ -151,82 +153,53 @@ export const TaxExplainer = function TaxExplainer({
             )}
           </p>
           <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-            Prisestimatene følger satsene som gjelder på referansedatoen for
-            siste kurspunkt ({dutyReferenceDate}). I perioden 1. april–31.
-            august 2026 er veibruksavgiften satt til 0 kr/l for veidiesel.
-          </p>
-        </div>
-
-        <div className="mb-12 rounded-2xl border border-amber-500/25 bg-amber-500/8 p-5">
-          <p className="text-sm font-semibold text-foreground">
-            CO₂-kuttet fra 1. mai er regnet inn i prisestimatene
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Stortinget har vedtatt å redusere CO₂-avgiften for autodiesel til
-            3,09 kr/l fra 1. mai. Finansdepartementets forskrift 30. mars 2026
-            nr. 525 fastsetter at de aktuelle stortingsvedtakene trer i kraft 1.
-            mai 2026. Vi har lagt dette inn i prisestimatene på siden, men
-            regjeringen skriver samtidig at oppfølgingen fortsatt avventer
-            avklaringer. Satsene kan derfor bli endret senere.
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            EØS-rettslig avklaring om statsstøtte er ikke ferdig.
-            Finansministeren har trukket fram risiko for at vedtakene kan bli
-            vurdert som ulovlig statsstøtte — i et verstefall kan det i teorien
-            bli aktuelt med tilbakebetaling av oppnådd besparelse.
-          </p>
-          <p className="mt-3 text-xs text-muted-foreground">
-            Les mer i{" "}
-            <Link
-              className="text-foreground underline underline-offset-2 hover:no-underline"
-              href="/nyheter/co2-kutt-1-mai-anleggsdiesel-autodiesel-sjoefart"
-            >
-              nyhetssaken om 1. mai
-            </Link>
-            , hos{" "}
-            <a
-              className="text-foreground underline underline-offset-2 hover:no-underline"
-              href="https://lovdata.no/forskrift/2026-03-30-525"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Lovdata (forskrift 525/2026)
-            </a>
-            ,{" "}
-            <a
-              className="text-foreground underline underline-offset-2 hover:no-underline"
-              href="https://www.regjeringen.no/no/aktuelt/oppfolging-av-stortingets-vedtak-om-reduksjon-i-avgifter-pa-drivstoff/id3155277/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Regjeringen
-            </a>{" "}
-            og{" "}
-            <a
-              className="text-foreground underline underline-offset-2 hover:no-underline"
-              href="https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Stortinget
-            </a>
-            .
+            Satsene gjelder {dutyReferenceDate}. Prisestimatet bruker siste
+            børsdag med råvarepris. I perioden 1. april–31. august 2026 var
+            veibruksavgiften 0 kr/l for veidiesel.
           </p>
         </div>
 
         <div className="mb-12 rounded-2xl border border-border bg-card p-5">
           <p className="text-sm font-semibold text-foreground">
-            Hvorfor kan anleggsdiesel koste mindre enn diesel på pumpa?
+            De midlertidige avgiftskuttene er avsluttet
           </p>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Siden her viser veidiesel, altså autodiesel. I Stortingets vedtak er
-            CO₂-avgiften fra 1. mai satt lavere for anleggsdiesel enn for
-            autodiesel: 1,92 kr/l mot 3,09 kr/l. Det kan gjøre anleggsdiesel
-            billigere enn vanlig diesel på stasjon.
+            Veibruksavgiften var 0 kr/l fra 1. april til 31. august 2026. Fra 1.
+            mai til 31. august var CO₂-avgiften 3,09 kr/l for autodiesel og 1,92
+            kr/l for anleggsdiesel. Fra 1. september er satsene igjen 2,28 kr/l
+            i veibruksavgift og 4,42 kr/l i CO₂-avgift for autodiesel.
+            Historiske beregninger bruker satsene for hver enkelt dato.
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Kilder:{" "}
+            <a
+              className="text-foreground underline underline-offset-2"
+              href="https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/saravgifter/om/mineralske-produkter/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Skatteetaten
+            </a>
+            {" og "}
+            <a
+              className="text-foreground underline underline-offset-2"
+              href="https://www.regjeringen.no/no/aktuelt/forskrift-om-redusert-co2-avgift-trer-i-kraft-1.-mai/id3158130/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Finansdepartementet
+            </a>
+            .
+          </p>
+        </div>
+        <div className="mb-12 rounded-2xl border border-border bg-card p-5">
+          <p className="text-sm font-semibold text-foreground">
+            Hvorfor kan anleggsdiesel koste mindre?
           </p>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Kort sagt: forskjellen handler først og fremst om avgifter, ikke at
-            siden regner feil. Tallene våre gjelder fortsatt autodiesel.
+            Anleggsdiesel har ikke veibruksavgift. CO₂-avgiften varierer med
+            dato og bruksområde. Tabellen «Samme råvare, ulike avgifter» viser
+            forskjellen med samme råvarepris og modellerte distribusjon.
           </p>
         </div>
 
@@ -271,7 +244,7 @@ export const TaxExplainer = function TaxExplainer({
             </p>
             <p className="mt-2 text-sm text-muted-foreground max-w-3xl">
               Tabellen under viser satsene som er lagt inn i prisestimatene,
-              inkludert CO₂-kuttet fra 1. mai slik det står i vedtaket.
+              inkludert de midlertidige kuttene våren og sommeren 2026.
             </p>
           </div>
           <div className="overflow-x-visible md:overflow-x-auto">
@@ -343,10 +316,9 @@ export const TaxExplainer = function TaxExplainer({
           </div>
           <div className="space-y-3 p-6 border-t border-border">
             <p className="text-xs text-muted-foreground">
-              I 2026 er veibruksavgiften fjernet fra 1. april til 31. august. I
-              tillegg er CO₂-kuttet fra 1. mai lagt inn i modellen etter
-              Stortingets vedtak, men dette er fortsatt ikke endelig avklart og
-              kan bli justert senere.
+              De midlertidige kuttene gjelder bare de oppgitte periodene.
+              Satsene gjelder modellens mineralolje; faktisk innblanding av
+              biodrivstoff kan gi en annen avgift per liter dieselblanding.
             </p>
             <p className="text-xs text-muted-foreground">
               Modellen inkluderer ikke alle mulige små satser og særregler.

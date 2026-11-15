@@ -4,18 +4,12 @@ import { cn } from "@/lib/utils";
 
 const ALT = "Dieselpris.no";
 
-export const SiteLogoMark = function SiteLogoMark({
-  className,
-}: {
-  className?: string;
-}) {
-  return (
-    <Image
-      alt={ALT}
-      className={cn("object-contain", className)}
-      height={32}
-      src="/logo.svg"
-      width={32}
-    />
-  );
-};
+export const SiteLogoMark = ({ className }: { className?: string }) => (
+  <Image
+    alt={ALT}
+    className={cn("object-contain", className)}
+    height={32}
+    src="/logo.svg"
+    width={32}
+  />
+);

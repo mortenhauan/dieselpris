@@ -13,7 +13,14 @@ export const GET = async function GET(request: NextRequest) {
   }
 
   revalidateTag("diesel-prices", { expire: 0 });
-  await getDieselPricesData();
-
-  return Response.json({ ok: true });
+  const data = await getDieselPricesData();
+  const hasPrices = data.current !== null;
+  return Response.json(
+    {
+      ok: hasPrices,
+      marketDate: data.market_date,
+      currencyAvailable: data.current?.price_nok_liter !== null && hasPrices,
+    },
+    { status: hasPrices ? 200 : 503 }
+  );
 };

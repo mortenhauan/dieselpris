@@ -8,7 +8,6 @@ import type { DieselPricesPayload } from "@/lib/diesel-prices-payload";
 import { fetchNextSixIceUlsMonthlyContracts } from "@/lib/ice-uls-forward-contracts";
 import {
   fetchNorgesBankUsdNokSeries,
-  USD_NOK_FALLBACK,
   usdNokOnOrBefore,
 } from "@/lib/norges-bank-usd-nok";
 import {
@@ -16,7 +15,6 @@ import {
   fetchIceBrentDaily,
   fetchIceGasoilUls1Daily,
   ICEEUR_ULS1_CONTINUOUS,
-  tradingViewBarsToHistorical,
 } from "@/lib/tradingview-ice-gasoil";
 
 export type {
@@ -41,38 +39,40 @@ export const getDieselPricesData =
     cacheTag("diesel-prices");
     cacheLife("dieselPrices");
 
-    const fxSeries = await fetchNorgesBankUsdNokSeries(130);
-    const spotUsdNok = fxSeries?.latestRate ?? USD_NOK_FALLBACK;
-    const exchangeSource = fxSeries
-      ? `Norges Bank (USD/NOK, ${fxSeries.latestDate})`
-      : `Fast kurs (fallback ${USD_NOK_FALLBACK})`;
-
-    const resolveUsdNok = (utcYmd: string) =>
-      usdNokOnOrBefore(fxSeries, utcYmd, spotUsdNok);
-
-    try {
-      const { bars: rawBars } = await fetchIceGasoilUls1Daily({
+    const [fxSeries, gasoilTv, forwardContracts, brentTv] = await Promise.all([
+      fetchNorgesBankUsdNokSeries(130),
+      fetchIceGasoilUls1Daily({
         barCount: 110,
         hardTimeoutMs: 22_000,
         minBars: 80,
         settleMs: 1500,
         symbol: ICEEUR_ULS1_CONTINUOUS,
-      });
+      }).catch(() => null),
+      fetchNextSixIceUlsMonthlyContracts().catch(() => []),
+      fetchIceBrentDaily({
+        barCount: 110,
+        hardTimeoutMs: 22_000,
+        minBars: 50,
+        settleMs: 1500,
+      }).catch(() => null),
+    ]);
+    const spotUsdNok = fxSeries?.latestRate ?? null;
+    const exchangeSource = fxSeries
+      ? `Norges Bank (USD/NOK, ${fxSeries.latestDate})`
+      : "Valutakurs utilgjengelig";
 
+    const resolveUsdNok = (utcYmd: string) =>
+      usdNokOnOrBefore(fxSeries, utcYmd);
+
+    try {
+      if (!gasoilTv) {
+        return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource);
+      }
+      const rawBars = gasoilTv.bars;
       const bars = sliceLastDailyBars(rawBars, HISTORY_DAYS);
       if (bars.length < 2) {
         return buildUnavailableDieselPricesPayload(spotUsdNok, exchangeSource);
       }
-
-      const [forwardContracts, brentTv] = await Promise.all([
-        fetchNextSixIceUlsMonthlyContracts(),
-        fetchIceBrentDaily({
-          barCount: 110,
-          hardTimeoutMs: 22_000,
-          minBars: 50,
-          settleMs: 1500,
-        }).catch(() => null),
-      ]);
 
       const brentBars = brentTv
         ? sliceLastDailyBars(brentTv.bars, HISTORY_DAYS)
@@ -98,8 +98,12 @@ export const getDieselPricesData =
       const changePercent = prev.close === 0 ? 0 : (change / prev.close) * 100;
       const latestYmd = barTimeToExchangeDate(latest.time);
       const spotForLatest = resolveUsdNok(latestYmd);
+      const rateDate =
+        fxSeries?.sortedDatesAsc.findLast((date) => date <= latestYmd) ?? null;
       const rawPricePerLiter =
-        (currentPrice * spotForLatest) / DIESEL_LITERS_PER_METRIC_TON;
+        spotForLatest === null
+          ? null
+          : (currentPrice * spotForLatest) / DIESEL_LITERS_PER_METRIC_TON;
       const contracts = forwardContracts.length >= 2 ? forwardContracts : [];
 
       return {
@@ -108,21 +112,39 @@ export const getDieselPricesData =
         current: {
           change: Math.round(change * 100) / 100,
           change_percent: Math.round(changePercent * 100) / 100,
-          price_nok_liter: Math.round(rawPricePerLiter * 100) / 100,
+          price_nok_liter:
+            rawPricePerLiter === null
+              ? null
+              : Math.round(rawPricePerLiter * 100) / 100,
           price_usd_mt: Math.round(currentPrice * 100) / 100,
         },
         data_source:
           "Lavsvovel gasoil (ICE Europa): sammenhengende dagskurve + seks månedlige terminkontrakter",
         exchange_rate: {
-          source: exchangeSource,
-          usd_nok: Math.round(spotUsdNok * 10_000) / 10_000,
+          date: rateDate,
+          source: rateDate
+            ? `Norges Bank (USD/NOK, ${rateDate})`
+            : "Valutakurs utilgjengelig",
+          usd_nok: spotForLatest,
         },
-        historical: tradingViewBarsToHistorical(
-          bars,
-          DIESEL_LITERS_PER_METRIC_TON,
-          resolveUsdNok
-        ),
-        updated_at: new Date().toISOString(),
+        historical: bars.flatMap((bar) => {
+          const date = barTimeToExchangeDate(bar.time);
+          const fx = resolveUsdNok(date);
+          return fx === null
+            ? []
+            : [
+                {
+                  date,
+                  price: bar.close,
+                  price_nok_liter:
+                    Math.round(
+                      ((bar.close * fx) / DIESEL_LITERS_PER_METRIC_TON) * 100
+                    ) / 100,
+                },
+              ];
+        }),
+        fetched_at: new Date().toISOString(),
+        market_date: latestYmd,
       };
     } catch (error) {
       console.error(

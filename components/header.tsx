@@ -51,11 +51,11 @@ const mobileNavLinkClass = function mobileNavLinkClass(isActive: boolean) {
   );
 };
 
-export const Header = function Header({
+export const Header = ({
   activeNav = "prices",
   selectedRegionId = DEFAULT_REGION_ID,
   variant = "region",
-}: HeaderProps) {
+}: HeaderProps) => {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const sectionBasePath = regionPath(selectedRegionId);
@@ -100,7 +100,7 @@ export const Header = function Header({
                 </span>
                 <Select onValueChange={onRegionChange} value={selectedRegionId}>
                   <SelectTrigger
-                    aria-labelledby="region-select-label"
+                    aria-label="Velg region"
                     className="min-w-0 flex-1 bg-background"
                     size="sm"
                   >

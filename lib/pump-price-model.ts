@@ -38,13 +38,19 @@ export const PROPOSED_2027_PUMP_PRICE_RATES = {
  * - Regjeringen: Avgiftssatser 2026 (med 2025/2026-tabell)
  * - Skatteetaten: Veibruksavgift på drivstoff / Merverdiavgift
  * - Stortinget, vedtak i sak p=107811
- * - Regjeringen, oppfølging 30.03.2026: veibruks 0 fra 1. april, øvrige CO2-endringer avventer avklaringer
+ * - Skatteetaten: midlertidige satser fra april/mai til 1. september 2026.
  *
  * Distribusjon er fortsatt en modellert margin og ikke en offentlig avgiftssats.
- * Appen modellerer likevel Stortingets vedtakte CO2-kutt for autodiesel fra
- * 1. mai 2026, og merker dette i UI som vedtatt men ikke endelig avklart.
+ * CO₂-kuttet for autodiesel gjaldt 1. mai–31. august 2026.
  */
 export const PUMP_PRICE_RATE_SCHEDULE: readonly ScheduledPumpPriceRates[] = [
+  {
+    co2: 3.17,
+    defaultDistribution: 3.5,
+    effectiveFrom: "2024-01-01",
+    mvaRate: 0.25,
+    veibruks: 2.71,
+  },
   {
     co2: 3.79,
     defaultDistribution: 3.5,
@@ -136,13 +142,15 @@ export const FISKE_NAERE_OG_FJERNE_RATE_SCHEDULE: readonly ScheduledComparisonDi
   ] as const;
 
 /**
- * Fiske utelukkende i nære farvann: ingen redusert sats i gjeldende lov —
- * betaler ordinær CO₂ på mineralolje. Vedtak 594 (0 kr/l) er ikke iverksatt.
+ * Fiske utelukkende i nære farvann: nullsats 1. mai–31. august 2026.
+ * Kilde: Skatteetaten, avgift på mineralske produkter.
  */
 export const FISKE_KUN_NAERE_RATE_SCHEDULE: readonly ScheduledComparisonDieselRates[] =
   [
     { co2: 3.79, effectiveFrom: "2025-01-01", mvaRate: 0.25, veibruks: 0 },
     { co2: 4.42, effectiveFrom: "2026-01-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 0, effectiveFrom: "2026-05-01", mvaRate: 0.25, veibruks: 0 },
+    { co2: 4.42, effectiveFrom: "2026-09-01", mvaRate: 0.25, veibruks: 0 },
   ] as const;
 
 const [FIRST_PUMP_PRICE_RATES] = PUMP_PRICE_RATE_SCHEDULE;
@@ -286,10 +294,10 @@ export const PUMP_PRICE_STACK_LAYERS: readonly {
   color: string;
 }[] = [
   { color: "#4a5568", key: "distribution", name: "Modellert distribusjon" },
-  { color: "#f59e0b", key: "co2", name: "CO2-avgift" },
+  { color: "#f59e0b", key: "co2", name: "CO₂-avgift" },
   { color: "#22c55e", key: "veibruks", name: "Veibruksavgift" },
   { color: "#1a1a2e", key: "raw", name: "Råvarepris" },
-  { color: "#ef4444", key: "mva", name: "MVA (25%)" },
+  { color: "#ef4444", key: "mva", name: "MVA (25 %)" },
 ];
 
 /** Hover/tooltip: øverst på stakken først i listen (som visuelt ovenfra på grafen). */

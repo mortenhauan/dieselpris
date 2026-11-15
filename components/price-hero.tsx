@@ -21,10 +21,9 @@ const formatUpdatedAt = function formatUpdatedAt(iso: string) {
   }
   return d.toLocaleString("no-NO", {
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
     month: "short",
     timeZone: "Europe/Oslo",
+    year: "numeric",
   });
 };
 
@@ -50,7 +49,7 @@ const PLUS_DUTIES_TOOLTIP_SUMMARY =
   "Estimert råvarepris med veibruks- og CO₂-avgift og MVA";
 
 const PLUS_DUTIES_TOOLTIP_DETAIL =
-  "Vi legger på de nasjonale satsene som i prissammensettingen under, og beregner MVA på summen — men uten modellert distribusjon eller stasjonsmargin.";
+  "Vi bruker avgiftssatsene for fossil diesel, som i prissammensettingen under, og beregner MVA på summen — men uten modellert distribusjon eller stasjonsmargin.";
 
 const rawNokTooltipSourceLine = function rawNokTooltipSourceLine(
   exchangeSource?: string
@@ -61,7 +60,7 @@ const rawNokTooltipSourceLine = function rawNokTooltipSourceLine(
   if (exchangeSource?.trim()) {
     return `Valutakilde: ${exchangeSource.trim()}.`;
   }
-  return "Uten fersk kurs fra Norges Bank brukes en fast reservekurs for USD/NOK.";
+  return "Valutakursen er utilgjengelig. Omregning til kroner vises når en kildebelagt kurs er tilgjengelig.";
 };
 
 const exchangeRateFooterBlurb = function exchangeRateFooterBlurb(
@@ -78,115 +77,105 @@ const exchangeRateFooterBlurb = function exchangeRateFooterBlurb(
 
 interface PriceHeroProps {
   priceUsdMt: number;
-  priceNokLiter: number;
-  priceNokLiterPlusDuties: number;
+  priceNokLiter: number | null;
+  priceNokLiterPlusDuties: number | null;
   changePercent: number;
-  updatedAt: string;
+  marketDate: string;
   seoIntro: string;
   isLoading?: boolean;
   exchangeSource?: string;
 }
 
-const InstrumentHint = function InstrumentHint() {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "inline-flex shrink-0 rounded-full p-0.5 text-background/45 outline-none transition-colors hover:text-background/70 focus-visible:ring-2 focus-visible:ring-background/35"
-          )}
-          aria-label={`Forklaring: ${INSTRUMENT_SUMMARY}`}
-        >
-          <Info className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="bottom"
-        align="start"
-        sideOffset={6}
-        className={tooltipContentClass}
+const InstrumentHint = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        className={cn(
+          "inline-flex shrink-0 rounded-full p-0.5 text-background/45 outline-none transition-colors hover:text-background/70 focus-visible:ring-2 focus-visible:ring-background/35"
+        )}
+        aria-label={`Forklaring: ${INSTRUMENT_SUMMARY}`}
       >
-        <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
-          {INSTRUMENT_SUMMARY}
-        </p>
-        <p>{INSTRUMENT_TOOLTIP_DETAIL}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+        <Info className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="bottom"
+      align="start"
+      sideOffset={6}
+      className={tooltipContentClass}
+    >
+      <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
+        {INSTRUMENT_SUMMARY}
+      </p>
+      <p>{INSTRUMENT_TOOLTIP_DETAIL}</p>
+    </TooltipContent>
+  </Tooltip>
+);
 
-const PlusDutiesHint = function PlusDutiesHint() {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
-          )}
-          aria-label={`Forklaring: ${PLUS_DUTIES_TOOLTIP_SUMMARY}`}
-        >
-          <Info className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="bottom"
-        align="start"
-        sideOffset={6}
-        className={tooltipContentClass}
+const PlusDutiesHint = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        className={cn(
+          "inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+        )}
+        aria-label={`Forklaring: ${PLUS_DUTIES_TOOLTIP_SUMMARY}`}
       >
-        <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
-          {PLUS_DUTIES_TOOLTIP_SUMMARY}
-        </p>
-        <p>{PLUS_DUTIES_TOOLTIP_DETAIL}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+        <Info className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="bottom"
+      align="start"
+      sideOffset={6}
+      className={tooltipContentClass}
+    >
+      <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
+        {PLUS_DUTIES_TOOLTIP_SUMMARY}
+      </p>
+      <p>{PLUS_DUTIES_TOOLTIP_DETAIL}</p>
+    </TooltipContent>
+  </Tooltip>
+);
 
-const RawNokHint = function RawNokHint({
-  exchangeSource,
-}: {
-  exchangeSource?: string;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
-          )}
-          aria-label={`Forklaring: ${RAW_NOK_TOOLTIP_SUMMARY}`}
-        >
-          <Info className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="bottom"
-        align="start"
-        sideOffset={6}
-        className={tooltipContentClass}
+const RawNokHint = ({ exchangeSource }: { exchangeSource?: string }) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        className={cn(
+          "inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+        )}
+        aria-label={`Forklaring: ${RAW_NOK_TOOLTIP_SUMMARY}`}
       >
-        <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
-          {RAW_NOK_TOOLTIP_SUMMARY}
-        </p>
-        <p className="mb-2">{RAW_NOK_TOOLTIP_FORMULA}</p>
-        <p className="mb-2">{RAW_NOK_TOOLTIP_WEIGHT}</p>
-        <p>{rawNokTooltipSourceLine(exchangeSource)}</p>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+        <Info className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="bottom"
+      align="start"
+      sideOffset={6}
+      className={tooltipContentClass}
+    >
+      <p className="mb-2 border-b border-background/15 pb-2 font-medium leading-snug text-background">
+        {RAW_NOK_TOOLTIP_SUMMARY}
+      </p>
+      <p className="mb-2">{RAW_NOK_TOOLTIP_FORMULA}</p>
+      <p className="mb-2">{RAW_NOK_TOOLTIP_WEIGHT}</p>
+      <p>{rawNokTooltipSourceLine(exchangeSource)}</p>
+    </TooltipContent>
+  </Tooltip>
+);
 
-const ChangeHint = function ChangeHint({
+const ChangeHint = ({
   changePercent,
   className,
 }: {
   changePercent: number;
   className?: string;
-}) {
+}) => {
   const isPriceUp = changePercent >= 0;
 
   return (
@@ -201,12 +190,16 @@ const ChangeHint = function ChangeHint({
               : "bg-emerald-500/20 text-emerald-400",
             className
           )}
-          aria-label={`Endring fra forrige børsdag: ${isPriceUp ? "+" : ""}${changePercent.toFixed(2)} prosent. Trykk for forklaring.`}
+          aria-label={`Endring fra forrige børsdag: ${isPriceUp ? "+" : ""}${changePercent.toLocaleString("nb-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} prosent. Trykk for forklaring.`}
         >
           <HelpCircle className="h-3.5 w-3.5 shrink-0 opacity-85" aria-hidden />
           <span>
             {isPriceUp ? "+" : ""}
-            {changePercent.toFixed(2)}%
+            {changePercent.toLocaleString("nb-NO", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+            %
           </span>
         </button>
       </TooltipTrigger>
@@ -222,14 +215,14 @@ const ChangeHint = function ChangeHint({
   );
 };
 
-export const PriceHeroUnavailable = function PriceHeroUnavailable({
+export const PriceHeroUnavailable = ({
   seoIntro,
-  updatedAt,
+  fetchedAt,
 }: {
   seoIntro: string;
-  updatedAt: string;
-}) {
-  const formattedTime = formatUpdatedAt(updatedAt);
+  fetchedAt: string;
+}) => {
+  const formattedTime = formatUpdatedAt(fetchedAt);
   return (
     <section className="py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-6">
@@ -238,14 +231,13 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
             Råvarepris fra europeisk energibørs
           </p>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
-            Ingen live pris akkurat nå
+            Råvareprisen er utilgjengelig
           </h1>
           <p className="mb-6 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
             {seoIntro}
           </p>
           <p className="mb-10 max-w-xl text-pretty leading-relaxed text-muted-foreground">
-            Ingen oppdatert råvarepris akkurat nå. Kom tilbake om litt — da skal
-            tallene ligge her som vanlig.
+            Råvareprisen kan ikke hentes akkurat nå. Prøv igjen senere.
           </p>
         </div>
         <div className="rounded-2xl border border-border bg-card px-8 py-6 text-sm text-muted-foreground">
@@ -256,17 +248,17 @@ export const PriceHeroUnavailable = function PriceHeroUnavailable({
   );
 };
 
-export const PriceHero = function PriceHero({
+export const PriceHero = ({
   priceUsdMt,
   priceNokLiter,
   priceNokLiterPlusDuties,
   changePercent,
-  updatedAt,
+  marketDate,
   seoIntro,
   isLoading,
   exchangeSource,
-}: PriceHeroProps) {
-  const formattedTime = formatUpdatedAt(updatedAt);
+}: PriceHeroProps) => {
+  const formattedTime = formatUpdatedAt(marketDate);
   const metaRowClass = "mb-8 min-h-12 md:min-h-14";
 
   return (
@@ -277,7 +269,7 @@ export const PriceHero = function PriceHero({
             Råvarepris fra europeisk energibørs
           </p>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight text-balance">
-            Dagens råvarepris
+            Siste råvarepris
           </h1>
           <p className="mb-6 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
             {seoIntro}
@@ -328,7 +320,7 @@ export const PriceHero = function PriceHero({
 
             <div className="flex items-center gap-2 text-sm text-background/45">
               <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>Oppdatert {formattedTime}</span>
+              <span>Børsdag {formattedTime}</span>
               {isLoading ? (
                 <RefreshCw
                   className="h-3.5 w-3.5 animate-spin shrink-0"
@@ -356,7 +348,10 @@ export const PriceHero = function PriceHero({
                     isLoading && "animate-pulse"
                   )}
                 >
-                  {priceNokLiter.toFixed(2)}
+                  {priceNokLiter?.toLocaleString("nb-NO", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  }) ?? "—"}
                 </span>
                 <span className="text-muted-foreground text-lg font-medium">
                   kr/L
@@ -364,8 +359,14 @@ export const PriceHero = function PriceHero({
               </div>
             </div>
             <p className="text-muted-foreground text-sm mt-8 leading-snug">
-              Før avgifter og margin.
-              {exchangeRateFooterBlurb(exchangeSource)}
+              {priceNokLiter === null ? (
+                "Valutakurs utilgjengelig. Råvareprisen i USD vises som vanlig."
+              ) : (
+                <>
+                  Før avgifter og margin.
+                  {exchangeRateFooterBlurb(exchangeSource)}
+                </>
+              )}
             </p>
           </div>
 
@@ -387,7 +388,10 @@ export const PriceHero = function PriceHero({
                     isLoading && "animate-pulse"
                   )}
                 >
-                  {priceNokLiterPlusDuties.toFixed(2)}
+                  {priceNokLiterPlusDuties?.toLocaleString("nb-NO", {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  }) ?? "—"}
                 </span>
                 <span className="text-muted-foreground text-lg font-medium">
                   kr/L

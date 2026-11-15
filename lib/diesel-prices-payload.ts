@@ -4,7 +4,7 @@ export const DIESEL_LITERS_PER_METRIC_TON = 1176 as const;
 
 export interface DieselPricesCurrent {
   price_usd_mt: number;
-  price_nok_liter: number;
+  price_nok_liter: number | null;
   change: number;
   change_percent: number;
 }
@@ -22,18 +22,24 @@ export interface BrentHistoricalRow {
 }
 
 export interface DieselPricesPayload {
-  updated_at: string;
+  /** Date of the quoted daily ICE observation, never the fetch date. */
+  market_date: string | null;
+  fetched_at: string;
   current: DieselPricesCurrent | null;
   contracts: IceUlsContractRow[];
   historical: DieselPricesHistoricalRow[];
   brent_historical: BrentHistoricalRow[];
-  exchange_rate: { usd_nok: number; source: string };
+  exchange_rate: {
+    usd_nok: number | null;
+    date: string | null;
+    source: string;
+  };
   data_source: string;
 }
 
 export const buildUnavailableDieselPricesPayload =
   function buildUnavailableDieselPricesPayload(
-    usdToNokSpot: number,
+    usdToNokSpot: number | null,
     exchangeSource: string
   ): DieselPricesPayload {
     return {
@@ -42,10 +48,12 @@ export const buildUnavailableDieselPricesPayload =
       current: null,
       data_source: "Ingen live data akkurat nå",
       exchange_rate: {
+        date: null,
         source: exchangeSource,
-        usd_nok: Math.round(usdToNokSpot * 10_000) / 10_000,
+        usd_nok: usdToNokSpot,
       },
       historical: [],
-      updated_at: new Date().toISOString(),
+      fetched_at: new Date().toISOString(),
+      market_date: null,
     };
   };

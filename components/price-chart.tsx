@@ -120,11 +120,11 @@ interface PriceChartTooltipProps {
   payload?: readonly { payload?: unknown }[];
 }
 
-const PriceChartTooltip = function PriceChartTooltip({
+const PriceChartTooltip = ({
   active,
   label,
   payload,
-}: PriceChartTooltipProps) {
+}: PriceChartTooltipProps) => {
   if (!(active && payload?.length)) {
     return null;
   }
@@ -222,10 +222,7 @@ const axisTicksFromStacked = function axisTicksFromStacked(data: StackedRow[]) {
   };
 };
 
-export const PriceChart = function PriceChart({
-  data,
-  regionId,
-}: PriceChartProps) {
+export const PriceChart = ({ data, regionId }: PriceChartProps) => {
   const stackedData = useMemo(() => {
     const sorted = [...data].toSorted((a, b) => a.date.localeCompare(b.date));
     const daily = expandHistoricalTradingToCalendarDays(sorted);

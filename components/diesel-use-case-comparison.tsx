@@ -29,7 +29,7 @@ interface UseCaseRow {
   total: number;
 }
 
-export const DieselUseCaseComparison = function DieselUseCaseComparison({
+export const DieselUseCaseComparison = ({
   dutyReferenceDate,
   rawPriceNokPerLiter,
   regionId,
@@ -37,7 +37,7 @@ export const DieselUseCaseComparison = function DieselUseCaseComparison({
   dutyReferenceDate: string;
   rawPriceNokPerLiter: number;
   regionId: RegionId;
-}) {
+}) => {
   const region = getRegionPriceProfile(regionId);
   const auto = getPumpPriceRates(dutyReferenceDate);
   const autoTotal = pumpPriceComponents(
@@ -75,11 +75,6 @@ export const DieselUseCaseComparison = function DieselUseCaseComparison({
     },
   ];
 
-  const autodieselCo2IsVedtattKutt =
-    auto.co2 === 3.09 &&
-    dutyReferenceDate >= "2026-05-01" &&
-    dutyReferenceDate < "2026-09-01";
-
   return (
     <div className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
       <h3 className="text-lg font-semibold text-foreground mb-1">
@@ -91,12 +86,13 @@ export const DieselUseCaseComparison = function DieselUseCaseComparison({
           samme modellerte distribusjon
         </strong>{" "}
         som estimatet for {region.label.toLowerCase()}. Forskjellen er hvilke
-        offentlige satser som gjelder per bruksområde.{" "}
+        offentlige satser som gjelder per bruksområde. Modellen regner med
+        fossil mineralolje; innblanding av biodrivstoff kan gi andre avgifter.{" "}
         <Link
           className="text-foreground underline underline-offset-4 hover:text-accent"
           href="/nyheter/slik-pavirkes-autodiesel-anleggsdiesel-og-sjofart"
         >
-          Les mer om hva som er vedtatt og iverksatt
+          Bakgrunn om avgiftskuttene våren 2026
         </Link>
         .
       </p>
@@ -141,23 +137,20 @@ export const DieselUseCaseComparison = function DieselUseCaseComparison({
           distribusjon og avgifter. Faktisk MVA og kjøpsvilkår kan avvike for
           enkelte næringskjøp.
         </li>
-        {autodieselCo2IsVedtattKutt ? (
-          <li>
-            For autodiesel er CO₂{" "}
-            <strong className="text-foreground">3,09 kr/l</strong> lagt inn
-            etter Stortingets vedtak 595. Regjeringen har sagt at denne
-            endringen fortsatt må avklares før den er endelig gjeldende.
-          </li>
-        ) : null}
         <li>
-          CO₂ for fiske i <strong className="text-foreground">fjerne</strong> og
-          i <strong className="text-foreground">nære og fjerne</strong> farvann
-          ble satt til 0 kr/l fra 1. april (vedtak 591 og 592, iverksatt). For
-          fartøy som <strong className="text-foreground">bare</strong> fisker i
-          nære farvann finnes det ingen redusert sats i gjeldende lov — de
-          betaler ordinær CO₂ ({fmtKr(kunNaere.co2)} kr/l). Stortinget har
-          vedtatt 0 kr/l også for denne gruppen (vedtak 594), men det er ikke
-          iverksatt ennå grunnet statsstøtterettslige spørsmål.
+          Satsene gjelder {dutyReferenceDate}. De midlertidige CO₂-kuttene for
+          fiske gjaldt til 1. september 2026. For fiske bare i nære farvann
+          gjaldt nullsatsen fra 1. mai til 31. august. Ordinære og reduserte
+          satser er tilbake fra 1. september.{" "}
+          <a
+            className="text-foreground underline underline-offset-2"
+            href="https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/saravgifter/om/mineralske-produkter/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Se satser hos Skatteetaten
+          </a>
+          .
         </li>
       </ul>
     </div>

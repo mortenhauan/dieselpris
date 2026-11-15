@@ -4,104 +4,106 @@ import { SiteLogoMark } from "@/components/site-logo-mark";
 
 const copyrightYear = 2026;
 
-export const Footer = function Footer() {
-  return (
-    <footer className="border-t border-border py-16">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2.5 mb-4">
-              <SiteLogoMark className="h-8 w-8 shrink-0" />
-              <span className="text-base font-semibold tracking-tight text-foreground">
-                dieselpris
-              </span>
-            </div>
-            <div className="max-w-md space-y-3 text-sm leading-relaxed text-muted-foreground">
-              <p>
-                Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige
-                satser slik de er oppgitt i kildene.
-              </p>
-              <p>
-                Les også{" "}
-                <Link
-                  href="/nyheter"
-                  className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
-                >
-                  nyheter og forklaringer
-                </Link>{" "}
-                om vedtak og avgifter som kan påvirke prisen på pumpa.
-              </p>
-              <p className="text-xs leading-relaxed">
-                Tall og forklaringer er veiledende og kan inneholde feil eller
-                forenklinger. Ikke finansrådgivning eller prisgaranti —
-                verifiser mot kildene ved viktige beslutninger.
-              </p>
-            </div>
+export const Footer = () => (
+  <footer className="border-t border-border py-16">
+    <div className="max-w-6xl mx-auto px-6">
+      <div className="grid md:grid-cols-4 gap-12">
+        <div className="md:col-span-2">
+          <div className="flex items-center gap-2.5 mb-4">
+            <SiteLogoMark className="h-8 w-8 shrink-0" />
+            <span className="text-base font-semibold tracking-tight text-foreground">
+              dieselpris
+            </span>
           </div>
-
-          <div>
-            <h3 className="font-semibold text-foreground mb-4 text-sm">
-              Kilder
-            </h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>
-                <a
-                  href="https://www.ice.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
-                >
-                  ICE Futures Europe
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/avgiftssatser-2026/id3121982/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Regjeringen (avgiftssatser)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://lovdata.no"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Lovdata
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.norges-bank.no"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
-                >
-                  Norges Bank
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-foreground mb-4 text-sm">
-              Om prisene
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Prisene er basert på ICE lavsvovel gasoil (futures) og gir en
-              indikasjon på råvarepris. Faktiske pumpepriser varierer.
+          <div className="max-w-md space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <p>
+              Ikke tilknyttet drivstoffkjeder. Viser markedsdata og offentlige
+              satser slik de er oppgitt i kildene.
+            </p>
+            <p>
+              Les også{" "}
+              <Link
+                href="/nyheter"
+                className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+              >
+                nyheter og forklaringer
+              </Link>{" "}
+              om vedtak og avgifter som kan påvirke prisen på pumpa.
+            </p>
+            <p className="text-xs leading-relaxed">
+              Tall og forklaringer er veiledende og kan inneholde feil eller
+              forenklinger. Ikke finansrådgivning eller prisgaranti — verifiser
+              mot kildene ved viktige beslutninger.
             </p>
           </div>
         </div>
 
-        <div className="border-border mt-12 border-t pt-8 text-muted-foreground text-sm">
-          <p>&copy; {copyrightYear} dieselpris.no</p>
+        <div>
+          <h3 className="font-semibold text-foreground mb-4 text-sm">Kilder</h3>
+          <ul className="space-y-3 text-sm text-muted-foreground">
+            <li>
+              <a
+                href="https://www.ice.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                ICE Futures Europe
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/avgiftssatser-2026/id3121982/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                Regjeringen (avgiftssatser)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://lovdata.no"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                Lovdata
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.norges-bank.no"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                Norges Bank
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-foreground mb-4 text-sm">
+            Om prisene
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Prisene er basert på ICE lavsvovel gasoil (futures) og gir en
+            indikasjon på råvarepris. Faktiske pumpepriser varierer.
+          </p>
         </div>
       </div>
-    </footer>
-  );
-};
+
+      <div className="border-border mt-12 border-t pt-8 text-muted-foreground text-sm">
+        <p>&copy; {copyrightYear} dieselpris.no · Annonsefri</p>
+        <Link
+          className="mt-3 inline-block underline underline-offset-4 hover:text-foreground"
+          href="/om"
+        >
+          Om siden og kildene
+        </Link>
+      </div>
+    </div>
+  </footer>
+);
