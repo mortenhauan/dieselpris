@@ -42,161 +42,23 @@ const SOURCES: NewsSource[] = [
   },
 ];
 
-const Page = function Page() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header activeNav="news" variant="content" />
-      <main>
-        <NewsArticleLayout
-          canonicalUrl={CANONICAL}
-          category="Forklart"
-          publishedAtIso="2026-01-29T14:00:00+01:00"
-          description={DESCRIPTION}
-          sources={SOURCES}
-          title={TITLE}
-        >
-          <div className="rounded-2xl border border-accent bg-accent/10 p-5">
-            <p className="text-sm font-semibold">
-              Oppdatering 3. februar 2026:
-            </p>
-            <p className="mt-1 text-sm">
-              Stortinget har stemt. Forslaget om å stoppe ETS2 ble nedstemt med
-              bredt flertall.{" "}
-              <Link
-                className="font-medium underline underline-offset-4"
-                href="/nyheter/stortinget-sa-ja-til-ets2"
-              >
-                Les om vedtaket og hva det betyr for dieselprisen.
-              </Link>
-            </p>
-          </div>
-
-          <p className="text-lg font-medium">
-            ETS2 er ikke en avgift i tradisjonell forstand, men et kvotesystem
-            der drivstoffleverandører må kjøpe utslippskvoter. Kostnaden kan
-            likevel havne på pumpeprisen – oppå det du allerede betaler.
-            Stortinget debatterte 29. januar om Norge skulle forsøke å snu.
-          </p>
-
-          <h2 className="text-xl font-bold">Hva handler dette om?</h2>
-
-          <p>
-            EU har vedtatt noe som heter ETS2. Det er et nytt kvotehandelssystem
-            for klimagassutslipp – men denne gangen gjelder det ikke bare
-            industri og kraftverk. ETS2 dekker veitransport, oppvarming av bygg
-            og flere andre sektorer. Drivstoffleverandører (ikke sjåfører
-            direkte) pålegges en kvoteplikt for CO₂-utslippene fra diesel og
-            bensin de selger. Den kostnaden forventes å bli veltet over på
-            pumpeprisen, men det er ikke juridisk garantert at hele beløpet
-            havner hos forbrukeren.
-          </p>
-
-          <p>
-            Norge godtok ETS2 allerede i desember 2023, da EØS-komiteen
-            innlemmet direktivet og Stortinget samtykket. Gjennomføring i norsk
-            lov ble vedtatt i juni 2025, og det regulatoriske arbeidet ble
-            fullført i oktober 2025. Debatten i januar 2026 var altså ikke det
-            første veivalget – det var et forsøk fra Senterpartiet om å
-            reversere en prosess som allerede var godt i gang.
-          </p>
-
-          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              ETS2 i korte trekk
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>
-                ETS2 er en del av EUs «Fit for 55»-pakke – målet er å kutte
-                utslipp med 55 prosent innen 2030.
-              </li>
-              <li>
-                Drivstoffdistributører pålegges en kvoteplikt for diesel og
-                bensin de selger. Det er et kvotehandelssystem, ikke en
-                tradisjonell avgift.
-              </li>
-              <li>
-                Kostnaden for kvotene forventes veltet videre til pumpeprisen –
-                altså til deg som tanker.
-              </li>
-              <li>
-                Overvåking og rapportering startet i 2025. Auksjonering av
-                kvoter skal begynne i 2027. Selve kvoteplikten – med
-                prisvirkning – er utsatt til tidligst 2028.
-              </li>
-            </ul>
-          </div>
-
-          <h2 className="text-xl font-bold">Hva skjedde i Stortinget?</h2>
-
-          <p>
-            Selv om Norge allerede hadde akseptert ETS2 gjennom EØS-avtalen,
-            leverte Senterpartiets Maren Grøthe og Trygve Slagsvold Vedum i
-            oktober 2025 et representantforslag (Dokument 8:8 S) om å reservere
-            seg. Forslaget ble sendt til Energi- og miljøkomiteen, som leverte
-            sin innstilling (Innst. 58 S) den 9. desember. Stortinget debatterte
-            saken 29. januar og stemte 3. februar.
-          </p>
-
-          <p>
-            Senterpartiet mente Norge allerede betaler nok for utslipp gjennom
-            CO₂-avgiften, og at ETS2 ville legge en ekstra byrde på folk som er
-            avhengige av bil og diesel i hverdagen – lastebilsjåfører,
-            anleggsfolk, bønder, fiskere.
-          </p>
-
-          <h2 className="text-xl font-bold">
-            Hva kan dette bety for literprisen?
-          </h2>
-
-          <p>
-            Ingen vet eksakt hva kvoteprisen i ETS2 vil bli. Det avhenger av
-            tilbud og etterspørsel i kvotemarkedet. Men mekanismen er enkel: jo
-            høyere kvotepris, desto mer koster det distributøren – og det ender
-            opp på regningen din.
-          </p>
-
-          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Slik fungerer det i praksis
-            </p>
-            <p className="text-sm">
-              Tenk deg at ETS2-kvoteprisen lander på 50 euro per tonn CO₂.
-              Diesel slipper ut omtrent 2,64 kg CO₂ per liter. Med full
-              overvelting fra leverandør til pumpe gir det et påslag på rundt
-              1,20–1,50 kroner per liter (avhengig av valutakurs) – oppå
-              veibruksavgift og CO₂-avgift du allerede betaler. Hvor mye som
-              faktisk treffer pumpeprisen avhenger av markedsforhold og
-              konkurranse. Lander kvoteprisen høyere, blir påslaget høyere.
-            </p>
-          </div>
-
-          <p>
-            Norge har allerede blant Europas høyeste avgifter på diesel. I dag
-            betaler du veibruksavgift, CO₂-avgift og moms. ETS2 ville legge seg
-            som et nytt lag oppå disse.
-          </p>
-
-          <h2 className="text-xl font-bold">Hvem vil hva?</h2>
-
-          <p>
-            Senterpartiet ville at Norge skulle bruke reservasjonsretten i
-            EØS-avtalen for å holde ETS2 ute. De pekte på at norske sjåfører og
-            næringsdrivende allerede bærer en høy klimaregning, og at et nytt
-            kvotesystem rammer distriktene hardest.
-          </p>
-
-          <p>
-            Et flertall i Energi- og miljøkomiteen – Arbeiderpartiet, Høyre, SV,
-            MDG og Venstre – mente at Norge bør følge EU på dette feltet, som
-            del av klimapolitikken. De argumenterte for at felles regler gir
-            like konkurransevilkår og at ETS2 er nødvendig for å nå klimamålene.
-          </p>
-
-          <h2 className="text-xl font-bold">Hva skjedde videre?</h2>
-
-          <p>
-            Stortinget stemte over forslaget 3. februar 2026. Senterpartiets
-            forslag ble nedstemt med bredt flertall.{" "}
+const Page = () => (
+  <div className="min-h-screen bg-background">
+    <Header activeNav="news" variant="content" />
+    <main>
+      <NewsArticleLayout
+        canonicalUrl={CANONICAL}
+        category="Forklart"
+        publishedAtIso="2026-01-29T14:00:00+01:00"
+        description={DESCRIPTION}
+        sources={SOURCES}
+        title={TITLE}
+      >
+        <div className="rounded-2xl border border-accent bg-accent/10 p-5">
+          <p className="text-sm font-semibold">Oppdatering 3. februar 2026:</p>
+          <p className="mt-1 text-sm">
+            Stortinget har stemt. Forslaget om å stoppe ETS2 ble nedstemt med
+            bredt flertall.{" "}
             <Link
               className="font-medium underline underline-offset-4"
               href="/nyheter/stortinget-sa-ja-til-ets2"
@@ -204,10 +66,143 @@ const Page = function Page() {
               Les om vedtaket og hva det betyr for dieselprisen.
             </Link>
           </p>
-        </NewsArticleLayout>
-      </main>
-    </div>
-  );
-};
+        </div>
+
+        <p className="text-lg font-medium">
+          ETS2 er ikke en avgift i tradisjonell forstand, men et kvotesystem der
+          drivstoffleverandører må kjøpe utslippskvoter. Kostnaden kan likevel
+          havne på pumpeprisen – oppå det du allerede betaler. Stortinget
+          debatterte 29. januar om Norge skulle forsøke å snu.
+        </p>
+
+        <h2 className="text-xl font-bold">Hva handler dette om?</h2>
+
+        <p>
+          EU har vedtatt noe som heter ETS2. Det er et nytt kvotehandelssystem
+          for klimagassutslipp – men denne gangen gjelder det ikke bare industri
+          og kraftverk. ETS2 dekker veitransport, oppvarming av bygg og flere
+          andre sektorer. Drivstoffleverandører (ikke sjåfører direkte) pålegges
+          en kvoteplikt for CO₂-utslippene fra diesel og bensin de selger. Den
+          kostnaden forventes å bli veltet over på pumpeprisen, men det er ikke
+          juridisk garantert at hele beløpet havner hos forbrukeren.
+        </p>
+
+        <p>
+          Norge godtok ETS2 allerede i desember 2023, da EØS-komiteen innlemmet
+          direktivet og Stortinget samtykket. Gjennomføring i norsk lov ble
+          vedtatt i juni 2025, og det regulatoriske arbeidet ble fullført i
+          oktober 2025. Debatten i januar 2026 var altså ikke det første
+          veivalget – det var et forsøk fra Senterpartiet om å reversere en
+          prosess som allerede var godt i gang.
+        </p>
+
+        <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            ETS2 i korte trekk
+          </p>
+          <ul className="space-y-2 text-sm">
+            <li>
+              ETS2 er en del av EUs «Fit for 55»-pakke – målet er å kutte
+              utslipp med 55 prosent innen 2030.
+            </li>
+            <li>
+              Drivstoffdistributører pålegges en kvoteplikt for diesel og bensin
+              de selger. Det er et kvotehandelssystem, ikke en tradisjonell
+              avgift.
+            </li>
+            <li>
+              Kostnaden for kvotene forventes veltet videre til pumpeprisen –
+              altså til deg som tanker.
+            </li>
+            <li>
+              Overvåking og rapportering startet i 2025. Auksjonering av kvoter
+              skal begynne i 2027. Selve kvoteplikten – med prisvirkning – er
+              utsatt til tidligst 2028.
+            </li>
+          </ul>
+        </div>
+
+        <h2 className="text-xl font-bold">Hva skjedde i Stortinget?</h2>
+
+        <p>
+          Selv om Norge allerede hadde akseptert ETS2 gjennom EØS-avtalen,
+          leverte Senterpartiets Maren Grøthe og Trygve Slagsvold Vedum i
+          oktober 2025 et representantforslag (Dokument 8:8 S) om å reservere
+          seg. Forslaget ble sendt til Energi- og miljøkomiteen, som leverte sin
+          innstilling (Innst. 58 S) den 9. desember. Stortinget debatterte saken
+          29. januar og stemte 3. februar.
+        </p>
+
+        <p>
+          Senterpartiet mente Norge allerede betaler nok for utslipp gjennom
+          CO₂-avgiften, og at ETS2 ville legge en ekstra byrde på folk som er
+          avhengige av bil og diesel i hverdagen – lastebilsjåfører,
+          anleggsfolk, bønder, fiskere.
+        </p>
+
+        <h2 className="text-xl font-bold">
+          Hva kan dette bety for literprisen?
+        </h2>
+
+        <p>
+          Ingen vet eksakt hva kvoteprisen i ETS2 vil bli. Det avhenger av
+          tilbud og etterspørsel i kvotemarkedet. Men mekanismen er enkel: jo
+          høyere kvotepris, desto mer koster det distributøren – og det ender
+          opp på regningen din.
+        </p>
+
+        <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Slik fungerer det i praksis
+          </p>
+          <p className="text-sm">
+            Tenk deg at ETS2-kvoteprisen lander på 50 euro per tonn CO₂. Diesel
+            slipper ut omtrent 2,64 kg CO₂ per liter. Med full overvelting fra
+            leverandør til pumpe gir det et påslag på rundt 1,20–1,50 kroner per
+            liter (avhengig av valutakurs) – oppå veibruksavgift og CO₂-avgift
+            du allerede betaler. Hvor mye som faktisk treffer pumpeprisen
+            avhenger av markedsforhold og konkurranse. Lander kvoteprisen
+            høyere, blir påslaget høyere.
+          </p>
+        </div>
+
+        <p>
+          Norge har allerede blant Europas høyeste avgifter på diesel. I dag
+          betaler du veibruksavgift, CO₂-avgift og moms. ETS2 ville legge seg
+          som et nytt lag oppå disse.
+        </p>
+
+        <h2 className="text-xl font-bold">Hvem vil hva?</h2>
+
+        <p>
+          Senterpartiet ville at Norge skulle bruke reservasjonsretten i
+          EØS-avtalen for å holde ETS2 ute. De pekte på at norske sjåfører og
+          næringsdrivende allerede bærer en høy klimaregning, og at et nytt
+          kvotesystem rammer distriktene hardest.
+        </p>
+
+        <p>
+          Et flertall i Energi- og miljøkomiteen – Arbeiderpartiet, Høyre, SV,
+          MDG og Venstre – mente at Norge bør følge EU på dette feltet, som del
+          av klimapolitikken. De argumenterte for at felles regler gir like
+          konkurransevilkår og at ETS2 er nødvendig for å nå klimamålene.
+        </p>
+
+        <h2 className="text-xl font-bold">Hva skjedde videre?</h2>
+
+        <p>
+          Stortinget stemte over forslaget 3. februar 2026. Senterpartiets
+          forslag ble nedstemt med bredt flertall.{" "}
+          <Link
+            className="font-medium underline underline-offset-4"
+            href="/nyheter/stortinget-sa-ja-til-ets2"
+          >
+            Les om vedtaket og hva det betyr for dieselprisen.
+          </Link>
+        </p>
+      </NewsArticleLayout>
+    </main>
+  </div>
+);
 
 export default Page;

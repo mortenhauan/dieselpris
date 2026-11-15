@@ -13,7 +13,7 @@ const sitemap = function sitemap(): MetadataRoute.Sitemap {
   }));
   const newsEntries = NEWS_INDEX.map((article) => ({
     changeFrequency: "daily" as const,
-    lastModified: new Date(article.publishedAtIso),
+    lastModified: new Date(article.modifiedAtIso ?? article.publishedAtIso),
     priority: 0.6,
     url: new URL(`/nyheter/${article.slug}`, SITE_URL).href,
   }));
@@ -24,6 +24,11 @@ const sitemap = function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily" as const,
       priority: 0.7,
       url: new URL("/nyheter", SITE_URL).href,
+    },
+    {
+      url: new URL("/om", SITE_URL).href,
+      changeFrequency: "monthly",
+      priority: 0.4,
     },
     ...newsEntries,
   ];

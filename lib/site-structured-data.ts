@@ -12,6 +12,7 @@ const organization = function organization(): Record<string, unknown> {
 export const articleJsonLd = function articleJsonLd(input: {
   canonicalUrl: string;
   datePublished: string;
+  dateModified?: string;
   description?: string;
   headline: string;
 }): Record<string, unknown> {
@@ -20,7 +21,7 @@ export const articleJsonLd = function articleJsonLd(input: {
     "@context": "https://schema.org",
     "@type": "Article",
     author: pub,
-    dateModified: input.datePublished,
+    dateModified: input.dateModified ?? input.datePublished,
     datePublished: input.datePublished,
     headline: input.headline,
     inLanguage: "nb-NO",

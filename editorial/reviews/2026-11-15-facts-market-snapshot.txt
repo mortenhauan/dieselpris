@@ -1,0 +1,14 @@
+Independent facts review retrieval, 2026-11-15. Actual tool session 92446; node --import tsx scripts/fetch-current-prices.ts.
+Norges Bank USD/NOK: 9.5634, 2026-11-13
+TradingView ICEEUR:ULS1! daily closes (USD/metric tonne):
+2026-11-05 1294.25
+2026-11-06 1301.75
+2026-11-09 1270.75
+2026-11-10 1218.00
+2026-11-11 1278.50
+2026-11-12 1249.75
+2026-11-13 1287.50
+NOK/L by dated FX: 10.23,10.44,10.17,9.80,10.37,10.13,10.47
+ULS1 last48 hourly bars low1235.75 high1301.25 change+39 USD/mt
+BRN1 last close95.84 USD/barrel, 2026-11-13.
+No fallback values used. Ordinary sandbox-network attempt failed DNS; approved network attempt succeeded.

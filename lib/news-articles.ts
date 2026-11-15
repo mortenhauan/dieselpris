@@ -7,6 +7,8 @@ export interface NewsIndexEntry {
   category: string;
   intro: string;
   publishedAtIso: string;
+  modifiedAtIso?: string;
+  updateNote?: string;
   slug: string;
   title: string;
 }
@@ -23,14 +25,6 @@ export const formatNewsDate = function formatNewsDate(iso: string): string {
 };
 
 const entries: NewsIndexEntry[] = [
-  {
-    category: "Nyhet",
-    intro:
-      "ICE-gasoil steg 10,8 prosent fra 9. til 16. september. Lav eksport og fallende lagre holder dieselmarkedet stramt.",
-    publishedAtIso: "2026-09-17T19:40:00+02:00",
-    slug: "dieselmangel-presser-prisene-i-september",
-    title: "Dieselmarkedet strammes til – råvaren er blitt dyrere i september",
-  },
   {
     category: "Nyhet",
     intro:
@@ -167,16 +161,22 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
-      "Fra 1. april fjernes veibruksavgiften midlertidig. For vanlig diesel kan det bety rundt 2,85 kroner billigere per liter på pumpa.",
+      "Veibruksavgiften settes midlertidig til null. Det tilsvarer 2,85 kr/l inkl. MVA dersom hele kuttet slår ut i pumpeprisen.",
     publishedAtIso: "2026-03-30T13:00:00+02:00",
+    modifiedAtIso: "2026-11-15T12:29:59Z",
+    updateNote:
+      "Rettet anslått provenytap og presisert beregnet prisvirkning og MVA.",
     slug: "drivstoffavgiftene-kuttes-fra-1-april",
     title: "Drivstoffavgiftene kuttes fra 1. april – dette er det som skjer",
   },
   {
     category: "Nyhet",
     intro:
-      "CO₂-avgiften på diesel øker med over 60 øre per liter fra nyttår. For et vogntog betyr det over 23 000 kroner mer i året.",
+      "CO₂-avgiften øker, mens veibruksavgiften går ned. For fossil diesel øker summen med 22 øre per liter uten MVA fra nyttår.",
     publishedAtIso: "2025-12-22T18:00:00+01:00",
+    modifiedAtIso: "2026-11-15T12:29:59Z",
+    updateNote:
+      "Rettet veibruksavgiften for 2025, samlet avgiftsøkning og kostnadseksempler. Presisert forutsetningen om fossil diesel.",
     slug: "dieselavgiftene-for-2026-er-vedtatt",
     title: "Dieselavgiftene for 2026 er vedtatt",
   },
@@ -223,8 +223,11 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Bakgrunn",
     intro:
-      "Høyre la frem forslaget tirsdag 25. mars. Dagen etter hadde Stortinget debattert, stemt og vedtatt de største avgiftskuttene på drivstoff i nyere norsk historie.",
-    publishedAtIso: "2026-03-26T19:00:00+01:00",
+      "Stortinget vedtok midlertidige drivstoffkutt 26. mars. Her er tidslinjen, vedtakene og oppfølgingen fra Finansdepartementet.",
+    publishedAtIso: "2026-03-26",
+    modifiedAtIso: "2026-11-15T12:29:59Z",
+    updateNote:
+      "Rettet tidslinje og kildegrunnlag. Lagt til oppfølgingen fra 30. mars.",
     slug: "fra-forslag-til-vedtak-pa-to-dager",
     title: "Fra forslag til vedtak på to dager",
   },

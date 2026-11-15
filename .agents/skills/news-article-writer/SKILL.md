@@ -59,7 +59,7 @@ the mandatory independent review below still applies.
 
 After journalists deliver:
 
-- Add entries to `lib/news-articles.ts` (if not done by journalist)
+- Keep drafts under `editorial/drafts/` until publisher approval. Only then create the public route and add its index entry.
 - Run `pnpm dlx ultracite check` and `pnpm typecheck`
 - Verify article reads like journalism, not a government summary
 
@@ -99,7 +99,7 @@ deployment; follow the user's publishing instructions.
 
 ## Article Technical Spec
 
-Each article is a static Next.js route at `app/nyheter/{slug}/page.tsx`.
+For approved publication, each article is a static Next.js route at `app/nyheter/{slug}/page.tsx`.
 
 ### File structure
 
@@ -138,12 +138,13 @@ const SOURCES: NewsSource[] = [
   { href: "https://...", label: "Regjeringen: ..." },
 ];
 
-const Page = function Page() {
+const Page = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header activeNav="news" variant="content" />
       <main>
         <NewsArticleLayout
+          canonicalUrl={CANONICAL}
           category="Nyhet"
           publishedAtIso="2026-03-30T13:00:00+02:00"
           sources={SOURCES}
@@ -183,12 +184,14 @@ export default Page;
 - No article length or line-count cap; accuracy, sources, and depth determine length
 - Max 155 characters for SEO description
 - Slug: lowercase ASCII, hyphens only
-- Function style: `const Page = function Page() {`
+- Function style: `const Page = () => {`
 - Always include at least one source from the original public record
 
 ### Index registration
 
-Add entry to `lib/news-articles.ts`:
+Only after publisher approval, add an entry to `lib/news-articles.ts`. Drafts stay under `editorial/drafts/`, outside `app/`. Never backdate a new draft. For substantive revisions preserve `publishedAtIso`, set `modifiedAtIso` and `updateNote` on the index entry; the article layout and sitemap use those fields.
+
+Approved index entry:
 
 ```ts
 {
@@ -210,12 +213,12 @@ Before marking an article done:
 - Includes at least one concrete calculation (kr saved per filling, yearly cost)
 - Names specific fuel types when rules differ
 - No meta-commentary ("this article explains..." or "we recommend reading...")
-- For backdated articles: written from that date's perspective, no future knowledge
+- New articles are never backdated; historical revisions preserve publication dates and clearly date later additions.
 - Dates are correct (check calendar — does the weekday match?)
 - Numbers match the cited sources exactly
 - Sources are linked in the footer
 - SEO metadata is set with canonical URL
-- Entry added to news index
+- For approved publication only: entry added to news index
 - Lint and typecheck pass
 - Both independent fact-check reports complete, corrections rechecked, and no unresolved blockers
 - Vær Varsom review completed with no unresolved breaches

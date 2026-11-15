@@ -16,3 +16,7 @@ Shared utilities and pricing models used across the app.
 - [`regional-price-model.md`](./regional-price-model.md): Intent, scope, and modeling limits for the regional estimate layer.
 - [`region-route.ts`](./region-route.ts): Builds region URLs (`/` for default/national, `/{regionId}` for others).
 - [`site-seo-copy.ts`](./site-seo-copy.ts): Shared short descriptions for homepage/region `<meta description>`, hero intro, and `WebSite` JSON-LD (`site-seo-copy.md`).
+
+## Market dates and missing currency
+
+`DieselPricesPayload.market_date` is the latest quoted daily ICE session date; `fetched_at` records retrieval only. `current.price_nok_liter` and `exchange_rate.usd_nok` are nullable. Missing Norges Bank observations never use a fixed rate or a rate published after the quote date. USD remains available independently. `historical` contains only days with valid currency observations, and comparisons end on the last common quoted day.

@@ -50,252 +50,239 @@ const SOURCES: NewsSource[] = [
   },
 ];
 
-const Page = function Page() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header activeNav="news" variant="content" />
-      <main>
-        <NewsArticleLayout
-          canonicalUrl={CANONICAL}
-          category="Nyhet"
-          publishedAtIso="2026-02-03T13:00:00+01:00"
-          description={DESCRIPTION}
-          sources={SOURCES}
-          title={TITLE}
-        >
-          <p className="text-lg font-medium">
-            Stortinget stemte 3. februar over Senterpartiets forslag om å stanse
-            ETS2 – EUs nye kvotesystem for drivstoff. Et bredt flertall avviste
-            forslagene. Bare Sp og FrP stemte for å stoppe. Dermed ligger
-            EU-kvoteprisen på diesel fast i planene, med prisvirkning trolig fra
-            2028.
+const Page = () => (
+  <div className="min-h-screen bg-background">
+    <Header activeNav="news" variant="content" />
+    <main>
+      <NewsArticleLayout
+        canonicalUrl={CANONICAL}
+        category="Nyhet"
+        publishedAtIso="2026-02-03T13:00:00+01:00"
+        description={DESCRIPTION}
+        sources={SOURCES}
+        title={TITLE}
+      >
+        <p className="text-lg font-medium">
+          Stortinget stemte 3. februar over Senterpartiets forslag om å stanse
+          ETS2 – EUs nye kvotesystem for drivstoff. Et bredt flertall avviste
+          forslagene. Bare Sp og FrP stemte for å stoppe. Dermed ligger
+          EU-kvoteprisen på diesel fast i planene, med prisvirkning trolig fra
+          2028.
+        </p>
+
+        <p>
+          ETS2 er ikke nytt i norsk sammenheng. EØS-komiteen innlemmet
+          direktivet i desember 2023, og Stortinget samtykket. Gjennomføringen i
+          norsk lov ble vedtatt i juni 2025, og det regulatoriske arbeidet ble
+          sluttført i oktober 2025. Avstemningen 3. februar handlet altså om å
+          reversere noe som allerede var vedtatt og langt på vei gjennomført.
+        </p>
+
+        <h2 className="text-xl font-bold">Tre avstemninger, samme resultat</h2>
+
+        <p>
+          Stortinget tok tre voteringer. Først ble FrPs forslag om å fjerne
+          CO₂-avgiften på områder dekket av ETS2 nedstemt med 119 mot 47.
+          Deretter ble Senterpartiets forslag om å stanse ETS2 helt nedstemt med
+          110 mot 55. Til slutt ble komiteens tilråding – at forslaget ikke
+          vedtas – godkjent med 109 mot 57 stemmer.
+        </p>
+
+        <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Slik stemte partiene
           </p>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <span className="font-semibold">For å stoppe ETS2:</span>{" "}
+              Senterpartiet og Fremskrittspartiet (57 stemmer)
+            </li>
+            <li>
+              <span className="font-semibold">Mot å stoppe ETS2:</span>{" "}
+              Arbeiderpartiet, Høyre, SV, Rødt, MDG, Venstre og KrF (109
+              stemmer)
+            </li>
+          </ul>
+        </div>
 
-          <p>
-            ETS2 er ikke nytt i norsk sammenheng. EØS-komiteen innlemmet
-            direktivet i desember 2023, og Stortinget samtykket. Gjennomføringen
-            i norsk lov ble vedtatt i juni 2025, og det regulatoriske arbeidet
-            ble sluttført i oktober 2025. Avstemningen 3. februar handlet altså
-            om å reversere noe som allerede var vedtatt og langt på vei
-            gjennomført.
+        <h2 className="text-xl font-bold">Kjernen i debatten: dobbel avgift</h2>
+
+        <p>
+          Stortingsdebatten 29. januar handlet i stor grad om ett spørsmål: skal
+          norske bilister betale både CO₂-avgift og ETS2-kvotepris samtidig? I
+          2026 betaler du 4,42 kroner per liter diesel i CO₂-avgift. Hvis ETS2
+          legger seg oppå, kan totalbelastningen bli betydelig.
+        </p>
+
+        <p>
+          Fremskrittspartiet brukte regjeringens egne ord mot den. I
+          statsbudsjettet for 2026 fjernet regjeringen CO₂-avgiften på luftfart
+          som er dekket av EUs kvotesystem, med følgende begrunnelse:
+        </p>
+
+        <blockquote className="border-l-4 border-accent/50 pl-5 italic text-muted-foreground">
+          «Ileggelse av både avgift og kvoteplikt innebærer en uhensiktsmessig
+          dobbel virkemiddelbruk. Et avgiftsfritak vil gi en mer effektiv
+          klimapolitikk ettersom avgift i tillegg til kvoteplikt har begrenset
+          eller ingen klimaeffekt.»
+        </blockquote>
+
+        <p>
+          FrP spurte hvorfor samme logikk ikke gjelder for diesel. Sp pekte på
+          at mange i distriktene ikke har noe alternativ til bil – og at
+          lastebilsjåfører, bønder og fiskere allerede bærer en høy
+          klimaregning.
+        </p>
+
+        <h2 className="text-xl font-bold">
+          Flertallet: EØS-forpliktelsene veier tyngst
+        </h2>
+
+        <p>
+          Arbeiderpartiet understreket at Norge kan søke om midlertidig unntak
+          og kompensere gjennom andre avgifter dersom det blir nødvendig.
+          Kvoteplikt med prisvirkning er utsatt til tidligst 2028, noe Ap mener
+          gir bedre tid til å forberede seg.
+        </p>
+
+        <p>
+          Høyre og Venstre la vekt på at EØS-avtalen er avgjørende for norsk
+          økonomi. ETS2-regelverket er allerede gjennomført i norsk lov – å
+          stoppe nå ville bety å rive opp vedtatt lovverk. De argumenterte for
+          at like regler sikrer at norske bedrifter konkurrerer på samme vilkår
+          som i EU.
+        </p>
+
+        <p>
+          Rødt hadde en mer sammensatt posisjon. Partiet anerkjente at
+          klimasamarbeid krever felles regler, men advarte mot at ETS2 overfører
+          kontroll fra Stortinget til EU-markedet. Rødt viste til
+          protestbevegelsen «de gule vestene» i Frankrike i 2018 som eksempel på
+          hva som skjer når avgiftsøkninger mangler folkelig forankring. Likevel
+          stemte Rødt med flertallet.
+        </p>
+
+        <h2 className="text-xl font-bold">Også EU-land vil ha endringer</h2>
+
+        <p>
+          Motstanden mot ETS2 finnes ikke bare i Norge. I sommer sendte 16
+          EU-land – blant dem Tsjekkia, Tyskland, Italia, Spania og Polen – et
+          felles brev til EU-kommisjonen der de ba om endringer, blant annet at
+          kvoteprisen holdes nær gulvet på 45 euro per tonn. EU-kommisjonen la i
+          november 2025 frem et forslag til justeringer av
+          markedsstabilitetsreserven som delvis imøtekommer kravene.
+        </p>
+
+        <h2 className="text-xl font-bold">Hva betyr dette for dieselprisen?</h2>
+
+        <p>
+          Regjeringen la selv frem prisscenarioer i Prop. 104 L. Ved den høyeste
+          kvoteprisen på 200 euro per tonn (2020-kroner) kan påslaget bli opptil
+          7,49 kroner per liter diesel og 6,54 kroner per liter bensin.
+        </p>
+
+        <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Hva det kan koste deg
           </p>
-
-          <h2 className="text-xl font-bold">
-            Tre avstemninger, samme resultat
-          </h2>
-
-          <p>
-            Stortinget tok tre voteringer. Først ble FrPs forslag om å fjerne
-            CO₂-avgiften på områder dekket av ETS2 nedstemt med 119 mot 47.
-            Deretter ble Senterpartiets forslag om å stanse ETS2 helt nedstemt
-            med 110 mot 55. Til slutt ble komiteens tilråding – at forslaget
-            ikke vedtas – godkjent med 109 mot 57 stemmer.
-          </p>
-
-          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Slik stemte partiene
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <span className="font-semibold">For å stoppe ETS2:</span>{" "}
-                Senterpartiet og Fremskrittspartiet (57 stemmer)
-              </li>
-              <li>
-                <span className="font-semibold">Mot å stoppe ETS2:</span>{" "}
-                Arbeiderpartiet, Høyre, SV, Rødt, MDG, Venstre og KrF (109
-                stemmer)
-              </li>
-            </ul>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr>
+                  <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
+                    Scenario
+                  </th>
+                  <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
+                    Ekstra per liter
+                  </th>
+                  <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
+                    Per fylling (60 L)
+                  </th>
+                  <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
+                    Vogntog per år
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border-b border-border/50 px-4 py-3">
+                    Lav (45 €/tonn)
+                  </td>
+                  <td className="border-b border-border/50 px-4 py-3">
+                    ca. 1,50 kr
+                  </td>
+                  <td className="border-b border-border/50 px-4 py-3">
+                    ca. 90 kr
+                  </td>
+                  <td className="border-b border-border/50 px-4 py-3">
+                    ca. 30 000 kr
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3">Høy (200 €/tonn)</td>
+                  <td className="px-4 py-3">ca. 7,50 kr</td>
+                  <td className="px-4 py-3">ca. 450 kr</td>
+                  <td className="px-4 py-3">ca. 150 000 kr</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <h2 className="text-xl font-bold">
-            Kjernen i debatten: dobbel avgift
-          </h2>
-
-          <p>
-            Stortingsdebatten 29. januar handlet i stor grad om ett spørsmål:
-            skal norske bilister betale både CO₂-avgift og ETS2-kvotepris
-            samtidig? I 2026 betaler du 4,42 kroner per liter diesel i
-            CO₂-avgift. Hvis ETS2 legger seg oppå, kan totalbelastningen bli
-            betydelig.
+          <p className="mt-3 text-xs text-muted-foreground">
+            Vogntog-anslaget forutsetter ca. 20 000 liter diesel i året. Endelig
+            påslag avhenger av kvotepris, valutakurs og eventuelle kompenserende
+            avgiftskutt fra regjeringen.
           </p>
+        </div>
 
-          <p>
-            Fremskrittspartiet brukte regjeringens egne ord mot den. I
-            statsbudsjettet for 2026 fjernet regjeringen CO₂-avgiften på
-            luftfart som er dekket av EUs kvotesystem, med følgende begrunnelse:
+        <h2 className="text-xl font-bold">Hva skjer videre?</h2>
+
+        <p>
+          ETS2 innføres trinnvis. Overvåking og rapportering av utslipp begynte
+          allerede i 2025. Auksjonering av kvoter skal starte i 2027. Selve
+          kvotepliktfasen – der drivstoffleverandørene må levere kvoter og
+          kostnaden kan slå ut i pumpeprisen – er utsatt med ett år til tidligst
+          1. januar 2028. Det gir regjeringen tid til å avklare om CO₂-avgiften
+          skal reduseres for å unngå dobbel virkemiddelbruk – slik den allerede
+          har gjort for luftfarten. Regjeringen har signalisert at de vil
+          vurdere kompenserende tiltak, men ingenting er vedtatt.
+        </p>
+
+        <p>
+          Selv om regjeringen kutter CO₂-avgiften for å kompensere, endrer det
+          hvor pengene havner. I dag går CO₂-avgiften – 4,42 kroner per liter i
+          2026 – rett i den norske statskassen. Under ETS2 betaler
+          drivstoffleverandørene for kvoter som auksjoneres på det europeiske
+          markedet. Deltakerlandene, inkludert Norge gjennom EØS-avtalen, mottar
+          auksjonsinntektene og er forpliktet til å bruke dem på klima- og
+          sosialtiltak. Nøyaktig hvordan Norges andel fordeles, og hvor mye som
+          eventuelt øremerkes EUs sosiale klimafond, er ikke endelig avklart.
+        </p>
+
+        <p>
+          For deg som kjører på diesel betyr vedtaket at ETS2 ligger fast i
+          planene. Spørsmålene som gjenstår er hvor mye av kostnadene som dempes
+          gjennom kutt i andre avgifter – og hvordan auksjonsinntektene fordeles
+          mellom Norge og EU.
+        </p>
+
+        <div className="rounded-2xl border border-border bg-secondary/40 p-5">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Les også
           </p>
-
-          <blockquote className="border-l-4 border-accent/50 pl-5 italic text-muted-foreground">
-            «Ileggelse av både avgift og kvoteplikt innebærer en uhensiktsmessig
-            dobbel virkemiddelbruk. Et avgiftsfritak vil gi en mer effektiv
-            klimapolitikk ettersom avgift i tillegg til kvoteplikt har begrenset
-            eller ingen klimaeffekt.»
-          </blockquote>
-
-          <p>
-            FrP spurte hvorfor samme logikk ikke gjelder for diesel. Sp pekte på
-            at mange i distriktene ikke har noe alternativ til bil – og at
-            lastebilsjåfører, bønder og fiskere allerede bærer en høy
-            klimaregning.
-          </p>
-
-          <h2 className="text-xl font-bold">
-            Flertallet: EØS-forpliktelsene veier tyngst
-          </h2>
-
-          <p>
-            Arbeiderpartiet understreket at Norge kan søke om midlertidig unntak
-            og kompensere gjennom andre avgifter dersom det blir nødvendig.
-            Kvoteplikt med prisvirkning er utsatt til tidligst 2028, noe Ap
-            mener gir bedre tid til å forberede seg.
-          </p>
-
-          <p>
-            Høyre og Venstre la vekt på at EØS-avtalen er avgjørende for norsk
-            økonomi. ETS2-regelverket er allerede gjennomført i norsk lov – å
-            stoppe nå ville bety å rive opp vedtatt lovverk. De argumenterte for
-            at like regler sikrer at norske bedrifter konkurrerer på samme
-            vilkår som i EU.
-          </p>
-
-          <p>
-            Rødt hadde en mer sammensatt posisjon. Partiet anerkjente at
-            klimasamarbeid krever felles regler, men advarte mot at ETS2
-            overfører kontroll fra Stortinget til EU-markedet. Rødt viste til
-            protestbevegelsen «de gule vestene» i Frankrike i 2018 som eksempel
-            på hva som skjer når avgiftsøkninger mangler folkelig forankring.
-            Likevel stemte Rødt med flertallet.
-          </p>
-
-          <h2 className="text-xl font-bold">Også EU-land vil ha endringer</h2>
-
-          <p>
-            Motstanden mot ETS2 finnes ikke bare i Norge. I sommer sendte 16
-            EU-land – blant dem Tsjekkia, Tyskland, Italia, Spania og Polen – et
-            felles brev til EU-kommisjonen der de ba om endringer, blant annet
-            at kvoteprisen holdes nær gulvet på 45 euro per tonn. EU-kommisjonen
-            la i november 2025 frem et forslag til justeringer av
-            markedsstabilitetsreserven som delvis imøtekommer kravene.
-          </p>
-
-          <h2 className="text-xl font-bold">
-            Hva betyr dette for dieselprisen?
-          </h2>
-
-          <p>
-            Regjeringen la selv frem prisscenarioer i Prop. 104 L. Ved den
-            høyeste kvoteprisen på 200 euro per tonn (2020-kroner) kan påslaget
-            bli opptil 7,49 kroner per liter diesel og 6,54 kroner per liter
-            bensin.
-          </p>
-
-          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Hva det kan koste deg
-            </p>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr>
-                    <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
-                      Scenario
-                    </th>
-                    <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
-                      Ekstra per liter
-                    </th>
-                    <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
-                      Per fylling (60 L)
-                    </th>
-                    <th className="border-b border-border px-4 py-3 text-left font-semibold text-foreground">
-                      Vogntog per år
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border-b border-border/50 px-4 py-3">
-                      Lav (45 €/tonn)
-                    </td>
-                    <td className="border-b border-border/50 px-4 py-3">
-                      ca. 1,50 kr
-                    </td>
-                    <td className="border-b border-border/50 px-4 py-3">
-                      ca. 90 kr
-                    </td>
-                    <td className="border-b border-border/50 px-4 py-3">
-                      ca. 30 000 kr
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3">Høy (200 €/tonn)</td>
-                    <td className="px-4 py-3">ca. 7,50 kr</td>
-                    <td className="px-4 py-3">ca. 450 kr</td>
-                    <td className="px-4 py-3">ca. 150 000 kr</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Vogntog-anslaget forutsetter ca. 20 000 liter diesel i året.
-              Endelig påslag avhenger av kvotepris, valutakurs og eventuelle
-              kompenserende avgiftskutt fra regjeringen.
-            </p>
-          </div>
-
-          <h2 className="text-xl font-bold">Hva skjer videre?</h2>
-
-          <p>
-            ETS2 innføres trinnvis. Overvåking og rapportering av utslipp
-            begynte allerede i 2025. Auksjonering av kvoter skal starte i 2027.
-            Selve kvotepliktfasen – der drivstoffleverandørene må levere kvoter
-            og kostnaden kan slå ut i pumpeprisen – er utsatt med ett år til
-            tidligst 1. januar 2028. Det gir regjeringen tid til å avklare om
-            CO₂-avgiften skal reduseres for å unngå dobbel virkemiddelbruk –
-            slik den allerede har gjort for luftfarten. Regjeringen har
-            signalisert at de vil vurdere kompenserende tiltak, men ingenting er
-            vedtatt.
-          </p>
-
-          <p>
-            Selv om regjeringen kutter CO₂-avgiften for å kompensere, endrer det
-            hvor pengene havner. I dag går CO₂-avgiften – 4,42 kroner per liter
-            i 2026 – rett i den norske statskassen. Under ETS2 betaler
-            drivstoffleverandørene for kvoter som auksjoneres på det europeiske
-            markedet. Deltakerlandene, inkludert Norge gjennom EØS-avtalen,
-            mottar auksjonsinntektene og er forpliktet til å bruke dem på klima-
-            og sosialtiltak. Nøyaktig hvordan Norges andel fordeles, og hvor mye
-            som eventuelt øremerkes EUs sosiale klimafond, er ikke endelig
-            avklart.
-          </p>
-
-          <p>
-            For deg som kjører på diesel betyr vedtaket at ETS2 ligger fast i
-            planene. Spørsmålene som gjenstår er hvor mye av kostnadene som
-            dempes gjennom kutt i andre avgifter – og hvordan auksjonsinntektene
-            fordeles mellom Norge og EU.
-          </p>
-
-          <div className="rounded-2xl border border-border bg-secondary/40 p-5">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Les også
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  className="font-medium underline underline-offset-4"
-                  href="/nyheter/kan-eu-kreve-ny-avgift-pa-diesel-i-norge"
-                >
-                  Kan EU kreve ny avgift på diesel i Norge?
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </NewsArticleLayout>
-      </main>
-    </div>
-  );
-};
+          <ul className="space-y-2 text-sm">
+            <li>
+              <Link
+                className="font-medium underline underline-offset-4"
+                href="/nyheter/kan-eu-kreve-ny-avgift-pa-diesel-i-norge"
+              >
+                Kan EU kreve ny avgift på diesel i Norge?
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </NewsArticleLayout>
+    </main>
+  </div>
+);
 
 export default Page;

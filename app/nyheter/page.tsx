@@ -26,15 +26,13 @@ export const metadata: Metadata = {
   },
 };
 
-const Page = function Page() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header activeNav="news" variant="content" />
-      <main>
-        <NewsFeed />
-      </main>
-    </div>
-  );
-};
+const Page = () => (
+  <div className="min-h-screen bg-background">
+    <Header activeNav="news" variant="content" />
+    <main>
+      <NewsFeed />
+    </main>
+  </div>
+);
 
 export default Page;

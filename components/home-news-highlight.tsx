@@ -6,7 +6,7 @@ import { formatNewsDate, getRecentNewsEntries } from "@/lib/news-articles";
 
 const TEASER_COUNT = 3;
 
-export const HomeNewsHighlight = function HomeNewsHighlight() {
+export const HomeNewsHighlight = () => {
   const items = getRecentNewsEntries(TEASER_COUNT);
   if (items.length === 0) {
     return null;

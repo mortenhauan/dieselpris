@@ -32,14 +32,14 @@ The tax schedule is date-aware. This matters because the 90-day chart can span a
 - `2026-05-01`: midlertidig `veibruksavgift 0`, `CO2-avgift 3.09`, `MVA 25%` (lagt inn i appen etter Stortingets vedtak for autodiesel)
 - `2026-09-01`: tilbake til ordinære 2026-satser (`2.28` / `4.42`)
 
-Vedtakene som ligger bak kuttperioden er [Stortinget, sak p=107811](https://www.stortinget.no/no/Saker-og-publikasjoner/Vedtak/Vedtak/Sak/?p=107811) (vedtak 595 og 599 m.fl.). Regjeringens oppfølging 30.03.2026 sier at veibruksavgiften settes til null fra 1. april til 1. september, mens de øvrige vedtakene om CO2-avgift fortsatt reiser praktiske og statsstøtterettslige spørsmål som må avklares før de eventuelt iverksettes. Appen legger likevel inn autodiesel-satsen fra vedtak 595 fra 1. mai, og merker dette i UI som vedtatt men ikke endelig avklart.
+Kuttene trådte i kraft fra april/mai og utløp 1. september 2026. Se [Skatteetatens oversikt over midlertidige satser](https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/saravgifter/om/mineralske-produkter/) og [Finansdepartementets forskrift fra 1. mai](https://www.regjeringen.no/no/aktuelt/forskrift-om-redusert-co2-avgift-trer-i-kraft-1.-mai/id3158130/). Dette er historiske perioder, ikke avventende kutt.
 
 If the chart later expands further back in time, this schedule should be extended with older official rates instead of reusing the newest year for all points.
 
 ## Sources
 
 - Regjeringen, `Avgiftssatser 2026`: includes side-by-side 2025 and 2026 rates for diesel-related særavgifter
-- Regjeringen, `Oppfølging av Stortingets vedtak om reduksjon i avgifter på drivstoff` (30.03.2026): confirms `veibruksavgift 0` for road diesel from `1. april` to `1. september`, and that road-diesel `CO2` changes are not yet implemented
+- Skatteetaten: midlertidige CO₂-satser fra april/mai til 1. september 2026.
 - Skatteetaten, `Veibruksavgift på drivstoff`: confirms current `2026` diesel veibruksavgift
 - Skatteetaten, `Merverdiavgift`: confirms general `25 %` sats
 - Lovdata, `Stortingsvedtak om CO2-avgift på mineralske produkter for 2026` (generell mineraloljesats og reduserte satser for fiske etter bruksområde)
@@ -56,7 +56,7 @@ CO₂-avgift på mineralolje til fiske har tre forskjellige satstabeller, basert
 | Nære og fjerne farvann | 3,79 | 2,76            | **0**              | 592       | Iverksatt          |
 | Kun nære farvann       | 3,79 | 4,42 (generell) | 4,42               | 594 (→ 0) | **Ikke iverksatt** |
 
-«Kun nære» har ingen redusert sats i gjeldende lov og betaler ordinær CO₂. Vedtak 594 ville opprettet en ny post med 0 kr/l, men er ikke iverksatt grunnet statsstøtterettslige spørsmål. `FISKE_KUN_NAERE_RATE_SCHEDULE` oppdateres med 0-sats når forskriftsendring er bekreftet.
+«Kun nære» har 0 kr/l i CO₂-avgift fra 1. mai til 31. august 2026, og ordinær sats fra 1. september. Dette er lagt inn i `FISKE_KUN_NAERE_RATE_SCHEDULE`.
 
 Alle tre schedules bruker veibruksavgift 0 og MVA 25 %. `estimateComparisonPriceNokPerLiter` er den generiske prisformelen som brukes for alle sammenligningsrader.
 

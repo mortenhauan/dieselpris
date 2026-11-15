@@ -4,7 +4,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import type { NewsSource } from "@/lib/news-articles";
-import { formatNewsDate } from "@/lib/news-articles";
+import { formatNewsDate, NEWS_INDEX } from "@/lib/news-articles";
 import { articleJsonLd } from "@/lib/site-structured-data";
 
 interface NewsArticleLayoutProps {
@@ -17,7 +17,7 @@ interface NewsArticleLayoutProps {
   title: string;
 }
 
-export const NewsArticleLayout = function NewsArticleLayout({
+export const NewsArticleLayout = ({
   canonicalUrl,
   category,
   children,
@@ -25,13 +25,16 @@ export const NewsArticleLayout = function NewsArticleLayout({
   publishedAtIso,
   sources,
   title,
-}: NewsArticleLayoutProps) {
+}: NewsArticleLayoutProps) => {
+  const slug = canonicalUrl.split("/").at(-1);
+  const indexEntry = NEWS_INDEX.find((entry) => entry.slug === slug);
   return (
     <article className="bg-background py-12 md:py-20">
       <JsonLd
         data={articleJsonLd({
           canonicalUrl,
           datePublished: publishedAtIso,
+          dateModified: indexEntry?.modifiedAtIso,
           description,
           headline: title,
         })}
@@ -55,10 +58,35 @@ export const NewsArticleLayout = function NewsArticleLayout({
               {formatNewsDate(publishedAtIso)}
             </time>
           </div>
+          {indexEntry?.modifiedAtIso ? (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Oppdatert{" "}
+              <time dateTime={indexEntry.modifiedAtIso}>
+                {formatNewsDate(indexEntry.modifiedAtIso)}
+              </time>
+              . {indexEntry.updateNote}
+            </p>
+          ) : null}
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
             {title}
           </h1>
         </header>
+
+        <aside
+          className="mt-8 rounded-xl border border-border bg-secondary/40 p-4 text-sm text-muted-foreground"
+          aria-label="Om tidspunktet for artikkelen"
+        >
+          Artikkelen beskriver situasjonen på publiseringsdatoen. Senere
+          oppdateringer er merket med dato. Priser, avgifter og vedtak kan ha
+          endret seg.{" "}
+          <Link
+            href="/#avgifter"
+            className="text-foreground underline underline-offset-4"
+          >
+            Se avgiftssatsene i prisoversikten
+          </Link>
+          .
+        </aside>
 
         <div className="prose-diesel mt-10 space-y-8 text-base leading-relaxed text-foreground">
           {children}
