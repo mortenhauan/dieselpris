@@ -16,6 +16,12 @@ The model is used by the current price breakdown, the 90-day history chart, and 
 
 Regional selection is layered on top through [`regional-price-model.ts`](./regional-price-model.ts). Public taxes remain national, while the modeled `distribution` part can vary by selected region.
 
+## Foreløpige avgifter i prisprognosen
+
+`forecastPumpPriceComponents` bruker regjeringens [forslag til avgiftssatser for 2027](https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/skatte-og-avgiftssatser/avgiftssatser-2027/id3173439/) fra leveringsdato `2027-01-01`: CO₂ `5,13 kr/l`, veibruksavgift `1,84 kr/l` og MVA `25 %`. Satsene gjelder fossil diesel; modellen beregner ikke en egen biodrivstoffandel. Forslaget ligger separat fra den ordinære satsplanen, så dagens pris og historikken ikke tar i bruk et budsjettforslag som vedtatte avgifter.
+
+Prognosens hovedanslag, lav/høy, avgiftsandeler og prisforskjell bruker samme satser. Berørte måneder merkes som «Foreslåtte avgifter» i tabellen og med forbehold i grafens tooltip. Innledningen oppgir satsene og lenker til kilden. For leveringsmåneder etter 2027 videreføres forslaget som en uttrykkelig forutsetning. Når endelige satser er vedtatt, må både satsplanen og prognosens forslag/merking oppdateres.
+
 ## Historical handling
 
 The tax schedule is date-aware. This matters because the 90-day chart can span a year boundary.

@@ -2,7 +2,6 @@
 
 import { Info } from "lucide-react";
 import type { ReactNode } from "react";
-import { useCallback, useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -19,9 +18,11 @@ import {
 } from "@/components/ui/tooltip";
 import { DIESEL_LITERS_PER_METRIC_TON } from "@/lib/diesel-prices-payload";
 import {
+  forecastPumpPriceComponents,
+  PROPOSED_2027_PUMP_PRICE_RATES,
   PUMP_PRICE_STACK_LAYERS,
   PUMP_PRICE_STACK_LAYERS_TOOLTIP,
-  pumpPriceComponents,
+  usesProposedPumpPriceRates,
 } from "@/lib/pump-price-model";
 import type { PumpPriceLayerKey } from "@/lib/pump-price-model";
 import { getRegionPriceProfile } from "@/lib/regional-price-model";
@@ -64,6 +65,7 @@ type StackedFuturesRow = {
   price_nok_liter: number;
   session_pump_low: number;
   session_pump_high: number;
+  usesProposedRates: boolean;
 } & Record<PumpPriceLayerKey, number> & { total: number };
 
 const toStackedFutures = function toStackedFutures(
@@ -75,7 +77,7 @@ const toStackedFutures = function toStackedFutures(
   return contracts.map((c) => {
     const price_nok_liter =
       Math.round(((c.last_price * exchangeRate) / litersPerTon) * 100) / 100;
-    const parts = pumpPriceComponents(
+    const parts = forecastPumpPriceComponents(
       price_nok_liter,
       regionId,
       c.duty_at_utc_ymd
@@ -84,12 +86,12 @@ const toStackedFutures = function toStackedFutures(
       Math.round(((c.low * exchangeRate) / litersPerTon) * 100) / 100;
     const rawHighNokLiter =
       Math.round(((c.high * exchangeRate) / litersPerTon) * 100) / 100;
-    const partsLow = pumpPriceComponents(
+    const partsLow = forecastPumpPriceComponents(
       rawLowNokLiter,
       regionId,
       c.duty_at_utc_ymd
     );
-    const partsHigh = pumpPriceComponents(
+    const partsHigh = forecastPumpPriceComponents(
       rawHighNokLiter,
       regionId,
       c.duty_at_utc_ymd
@@ -108,6 +110,7 @@ const toStackedFutures = function toStackedFutures(
       session_pump_high,
       session_pump_low,
       total: parts.total,
+      usesProposedRates: usesProposedPumpPriceRates(c.duty_at_utc_ymd),
       veibruks: parts.veibruks,
     };
   });
@@ -133,35 +136,27 @@ const formatKrPerLiter = function formatKrPerLiter(value: number): string {
   return `${value.toLocaleString("nb-NO", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} kr/L`;
 };
 
-const Hint = function Hint({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <HintTooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
-          aria-label={`Forklaring: ${label}`}
-        >
-          <Info className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="top"
-        align="start"
-        sideOffset={6}
-        className={HINT_CLASS}
+const Hint = ({ label, children }: { label: string; children: ReactNode }) => (
+  <HintTooltip>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        className="inline-flex shrink-0 rounded-full p-0.5 text-muted-foreground/55 outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+        aria-label={`Forklaring: ${label}`}
       >
-        {children}
-      </TooltipContent>
-    </HintTooltip>
-  );
-};
+        <Info className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="top"
+      align="start"
+      sideOffset={6}
+      className={HINT_CLASS}
+    >
+      {children}
+    </TooltipContent>
+  </HintTooltip>
+);
 
 const LAYER_LEGEND = PUMP_PRICE_STACK_LAYERS.map((l) => l.name).join(" → ");
 
@@ -174,10 +169,7 @@ interface FuturesChartTooltipProps {
   payload?: readonly { payload?: unknown }[];
 }
 
-const FuturesChartTooltip = function FuturesChartTooltip({
-  active,
-  payload,
-}: FuturesChartTooltipProps) {
+const FuturesChartTooltip = ({ active, payload }: FuturesChartTooltipProps) => {
   if (!(active && payload?.length)) {
     return null;
   }
@@ -193,6 +185,11 @@ const FuturesChartTooltip = function FuturesChartTooltip({
       <p className="mb-2 text-sm font-semibold tabular-nums text-foreground">
         {formatKrPerLiter(row.total)}
       </p>
+      {row.usesProposedRates ? (
+        <p className="mb-2 max-w-60 text-xs text-muted-foreground">
+          Med foreslåtte avgifter for 2027. Ikke vedtatt.
+        </p>
+      ) : null}
       <div className="space-y-1">
         {PUMP_PRICE_STACK_LAYERS_TOOLTIP.map((layer) => (
           <div key={layer.key} className="flex justify-between gap-4 text-xs">
@@ -232,33 +229,24 @@ const FuturesChartTooltip = function FuturesChartTooltip({
   );
 };
 
-export const FuturesForecast = function FuturesForecast({
+export const FuturesForecast = ({
   contracts,
   exchangeRate,
   regionId,
-}: FuturesForecastProps) {
+}: FuturesForecastProps) => {
   const region = getRegionPriceProfile(regionId);
-  const stackedData = useMemo(
-    () =>
-      toStackedFutures(
-        contracts,
-        exchangeRate,
-        regionId,
-        DIESEL_LITERS_PER_METRIC_TON
-      ),
-    [contracts, exchangeRate, regionId]
+  const stackedData = toStackedFutures(
+    contracts,
+    exchangeRate,
+    regionId,
+    DIESEL_LITERS_PER_METRIC_TON
   );
-  const { yTicks, yDomain } = useMemo(
-    () => yScaleFromTotals(stackedData.map((d) => d.total)),
-    [stackedData]
-  );
-  const xCategories = useMemo(
-    () => stackedData.map((r) => r.contract_code),
-    [stackedData]
-  );
+  const { yTicks, yDomain } = yScaleFromTotals(stackedData.map((d) => d.total));
+  const xCategories = stackedData.map((r) => r.contract_code);
 
   const [firstRow] = stackedData;
   const lastRow = stackedData.at(-1);
+  const hasProposedRates = stackedData.some((row) => row.usesProposedRates);
   const firstTotal = firstRow?.total ?? 0;
   const lastTotal = lastRow?.total ?? 0;
   const priceDiff = lastTotal - firstTotal;
@@ -272,11 +260,8 @@ export const FuturesForecast = function FuturesForecast({
     priceDiffClass = "text-amber-600";
   }
 
-  const tickLabel = useCallback(
-    (code: string) =>
-      stackedData.find((r) => r.contract_code === code)?.contract_month ?? code,
-    [stackedData]
-  );
+  const tickLabel = (code: string) =>
+    stackedData.find((r) => r.contract_code === code)?.contract_month ?? code;
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 md:p-8">
@@ -302,11 +287,26 @@ export const FuturesForecast = function FuturesForecast({
             Tallene bygger på månedlige ICE-kontrakter og speiler grovt hva
             markedet priser inn for diesellevering den måneden — nivået det
             faktisk handles til. Ment som oversikt, ikke eksakte kjøpspriser på
-            stasjon. Øverst på siden brukes avgiftene som gjelder på siste
-            kursdag; her brukes nasjonale satser per leveringsmåned (1. i
-            måneden), så f.eks. mai viser allerede CO₂-kuttet som gjelder fra 1.
-            mai.
+            stasjon. Beregningen bruker dagens valutakurs og avgiftene for
+            leveringsmåneden, med 1. i måneden som avgiftsdato.
           </p>
+          {hasProposedRates ? (
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              <span className="font-medium text-foreground">
+                Foreløpige avgifter fra januar 2027:
+              </span>{" "}
+              Anslagene bruker regjeringens forslag om CO₂-avgift på 5,13 kr/l
+              og veibruksavgift på 1,84 kr/l, begge uten mva. Mva. er 25 %.
+              Forslaget er ikke vedtatt og kan bli endret.{" "}
+              <a
+                href={PROPOSED_2027_PUMP_PRICE_RATES.sourceUrl}
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                Se avgiftsforslaget
+              </a>
+              .
+            </p>
+          ) : null}
         </div>
         {firstRow && lastRow && stackedData.length >= 2 ? (
           <p className={`text-sm font-medium tabular-nums ${priceDiffClass}`}>
@@ -407,6 +407,11 @@ export const FuturesForecast = function FuturesForecast({
               >
                 <td className="px-4 py-3 text-foreground">
                   {row.contract_month}
+                  {row.usesProposedRates ? (
+                    <span className="mt-1 block text-xs text-muted-foreground">
+                      Foreslåtte avgifter
+                    </span>
+                  ) : null}
                 </td>
                 <td className="hidden md:table-cell px-4 py-3 text-right tabular-nums text-foreground">
                   {formatKrPerLiter(row.session_pump_low)}
@@ -427,11 +432,13 @@ export const FuturesForecast = function FuturesForecast({
         Avgifter etter leveringsmåned (dato 1. i måneden) · Valuta{" "}
         {exchangeRate.toFixed(4)} USD/NOK · ICE lavsvovel gasoil
       </p>
-      <p className="mt-2 text-xs text-muted-foreground">
-        Fra mai 2026 er CO₂-kuttet for autodiesel lagt inn etter Stortingets
-        vedtak. Regjeringen skriver samtidig at denne delen fortsatt avventer
-        avklaringer, så anslagene kan bli endret senere.
-      </p>
+      {hasProposedRates ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          Modellen bruker satsene for fossil diesel. Innblanding av biodrivstoff
+          kan gi andre avgifter. For måneder etter 2027 videreføres de
+          foreslåtte 2027-satsene som en forutsetning.
+        </p>
+      ) : null}
     </div>
   );
 };

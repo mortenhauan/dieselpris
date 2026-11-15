@@ -22,6 +22,16 @@ type ScheduledComparisonDieselRates = ComparisonDieselRates & {
   effectiveFrom: string;
 };
 
+/** Regjeringens forslag, kun til prognosen. Ikke vedtatte satser. */
+export const PROPOSED_2027_PUMP_PRICE_RATES = {
+  co2: 5.13,
+  effectiveFrom: "2027-01-01",
+  mvaRate: 0.25,
+  sourceUrl:
+    "https://www.regjeringen.no/no/tema/okonomi-og-budsjett/skatter-og-avgifter/skatte-og-avgiftssatser/avgiftssatser-2027/id3173439/",
+  veibruks: 1.84,
+} as const;
+
 /**
  * Avgiftene følger datoen i historikken.
  * Kilder:
@@ -153,6 +163,10 @@ const normalizeRateDate = function normalizeRateDate(
   return atDate.toISOString().slice(0, 10);
 };
 
+export const usesProposedPumpPriceRates = (atDate: string | Date): boolean =>
+  (normalizeRateDate(atDate) ?? "") >=
+  PROPOSED_2027_PUMP_PRICE_RATES.effectiveFrom;
+
 export const getPumpPriceRates = function getPumpPriceRates(
   atDate?: string | Date
 ): PumpPriceRates {
@@ -283,13 +297,11 @@ export const PUMP_PRICE_STACK_LAYERS_TOOLTIP = [
   ...PUMP_PRICE_STACK_LAYERS,
 ].toReversed();
 
-export const pumpPriceComponents = function pumpPriceComponents(
+const pumpPriceComponentsWithRates = function pumpPriceComponentsWithRates(
   rawNokPerLiter: number,
-  regionId?: RegionId,
-  atDate?: string | Date
+  distribution: number,
+  rates: PumpPriceRates
 ): PumpPriceComponents {
-  const rates = getPumpPriceRates(atDate);
-  const distribution = distributionNokPerLiterForEstimate(regionId, atDate);
   const { veibruks } = rates;
   const { co2 } = rates;
   const priceBeforeMva = rawNokPerLiter + distribution + veibruks + co2;
@@ -302,6 +314,34 @@ export const pumpPriceComponents = function pumpPriceComponents(
     total: priceBeforeMva + mva,
     veibruks,
   };
+};
+
+export const pumpPriceComponents = function pumpPriceComponents(
+  rawNokPerLiter: number,
+  regionId?: RegionId,
+  atDate?: string | Date
+): PumpPriceComponents {
+  return pumpPriceComponentsWithRates(
+    rawNokPerLiter,
+    distributionNokPerLiterForEstimate(regionId, atDate),
+    getPumpPriceRates(atDate)
+  );
+};
+
+/** Prognosen bruker foreslåtte 2027-satser fra januar, også videre i tid. */
+export const forecastPumpPriceComponents = function forecastPumpPriceComponents(
+  rawNokPerLiter: number,
+  regionId: RegionId,
+  atDate: string | Date
+): PumpPriceComponents {
+  const rates = getPumpPriceRates(atDate);
+  return pumpPriceComponentsWithRates(
+    rawNokPerLiter,
+    distributionNokPerLiterForEstimate(regionId, atDate),
+    usesProposedPumpPriceRates(atDate)
+      ? { ...rates, ...PROPOSED_2027_PUMP_PRICE_RATES }
+      : rates
+  );
 };
 
 /** Råvare (NOK/L) + veibruks + CO₂ + MVA — samme MVA-grunnlag som i `pumpPriceComponents`, men uten distribusjon/margin. */
