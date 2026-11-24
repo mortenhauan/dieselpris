@@ -1,0 +1,17 @@
+2026-11-24 – pnpm prices, TradingView ICEEUR:ULS1! and ICEEUR:BRN1!, Norges Bank
+Run: source scripts/use-nvm.sh && pnpm prices (Node 26.13.1).
+ULS1 daily observations (USD per metric tonne, then indicative NOK/l from script):
+2026-11-16 1246.75 10.18
+2026-11-17 1215.25 9.94
+2026-11-18 1179.50 9.70
+2026-11-19 1166.50 9.61
+2026-11-20 1170.25 9.70
+2026-11-23 1121.25 9.35
+2026-11-24 1096.25 9.13 (intraday daily bar while session open; not a final close)
+BRN1! 2026-11-24 86.40 (intraday, no direct comparison to ICE settlement).
+Norges Bank API EXR/B.USD.NOK.SP sdmx-csv observations, USD/NOK:
+2026-11-16 9.6005
+2026-11-20 9.7525
+2026-11-23 9.8076
+2026-11-24 9.7920
+Previous reviewed snapshot editorial/reviews/2026-11-15-publication-facts-market-snapshot.txt has November 13 comparator.

@@ -28,6 +28,14 @@ const entries: NewsIndexEntry[] = [
   {
     category: "Nyhet",
     intro:
+      "Dieselråvaren falt 10 prosent i dollar fra 16. til 23. november. En svakere krone dempet fallet til rundt 83 øre per liter i beregnet råvarekostnad.",
+    publishedAtIso: "2026-11-24T16:15:48Z",
+    slug: "dieselravaren-falt-ti-prosent-pa-en-uke",
+    title: "Dieselråvaren falt 10 prosent på én uke",
+  },
+  {
+    category: "Nyhet",
+    intro:
       "Regjeringen foreslår lavere veibruksavgift og høyere CO₂-avgift i 2027. Merket anleggsdiesel får ikke samme lettelse.",
     slug: "dieselavgifter-2027-autodiesel-anleggsdiesel",
     title:
